@@ -2,15 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package cat.copernic.project2.ERP.controllers;
+package cat.copernic.project2.ERP.services;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 /**
  *
- * @author brandon
+ * @author wilso
  */
-@Controller
-public class UsersController {
+@Service
+public class ActivityService {
           
 }
