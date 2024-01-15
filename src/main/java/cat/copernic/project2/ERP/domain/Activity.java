@@ -54,5 +54,6 @@ public class Activity {
     @OneToOne
     @JoinColumn(name = "monitor_id")
     private User monitor;
+   
 }
 

@@ -19,7 +19,6 @@ public class UserService {
           public UserService(UserDao userDao) {
                     this.userDao = userDao;
           }
-
           public User saveOrUpdatePerson(User user) {
                     if (user.getId() != null) {
                               User existingUser = userDao.findById(user.getId()).orElse(null);
@@ -33,24 +32,22 @@ public class UserService {
                     }
                     return userDao.save(user);
           }
-
           public void deleteUser(Long id) {
                     userDao.deleteById(id);
           }
-
           public User findById(Long id) {
                     return userDao.findById(id).orElse(null);
           }
-
           public List<User> getAllUsers() {
                     return userDao.findAll();
           }
-
           public List<User> findPersonsByIds(List<Long> ids) {
                     return userDao.findAllById(ids);
           }
-
           public User findPersonByEmail(String email) {
                     return userDao.findByEmail(email);
+          }
+          public User findPersonByName(String name){
+                    return userDao.findByName(name);
           }
 }

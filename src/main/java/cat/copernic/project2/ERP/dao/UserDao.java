@@ -12,6 +12,7 @@ import cat.copernic.project2.ERP.domain.User;
  */
 public interface UserDao extends GenericDao<User, Long> {
 
-
         User findByEmail(String email);
+        User findByName(String name);
+        
 }
