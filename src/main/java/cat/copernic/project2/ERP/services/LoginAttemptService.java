@@ -1,0 +1,46 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package cat.copernic.project2.ERP.services;
+
+
+import cat.copernic.project2.ERP.dao.UserDao;
+import cat.copernic.project2.ERP.domain.User;
+import org.springframework.stereotype.Service;
+
+/**
+ *
+ * @author wilso
+ */
+@Service
+public class LoginAttemptService {
+    private final int MAX_ATTEMPT = 3;
+    private final UserDao userDao;
+
+    public LoginAttemptService(UserDao personDao){
+        this.userDao = personDao;
+    }
+
+    public void incrementFailedAttempts(String username){
+        /*User person = userDao.findByEmail(username);
+        person.setFailedAttempts(person.getFailedAttempts()+1);
+        if (person.getFailedAttempts() >= MAX_ATTEMPT) {
+            person.setAccountNonLocked(false); // Bloquea la cuenta del usuario
+        }
+        userDao.save(person); // Guarda los cambios en la base de datos*/
+    }
+
+    public void resetFailedAttempts(String username){
+       /* User person = userDao.findByEmail(username);
+        person.setFailedAttempts(0);
+        person.setAccountNonLocked(true); // Desbloquea la cuenta del usuario
+        userDao.save(person); // Guarda los cambios en la base de datos*/
+    }
+
+    /*public boolean isUserBlocked(String username) {
+        User user = userDao.findByEmail(username);
+        return !person.isAccountNonLocked();
+    }*/
+}
+

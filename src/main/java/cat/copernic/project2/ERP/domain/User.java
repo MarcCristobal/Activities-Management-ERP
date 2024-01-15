@@ -5,12 +5,12 @@
 package cat.copernic.project2.ERP.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 
 /**
@@ -18,7 +18,7 @@ import lombok.Data;
  * @author brandon
  */
 @Data
-@MappedSuperclass
+@Entity
 public class User {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
