@@ -2,10 +2,6 @@ package cat.copernic.project2.ERP.services;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
-import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
-import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import cat.copernic.project2.ERP.dao.ActivityDao;
 import cat.copernic.project2.ERP.domain.Activity;
@@ -31,7 +27,7 @@ public class ActivityService {
             existingActivity.setPlace(activity.getPlace());
             existingActivity.setStartDate(activity.getStartDate());
             existingActivity.setEndDate(activity.getEndDate());
-            existingActivity.setIsFree(activity.isIsFree());
+            existingActivity.setFree(activity.isFree());
             existingActivity.setParticipantLimit(activity.getParticipantLimit());
             existingActivity.setPricePerPerson(activity.getPricePerPerson());
             existingActivity.setNumberOfPayments(activity.getNumberOfPayments());
