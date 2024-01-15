@@ -4,15 +4,12 @@
  */
 package cat.copernic.project2.ERP.dao;
 
-import cat.copernic.project2.ERP.domain.User;
+import cat.copernic.project2.ERP.domain.Activity;
 
 /**
  *
- * @author brandon
+ * @author oscar
  */
-public interface UserDao extends GenericDao<User, Long> {
-
-        User findByEmail(String email);
-        User findByName(String name);
+public interface ActivityDao extends GenericDao<Activity, Long> {
         
 }

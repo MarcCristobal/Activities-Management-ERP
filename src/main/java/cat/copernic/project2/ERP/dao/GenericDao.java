@@ -10,7 +10,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  *
- * @author wilso
+ * @author brandon
  */
 @NoRepositoryBean
 public interface GenericDao<T, ID extends Serializable> extends JpaRepository<T, ID> {
