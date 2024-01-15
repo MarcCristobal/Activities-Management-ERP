@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AppController {
 
-    @GetMapping("/")
+    @GetMapping("/index")
     public String showIndex() {
         return "login";
     }
 
+    @GetMapping("/home")
+    public String showHome() {
+        return "base";
+    }
 }
