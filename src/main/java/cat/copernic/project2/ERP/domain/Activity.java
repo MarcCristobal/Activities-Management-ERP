@@ -42,10 +42,12 @@ public class Activity {
 
     private boolean isFree;
 
+    private boolean isLimited;
+
     @Column(length = 10)
     private int participantLimit;
-    
-   @Column(length = 10)
+
+    @Column(length = 10)
     private double pricePerPerson;
 
     @Column(length = 10)
@@ -54,6 +56,21 @@ public class Activity {
     @OneToOne
     @JoinColumn(name = "monitor_id")
     private User monitor;
-   
-}
 
+    public boolean getIsFree() {
+        return isFree;
+    }
+
+    public void setIsFree(boolean isFree) {
+        this.isFree = isFree;
+    }
+
+    public boolean getIsLimited() {
+        return isLimited;
+    }
+
+    public void setIsLimited(boolean isLimited) {
+        this.isLimited = isLimited;
+    }
+
+}
