@@ -19,7 +19,6 @@ public class AppController {
         return "login";
     }
     
-
     @GetMapping("/home")
     public String showHome() {
         return "base";
