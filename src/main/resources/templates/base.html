@@ -4,17 +4,10 @@
     <title>Index</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link th:href="@{/css/tailwind.css}" rel="stylesheet">
 </head>
 <body>
-    <header class="bg-orange-500 p-4 flex items-center justify-between">
-        <div class="">
-            <img src="/images/NicolauCopernic-LOGO.png"/>
-        </div>
-        <div class="text-center text-white w-full">
-            <h1 class="text-3xl">ACTIVITIES MANAGEMENT</h1>
-        </div>
-    </header>
-
+    <div th:replace="header :: div"></div>
+    <div th:replace="nav :: div"></div>
 </body>
 </html>
