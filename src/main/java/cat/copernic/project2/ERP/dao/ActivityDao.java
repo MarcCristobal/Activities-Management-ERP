@@ -8,8 +8,8 @@ import cat.copernic.project2.ERP.domain.Activity;
 
 /**
  *
- * @author wilso
+ * @author oscar
  */
-public interface ActivityDao extends GenericDao<Activity, Long>{
-          
+public interface ActivityDao extends GenericDao<Activity, Long> {
+        
 }
