@@ -27,7 +27,8 @@ public class ActivityService {
             existingActivity.setPlace(activity.getPlace());
             existingActivity.setStartDate(activity.getStartDate());
             existingActivity.setEndDate(activity.getEndDate());
-            existingActivity.setFree(activity.isFree());
+            existingActivity.setIsFree(activity.getIsFree());
+            existingActivity.setIsLimited(activity.getIsLimited());
             existingActivity.setParticipantLimit(activity.getParticipantLimit());
             existingActivity.setPricePerPerson(activity.getPricePerPerson());
             existingActivity.setNumberOfPayments(activity.getNumberOfPayments());

@@ -1,9 +1,11 @@
-<!-- src/main/resources/templates/fragments/header.html -->
-<div th:fragment="header" style="display: flex; justify-content: space-between; align-items: center; padding: 2rem 5rem; background-color: orange;">
-    <img src="/images/NicolauCopernic-LOGO.png"> <!-- Ajusta el ancho según sea necesario -->
-    <h2 style="color: white; font-size: 1.5rem; font-weight: bold;">ACTIVITIES MANAGEMENT</h2>
-    <div></div> <!-- Este div vacío es necesario para centrar el texto -->
+<div class="w-screen h-auto flex items-center justify-center text-white p-4 bg-orange-500">
+    <img class="w-60 min-w-60" src="/images/NicolauCopernic-LOGO.png">
+    <div class="flex-grow">                   
+        <h1 class="text-3xl text-center font-bold">ACTIVITIES MANAGEMENT</h1>
+    </div>
+    <div class="w-60 min-w-60 flex space-x-2 justify-center items-center">
+        <label>User</label>
+        <img class="size-12" src="/images/usuario.png">
+        <img class="size-4" src="/images/flecha-hacia-abajo.png">
+    </div>
 </div>
-
-
-

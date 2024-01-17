@@ -43,11 +43,11 @@ public class SecurityConfig {
                             .requestMatchers("/index").permitAll()
                             .anyRequest().authenticated())
                             .formLogin(login -> login
-                            .loginPage("/index").defaultSuccessUrl("/home")
+                            .loginPage("/").defaultSuccessUrl("/home")
                             .failureHandler(authenticationFailureHandler))
                             .logout(logout -> logout
                             .logoutUrl("/my/ownlogout") // Custom logout URL
-                            .logoutSuccessUrl("/index")); // Redirect to custom login page after logout
+                            .logoutSuccessUrl("/")); // Redirect to custom login page after logout
                     return http.build();
           }
 
