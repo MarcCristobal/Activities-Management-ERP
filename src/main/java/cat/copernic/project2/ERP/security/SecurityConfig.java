@@ -40,7 +40,8 @@ public class SecurityConfig {
                             // Disable CSRF protection
                             .authorizeHttpRequests(authorize -> authorize
                             .requestMatchers("/images/**").permitAll()
-                            .requestMatchers("/index").permitAll()
+                            .requestMatchers("/css/**").permitAll()
+                            .requestMatchers("/").permitAll()
                             .anyRequest().authenticated())
                             .formLogin(login -> login
                             .loginPage("/").defaultSuccessUrl("/home")
