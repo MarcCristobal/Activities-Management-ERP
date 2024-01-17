@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Activities</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <header class="bg-orange-500 p-4 flex items-center justify-between">
+            <div class="">
+                <img src="/images/NicolauCopernic-LOGO.png"/>
+            </div>
+            <div class="text-center text-white w-full">
+                <h1 class="text-3xl">ACTIVITIES MANAGEMENT</h1>
+            </div>
+        </header>
+        <br>
+        <div class="ml-10 mr-10">
+            <p class="text-orange-500">Activities</p>
+            <br><br>
+            <div class="flex items-center">
+                <form th:action="@{/activities/create-activity}" method="get">
+                    <input type="submit" class="w-10 h-10 bg-cover bg-no-repeat bg-center cursor-pointer" value="" style="background-image: url('/images/anadir.png'); border: none;">
+                </form>
+                <input type="text" class="w-80 ml-4 border p-2 border-gray-800 rounded-t-md rounded-b-md ml-auto">
+                <input type="button" class="w-10 h-10 bg-cover bg-no-repeat bg-center cursor-pointer rounded-t-md rounded-b-md" style="background-image: url('/images/lupa.png'); background-color: #009886; border: none;">
+            </div>
+            <br>
+            <div class="flex items-center">
+                <input type="button" value="Add Participants" class="bg-gray-700 text-white py-2 px-4 rounded-t-md rounded-b-md font-bold text-lg hover:bg-green-700 cursor-pointer">
+                <input type="text" class="w-30 ml-4 border p-2 border-gray-800 ml-auto">
+                <input type="button" class="w-10 h-10 bg-cover bg-no-repeat bg-center cursor-pointer" style="background-image: url('/images/calendario.png'); border: none;">
+            </div>
+        </div>
+    </body>
+</html>
