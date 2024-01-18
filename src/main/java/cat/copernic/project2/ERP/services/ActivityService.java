@@ -34,6 +34,7 @@ public class ActivityService {
             existingActivity.setNumberOfPayments(activity.getNumberOfPayments());
             return activityDao.save(existingActivity);
         }
+        
         return activityDao.save(activity);
     }
 

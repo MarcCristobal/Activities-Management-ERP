@@ -1,3 +1,5 @@
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -33,8 +35,12 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
                     if (exception instanceof UserBlockedException) {
                               response.sendRedirect("/index?error=" + URLEncoder.encode("Tu cuenta ha sido bloqueada debido a demasiados intentos fallidos de inicio de sesión.", "UTF-8") + "&username=" + URLEncoder.encode(username, "UTF-8"));
                     } else {
-                              // Usa el mensaje de error de la excepción
-                              response.sendRedirect("/index?error=" + URLEncoder.encode(exception.getMessage(), "UTF-8") + "&username=" + URLEncoder.encode(username, "UTF-8"));
+                              String errorMessage = exception.getMessage();
+                              if (errorMessage == null) {
+                                  errorMessage = "Authentication failed";
+                              }
+                              response.sendRedirect("/index?error=" + URLEncoder.encode(errorMessage, "UTF-8") + "&username=" + URLEncoder.encode(username, "UTF-8"));
+
                     }
           }
 
