@@ -4,8 +4,12 @@
  */
 package cat.copernic.project2.ERP.Controllers;
 
+import cat.copernic.project2.ERP.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -13,14 +17,24 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class AppController {
+        private final UserService userService;
+        
+        @Autowired
+        public AppController(UserService userService){
+                this.userService = userService;
+        }
+        @GetMapping("/")
+        public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
+                if (error != null) {
+                        model.addAttribute("error", error);
+                }
+                boolean hasNotUsers = userService.hasUsers();
+                model.addAttribute("hasNotUsers", hasNotUsers);
+                return "login";
+        }
 
-    @GetMapping("/")
-    public String showIndex() {
-        return "login";
-    }
-
-    @GetMapping("/home")
-    public String showHome() {
-        return "base";
-    }
+        @GetMapping("/home")
+        public String showHome() {
+                return "base";
+        }
 }
