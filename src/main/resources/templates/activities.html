@@ -4,34 +4,47 @@
         <title>Activities</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet">
     </head>
     <body>
-        <header class="bg-orange-500 p-4 flex items-center justify-between">
-            <div class="">
-                <img src="/images/NicolauCopernic-LOGO.png"/>
-            </div>
-            <div class="text-center text-white w-full">
-                <h1 class="text-3xl">ACTIVITIES MANAGEMENT</h1>
-            </div>
-        </header>
-        <br>
-        <div class="ml-10 mr-10">
-            <p class="text-orange-500">Activities</p>
-            <br><br>
+        <div th:replace="header :: div"></div>
+        <div th:replace="nav :: div"></div>
+        <div class="space-y-6 mx-8 my-6">
+            <label class="p-2 text-orange-500 bg-gray-200 text-sm">Activities</label>
             <div class="flex items-center">
-                <form th:action="@{/activities/create-activity}" method="get">
-                    <input type="submit" class="w-10 h-10 bg-cover bg-no-repeat bg-center cursor-pointer" value="" style="background-image: url('/images/anadir.png'); border: none;">
+                <form th:action="@{/activities/create-activity}" method="get" class="flex flex-grow items-center">
+                    <button type="submit" class="w-10 h-10 cursor-pointer"><img src="/images/anadir.png"></button>
                 </form>
-                <input type="text" class="w-80 ml-4 border p-2 border-gray-800 rounded-t-md rounded-b-md ml-auto">
-                <input type="button" class="w-10 h-10 bg-cover bg-no-repeat bg-center cursor-pointer rounded-t-md rounded-b-md" style="background-image: url('/images/lupa.png'); background-color: #009886; border: none;">
+
+                <form th:action="@{/activities/filter-by-name}" method="post" class="flex items-center">
+                    <input type="text" id="text" name="text" class="w-80 h-10 border border-gray-800 rounded-md">
+                    <button type="submit" class="w-10 h-10 cursor-pointer rounded-md bg-teal-500"><img src="/images/lupa.png"></button>
+                </form>
             </div>
-            <br>
             <div class="flex items-center">
-                <input type="button" value="Add Participants" class="bg-gray-700 text-white py-2 px-4 rounded-t-md rounded-b-md font-bold text-lg hover:bg-green-700 cursor-pointer">
-                <input type="text" class="w-30 ml-4 border p-2 border-gray-800 ml-auto">
-                <input type="button" class="w-10 h-10 bg-cover bg-no-repeat bg-center cursor-pointer" style="background-image: url('/images/calendario.png'); border: none;">
+                <form class="flex flex-grow items-center">
+                    <button type="submit" class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer">Add Participants</button>                   
+                </form>
+
+                <form th:action="@{/activities/filter-by-date}" class="flex items-center">                    
+                    <input type="text" id="date" name="date" class="text-center w-32 h-8 border rounded-md border-gray-800">
+                    <button type="submit" class="w-8 h-8 cursor-pointer"><img src="/images/calendario.png"></button>
+                </form>
+            </div>
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 overflow-y-auto scrollbar-hide max-h-72">
+
+                <button class="size-full bg-teal-500 p-2">
+                    <div class="text-blue-700 text-lg font-semibold mb-2">Berlin Trip</div>
+                    <div class="mx-2 border-l-4 border-blue-700 font-black bg-gray-200 p-1">15th, January 2024</div>
+                    <div class="flex items-center justify-center space-x-1 mx-2 border-l-4 border-blue-700 bg-slate-50 p-2">
+                        <img class="size-6" src="/images/mapas-y-banderas.png">
+                        <span class="text-lg">Berlin</span>
+                    </div>
+                </button>
+
             </div>
         </div>
+
+
     </body>
 </html>
