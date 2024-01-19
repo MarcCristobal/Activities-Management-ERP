@@ -8,18 +8,58 @@
         <!-- Include Tailwind CSS -->
         <link th:href="@{/css/tailwind.css}" rel="stylesheet">
     </head>
-    <body class="bg-gray-100">
+    <body>
         <div th:replace="header :: div"></div>
         <div th:replace="nav :: div"></div>
-        <div class="container mx-auto mt-8">
-            <h2 class="text-2xl font-bold mb-4">User List</h2>
-            <form th:action="@{/home/users/user-form}" method="get">
-                <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Add User</button>
-            </form>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="space-y-6 mx-8 my-6">
+            <label class="p-2 text-orange-500 bg-gray-200 text-sm">Users</label>
+            <div class="flex items-center">
+                <form th:action="@{/home/users/user-form}" method="get" class="flex flex-grow items-center">
+                    <button type="submit" class="w-10 h-10 cursor-pointer"><img src="/images/anadir.png"></button>
+                </form>
+
+                <form th:action="@{/users/filter-by-name}" method="post" class="flex items-center">
+                    <input type="text" id="text" name="text" class="w-80 h-10 border border-gray-800 rounded-md">
+                    <button type="submit" class="w-10 h-10 cursor-pointer rounded-md bg-teal-500"><img src="/images/lupa.png"></button>
+                </form>
+            </div>
+
+            <div class="grid grid-rows-1 w-9/12">
+                <span class="grid grid-cols-2 text-lg font-bold text-slate-500 px-2 mb-2">
+                    <label>Name/Surname</label>
+                    <label>Role</label>
+                </span>
+                <span class="grid grid-cols-2 bg-gray-200 py-1 px-2">
+                    <span class="flex flex-row items-center space-x-3 font-semibold">
+                        <img class ="size-9" src="/images/usuario.png">
+                        <label>Pepito Pepe</label>
+                    </span>
+                    <span class="flex flex-row items-center justify-between">
+                        <label>Admin</label>
+                        <button class="flex items-center space-x-1 bg-teal-500 rounded-md text-slate-50 px-2 py-1">
+                            <img class="size-5" src="/images/sobre-nosotros.png">
+                            <label>Overview</label>
+                        </button>
+                    </span>
+                </span>
+                
+                <span class="grid grid-cols-2 py-1 px-2">
+                    <span class="flex flex-row items-center space-x-3 font-semibold">
+                        <img class ="size-9" src="/images/usuario.png">
+                        <label>Pepito Segundo</label>
+                    </span>
+                    <span class="flex flex-row items-center justify-between">
+                        <label>Admin</label>
+                        <button class="flex items-center space-x-1 bg-teal-500 rounded-md text-slate-50 px-2 py-1">
+                            <img class="size-5" src="/images/sobre-nosotros.png">
+                            <label>Overview</label>
+                        </button>
+                    </span>
+                </span>
+                
                 <!-- Iterate over a list of User objects (replace 'users' with your actual list) -->
-                <div th:each="user : ${users}" class="bg-white p-4 rounded-md shadow-md">
+<!--                <div th:each="user : ${users}" class="bg-white p-4 rounded-md shadow-md">
                     <img th:src="@{${user.imagePath}}" alt="User Image" class="w-full h-32 object-cover mb-4 rounded-md">
 
                     <h3 class="text-lg font-semibold mb-2" th:text="${user.name}"></h3>
@@ -28,9 +68,14 @@
                     <a th:href="@{'/profile/' + ${user.id}}" class="bg-blue-500 text-white px-4 py-2 rounded-md inline-block hover:bg-blue-600">
                         View Profile
                     </a>
-                </div>
+                </div>-->
             </div>
         </div>
+
+
+
+
+
 
     </body>
 </html>
