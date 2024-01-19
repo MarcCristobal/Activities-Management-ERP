@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
@@ -25,7 +26,7 @@ public class ActivitiesController {
     private ActivityService activityService;
 
     @GetMapping("/activities")
-    public String listACtivities(Model model) {
+    public String listActivities(Model model) {
         List<Activity> activities = activityService.getAllActivities();
         model.addAttribute("activities", activities);
         return "activities";
@@ -36,9 +37,36 @@ public class ActivitiesController {
         return "activity-form";
     }
 
-    @PostMapping("/activities/crate-activity")
+    @PostMapping("/activities/create-activity")
     public String createActivity(@ModelAttribute Activity activity) {
         activityService.saveOrUpdateActivity(activity);
+        return "redirect:/activities";
+    }
+
+    @GetMapping("/activities/edit-activity/{id}")
+    public String editActivity(@PathVariable("id") long id, Model model) {
+        if (id > 0) {
+            Activity activity = activityService.findActivityById(id);
+            model.addAttribute("activity", activity);
+        }
+        return "activity-form";
+    }
+
+    @GetMapping("/activities/{id}")
+    public String showActivity(@PathVariable("id") long id, Model model) {
+        Activity activity = activityService.findActivityById(id);
+        model.addAttribute("activity", activity);
+        return "activities-overview";
+    }
+
+    @PostMapping("/activities/delete-activity/{id}")
+    public String deleteActivity(@PathVariable("id") long id, Model model) {
+        activityService.deleteActivity(id);
+        return "redirect:/activities";
+    }
+
+    @GetMapping("/activities/cancel")
+    public String cancelAction() {
         return "redirect:/activities";
     }
 

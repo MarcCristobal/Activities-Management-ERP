@@ -34,7 +34,10 @@ public class ActivityService {
             existingActivity.setNumberOfPayments(activity.getNumberOfPayments());
             return activityDao.save(existingActivity);
         }
-        
+        if (!activity.getIsFree()) {
+            activity.setNumberOfPayments(0);
+            activity.setPricePerPerson(0);
+        }
         return activityDao.save(activity);
     }
 
@@ -50,7 +53,7 @@ public class ActivityService {
         return activityDao.findAll();
     }
 
-    public List<Activity> findActivityById(List<Long> id) {
-        return activityDao.findAllById(id);
+    public Activity findActivityById(Long id) {
+        return activityDao.findById(id).orElse(null);
     }
 }
