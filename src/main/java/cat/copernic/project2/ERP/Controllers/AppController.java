@@ -17,24 +17,26 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class AppController {
-        private final UserService userService;
-        
-        @Autowired
-        public AppController(UserService userService){
-                this.userService = userService;
-        }
-        @GetMapping("/")
-        public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
-                if (error != null) {
-                        model.addAttribute("error", error);
-                }
-                boolean hasNotUsers = userService.hasUsers();
-                model.addAttribute("hasNotUsers", hasNotUsers);
-                return "login";
-        }
 
-        @GetMapping("/home")
-        public String showHome() {
-                return "base";
-        }
+          private final UserService userService;
+
+          @Autowired
+          public AppController(UserService userService) {
+                    this.userService = userService;
+          }
+
+          @GetMapping("/")
+          public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
+                    if (error != null) {
+                              model.addAttribute("error", error);
+                    }
+                    boolean hasNotUsers = userService.hasUsers();
+                    model.addAttribute("hasNotUsers", hasNotUsers);
+                    return "login";
+          }
+
+          @GetMapping("/home")
+          public String showHome() {
+                    return "base";
+          }
 }
