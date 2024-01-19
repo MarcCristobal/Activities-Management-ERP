@@ -7,6 +7,7 @@ package cat.copernic.project2.ERP.services;
 
 import cat.copernic.project2.ERP.dao.UserDao;
 import cat.copernic.project2.ERP.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,29 +19,30 @@ public class LoginAttemptService {
     private final int MAX_ATTEMPT = 3;
     private final UserDao userDao;
 
+    @Autowired
     public LoginAttemptService(UserDao personDao){
         this.userDao = personDao;
     }
 
     public void incrementFailedAttempts(String username){
-        /*User person = userDao.findByEmail(username);
-        person.setFailedAttempts(person.getFailedAttempts()+1);
-        if (person.getFailedAttempts() >= MAX_ATTEMPT) {
-            person.setAccountNonLocked(false); // Bloquea la cuenta del usuario
+        User user = userDao.findByEmail(username);
+        user.setFailedAttempts(user.getFailedAttempts()+1);
+        if (user.getFailedAttempts() >= MAX_ATTEMPT) {
+            user.setAccountNonLocked(false); // Bloquea la cuenta del usuario
         }
-        userDao.save(person); // Guarda los cambios en la base de datos*/
+        userDao.save(user); // Guarda los cambios en la base de datos*/
     }
 
     public void resetFailedAttempts(String username){
-       /* User person = userDao.findByEmail(username);
+        User person = userDao.findByEmail(username);
         person.setFailedAttempts(0);
         person.setAccountNonLocked(true); // Desbloquea la cuenta del usuario
-        userDao.save(person); // Guarda los cambios en la base de datos*/
+        userDao.save(person); // Guarda los cambios en la base de datos
     }
 
-    /*public boolean isUserBlocked(String username) {
+    public boolean isUserBlocked(String username) {
         User user = userDao.findByEmail(username);
-        return !person.isAccountNonLocked();
-    }*/
+        return !user.isAccountNonLocked();
+    }
 }
 

@@ -4,7 +4,7 @@
         <title>Activity Information</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet">
     </head>
     <body>
         <div th:replace="header :: div"></div>
@@ -12,7 +12,8 @@
 
         <div class="space-y-6 mx-8 my-6">
             <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Activities</span> > Add Activity<span></span></label>
-            <form class="grid grid-cols-3" th:object="${activity}" th:action="@{/activity}" method="post">
+            <form class="grid grid-cols-3" th:object="${activity}" th:action="@{/activities/create-activity}" method="post">
+                <input type=hidden th:field="*{id}">
                 <div class="grid grid-rows-1 space-y-2">
                     <span class="text-gray-500 text-xl mr-80">Information</span>
 
@@ -70,21 +71,29 @@
                         <label for="numberOfPayments" class="font-bold">Number of payments</label>
                         <input type="numberOfPayments"id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}" required>                
                     </span>
+
+                    <div class="flex justify-end">
+                        <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
+                        <a th:href="@{/activities}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
+                    </div>
                 </div>
 
-                <div class="grid grid-rows-1 space-y-2">
-                    <span class="text-gray-500 text-xl">Resources</span>
+                <!--                <div class="grid grid-rows-1 space-y-2">
+                                    <span class="text-gray-500 text-xl">Resources</span>
+                                    <input type="text" id="resource" class="border p-1 border-gray-800">
+                                    <input type="button" class="bg-teal-600 text-white px-1 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Add">
+                                    <div id="resourcelist" class="border p-1 border-gray-800 w-full mt-4"></div>
+                
+                                </div>
+                
+                                <div class="grid grid-rows-1 space-y-2">
+                                    <span class="text-gray-500 text-xl">Requirements</span>
+                                    <input type="text" id="requirement" class="border p-1 border-gray-800">
+                                    <input type="button" class="bg-teal-600 text-white px-1 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Add">
+                                    <div id="resourcelist" class="border p-1 border-gray-800 w-full mt-4"></div>
+                                </div>-->
 
-                </div>
 
-                <div class="grid grid-rows-1 space-y-2">
-                    <span class="text-gray-500 text-xl">Requirements</span>
-                </div>
-
-                <div class="flex justify-end">
-                    <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
-                    <input type="submit" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer" value="Cancel">
-                </div>
             </form>
         </div>
     </body>

@@ -11,5 +11,5 @@ import cat.copernic.project2.ERP.domain.Activity;
  * @author oscar
  */
 public interface ActivityDao extends GenericDao<Activity, Long> {
-        
+
 }

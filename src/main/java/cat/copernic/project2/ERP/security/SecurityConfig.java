@@ -4,8 +4,9 @@
  */
 package cat.copernic.project2.ERP.security;
 
-
-
+import cat.copernic.project2.ERP.dao.UserDao;
+import cat.copernic.project2.ERP.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  *
@@ -26,42 +28,51 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationEn
 public class SecurityConfig {
 
 
-          private final CustomAuthenticationFailureHandler authenticationFailureHandler;
+        private final CustomAuthenticationFailureHandler authenticationFailureHandler;
+        private final UserDao userDao;
 
-          @Autowired
-          public SecurityConfig(CustomAuthenticationFailureHandler authenticationFailureHandler) {
-                    this.authenticationFailureHandler = authenticationFailureHandler;
+        @Autowired
+        public SecurityConfig(CustomAuthenticationFailureHandler authenticationFailureHandler, UserDao userDao) {
+                this.authenticationFailureHandler = authenticationFailureHandler;
+                this.userDao = userDao;
+        }
 
-          }
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                        .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/css/**").permitAll()
+                        .requestMatchers(new RegisterRequestMatcher()).permitAll()
+                        .requestMatchers("/").permitAll()
+                        .anyRequest().authenticated())
+                        .formLogin(login -> login
+                        .loginPage("/")
+                        .defaultSuccessUrl("/home", true)
+                        .failureHandler(authenticationFailureHandler))
+                        .logout(logout -> logout
+                        .logoutUrl("/my/ownlogout") // Custom logout URL
+                        .logoutSuccessUrl("/")); // Redirect to custom login page after logout
+                return http.build();
+        }
 
-          @Bean
-          public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                    http
-                            // Disable CSRF protection
-                            .authorizeHttpRequests(authorize -> authorize
-                            .requestMatchers("/images/**").permitAll()
-                            .requestMatchers("/css/**").permitAll()
-                            .requestMatchers("/").permitAll()
-                            .anyRequest().authenticated())
-                            .formLogin(login -> login
-                            .loginPage("/").defaultSuccessUrl("/home")
-                            .failureHandler(authenticationFailureHandler))
-                            .logout(logout -> logout
-                            .logoutUrl("/my/ownlogout") // Custom logout URL
-                            .logoutSuccessUrl("/")); // Redirect to custom login page after logout
-                    return http.build();
-          }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-          @Bean
-          public PasswordEncoder passwordEncoder() {
-                    return new BCryptPasswordEncoder();
-          }
-
-          @Bean
-          public AuthenticationEntryPoint authenticationEntryPoint() {
-                    BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-                    entryPoint.setRealmName("admin realm");
-                    return entryPoint;
-          }
+        @Bean
+        public AuthenticationEntryPoint authenticationEntryPoint() {
+                BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+                entryPoint.setRealmName("admin realm");
+                return entryPoint;
+        }
+        private class RegisterRequestMatcher implements RequestMatcher {
+        @Override
+        public boolean matches(HttpServletRequest request) {
+            // Solo permite el acceso a /register si no hay usuarios
+            return request.getServletPath().equals("/register") && userDao.count()==0;
+        }
+    }
 
 }

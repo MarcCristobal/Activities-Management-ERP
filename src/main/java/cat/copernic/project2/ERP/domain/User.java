@@ -20,26 +20,33 @@ import lombok.Data;
 @Data
 @Entity
 public class User {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        
-        @Column(length = 50)
-        private String name;
-        
-        @Column(length = 50)
-        private String surname;
-        
-        @Column(length = 50)
-        private String email;
-        
-        @Column(length = 64)
-        private String password;
 
-        @Enumerated(EnumType.STRING)
-        @Column(length = 15)
-        private UserRole role;
-        
-        @Column(length = 256)
-        private String photoPath;
+          @Id
+          @GeneratedValue(strategy = GenerationType.IDENTITY)
+          private Long id;
+
+          @Column(length = 50)
+          private String name;
+
+          @Column(length = 50)
+          private String surname;
+
+          @Column(length = 50, unique = true)
+          private String email;
+
+          @Column(length = 64)
+          private String password;
+
+          @Enumerated(EnumType.STRING)
+          private UserRole role;
+
+          @Column(length = 256)
+          private String photoPath;
+          
+          @Column(length = 5)
+          private int failedAttempts;
+          
+          private boolean accountNonLocked = true;
 }
+
+

@@ -43,33 +43,22 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
           public Authentication authenticate(Authentication authentication) throws AuthenticationException {
                     String username = authentication.getName();
                     String password = authentication.getCredentials().toString();
-                    if (username.equals("admin@admin")) {
-                              // Comprueba si la contraseña es correcta
-                              if (password.equals("admin")) {
-                                        // Crea un usuario en memoria con la autoridad ROLE_ADMIN
-                                        return new UsernamePasswordAuthenticationToken(username, password, Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-                              } else {
-                                        throw new BadCredentialsException("Contraseña incorrecta.");
-                              }
-                    }
                     User user = userRepository.findByEmail(username);
                     if (user == null) {
                               throw new UsernameNotFoundException("Usuario no encontrado");
                     }
-                    /*if (!person.isAccountNonLocked()) {
+                    if (!user.isAccountNonLocked()) {
                               throw new UserBlockedException("La cuenta está bloqueada");
                     }
-                    if (!passwordEncoder.matches(password, person.getPassword())) {
+                    if (!passwordEncoder.matches(password, user.getPassword())) {
                               // Incrementa el número de intentos fallidos y guarda el usuario
-                              person.setFailedAttempts(person.getFailedAttempts() + 1);
-                              userRepository.save(person);
 
                               // Lanza una excepción personalizada
-                              throw new BadCredentialsException("Contraseña incorrecta. Te quedan " + (MAX_ATTEMPTS - person.getFailedAttempts()) + " intentos.");
+                              throw new BadCredentialsException("Contraseña incorrecta. Te quedan " + (MAX_ATTEMPTS - user.getFailedAttempts()) + " intentos.");
                     }
 
                     // Si la autenticación es exitosa, resetea los intentos fallidos
-                    person.setFailedAttempts(0);*/
+                    user.setFailedAttempts(0);
                     userRepository.save(user);
 
                     return new UsernamePasswordAuthenticationToken(username, password, getAuthorities(user));
