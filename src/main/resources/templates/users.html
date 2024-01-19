@@ -1,4 +1,3 @@
-<!-- src/main/resources/templates/user-list.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -6,31 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User List</title>
     <!-- Include Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link th:href="@{/css/tailwind.css}" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-<div th:replace="~{header :: header}"></div>
+    <div th:replace="header :: div"></div>
+    <div th:replace="nav :: div"></div>
 <div class="container mx-auto mt-8">
     <h2 class="text-2xl font-bold mb-4">User List</h2>
     <form th:action="@{/home/users/user-form}" method="get">
     <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Add User</button>
 </form>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Iterate over a list of User objects (replace 'users' with your actual list) -->
-        <div th:each="user : ${users}" class="bg-white p-4 rounded-md shadow-md">
-            <img th:src="@{${user.imagePath}}" alt="User Image" class="w-full h-32 object-cover mb-4 rounded-md">
-
-            <h3 class="text-lg font-semibold mb-2" th:text="${user.name}"></h3>
-            <p class="text-gray-500 mb-2" th:text="${user.role}"></p>
-
-            <a th:href="@{'/profile/' + ${user.id}}" class="bg-blue-500 text-white px-4 py-2 rounded-md inline-block hover:bg-blue-600">
-                View Profile
-            </a>
-        </div>
-    </div>
+    <table class="table-auto w-full mt-4">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">Image</th>
+                <th class="px-4 py-2">Name</th>
+                <th class="px-4 py-2">Surname</th>
+                <th class="px-4 py-2">Role</th>
+                <th class="px-4 py-2">Profile</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Iterate over a list of User objects (replace 'users' with your actual list) -->
+            <tr th:each="user : ${users}">
+                <td class="border px-4 py-2"><img th:src="@{${user.photoPath}}" alt="User Image" class="w-20 h-20 object-cover rounded-md"></td>
+                <td class="border px-4 py-2" th:text="${user.name}"></td>
+                <td class="border px-4 py-2" th:text="${user.surname}"></td>
+                <td class="border px-4 py-2" th:text="${user.role}"></td>
+                <td class="border px-4 py-2"><a th:href="@{'/profile/' + ${user.id}}" class="bg-blue-500 text-white px-4 py-2 rounded-md inline-block hover:bg-blue-600">View Profile</a></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-
 </body>
 </html>
-

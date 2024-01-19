@@ -4,7 +4,9 @@
  */
 package cat.copernic.project2.ERP.domain;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,8 +15,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -34,10 +39,12 @@ public class Activity {
     @Column(length = 100)
     private String place;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     private boolean isFree;
@@ -52,6 +59,16 @@ public class Activity {
 
     @Column(length = 10)
     private int numberOfPayments;
+
+    @ElementCollection
+    @CollectionTable(name = "activity_resources", joinColumns = @JoinColumn(name = "activity_id"))
+    @Column(name = "resource")
+    private List<String> resources = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "activity_resources", joinColumns = @JoinColumn(name = "activity_id"))
+    @Column(name = "resource")
+    private List<String> requirements = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "monitor_id")
