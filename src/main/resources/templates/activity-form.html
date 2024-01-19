@@ -13,79 +13,49 @@
         <div class="space-y-6 mx-8 my-6">
             <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Activities</span> > Add Activity<span></span></label>
             <form class="grid grid-cols-3" th:object="${activity}" th:action="@{/activity}" method="post">
-                <div class="grid grid-rows-1 space-y-2">
+                <div class="grid grid-rows-1 space-y-4">
                     <span class="text-gray-500 text-xl mr-80">Information</span>
 
                     <span class="flex flex-col">
                         <label for="name" class="font-bold">Title</label>                        
                         <input type="text" id="name" class="border p-1 border-gray-800" th:field="*{name}" required>
                     </span>
-
-                    <span class="flex flex-col">
-                        <label for="place" class="font-bold">Place</label>
-                        <input type="text" id="place" class="border p-1 border-gray-800" th:field="*{place}" required>                        
-                    </span>
-
-                    <span class="grid grid-cols-2">
-                        <span class="flex flex-col">
-                            <label for="startDate" class="font-bold mr-24">Start Date</label>
-                            <input type="date" id="startDate" class="border p-1 border-gray-800 mr-2 w-40" th:field="*{startDate}" required>                            
-                        </span>
-
-                        <span class="flex flex-col">
-                            <label for="endDate" class="font-bold">End Date</label>
-                            <input type="date" id="endDate" class="border p-1 border-gray-800 w-40" th:field="*{endDate}" required>
-                        </span>
-                    </span>
-
-                    <span class="grid grid-cols-2">
-                        <span class="flex flex-col">
-                            <label for="isFree" class="font-bold mr-10">Payment Activity</label>
-                            <span class="flex flex-row">
-                                <label for="yes" class="font-bold">Yes</label>
-                                <input type="radio" id="isFree" class="border p-1 border-gray-800 mr-2" th:field="*{isFree}" value="true">
-                                <label for="no" class="font-bold">No</label>
-                                <input type="radio" id="isNotFree" class="border p-1 border-gray-800 mr-16" th:field="*{isFree}" value="false">
-                            </span>
-                        </span>
-
-                        <span class="flex flex-col">                            
-                            <label for="participantLimit" class="form-label font-bold">Participants</label>
-                            <span class="flex flex-row">
-                                <label for="limited" class="font-bold">Limited</label>
-                                <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}">
-                                <label for="numberOfParticipants" class="font-bold">Num</label>
-                                <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" required>
-                            </span>
-                        </span>
-                    </span>
-
-                    <span>
-                        <label for="pricePerPerson" class="font-bold">Price per person</label>
-                        <input type="pricePerPerson" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}" required>
-                        <label for="€" class="font-bold">€</label>                        
-                    </span>
-
-                    <span>
-                        <label for="numberOfPayments" class="font-bold">Number of payments</label>
-                        <input type="numberOfPayments"id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}" required>                
-                    </span>
+                    <label for="place" class="font-bold">Place</label>
+                    <input type="text" id="place" class="border p-1 border-gray-800" th:field="*{place}" required>
+                    <label for="startDate" class="font-bold mr-24">Start Date</label>
+                    <label for="endDate" class="font-bold">End Date</label>
+                    <input type="date" id="startDate" class="border p-1 border-gray-800 mr-2 w-40" th:field="*{startDate}" required>
+                    <input type="date" id="endDate" class="border p-1 border-gray-800 w-40" th:field="*{endDate}" required>
+                    <label for="isFree" class="font-bold mr-10">Payment Activity</label>
+                    <label for="participantLimit" class="form-label font-bold">Participants</label>
+                    <label for="yes" class="font-bold">Yes</label>
+                    <input type="radio" id="isFree" class="border p-1 border-gray-800 mr-2" th:field="*{isFree}" value="true">
+                    <label for="no" class="font-bold">No</label>
+                    <input type="radio" id="isNotFree" class="border p-1 border-gray-800 mr-16" th:field="*{isFree}" value="false">
+                    <label for="limited" class="font-bold">Limited</label>
+                    <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}">
+                    <label for="numberOfParticipants" class="font-bold">Num</label>
+                    <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" required>
+                    <label for="pricePerPerson" class="font-bold">Price per person</label>
+                    <input type="pricePerPerson" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}" required>
+                    <label for="€" class="font-bold">€</label>
+                    <label for="numberOfPayments" class="font-bold">Number of payments</label>
+                    <input type="numberOfPayments"id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}" required>                
                 </div>
-
-                <div class="grid grid-rows-1 space-y-2">
+                <div>
                     <span class="text-gray-500 text-xl">Resources</span>
 
                 </div>
-
-                <div class="grid grid-rows-1 space-y-2">
+                <div>
                     <span class="text-gray-500 text-xl">Requirements</span>
                 </div>
-
-                <div class="flex justify-end">
-                    <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
-                    <input type="submit" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer" value="Cancel">
-                </div>
             </form>
+
+
+            <div class="flex justify-end">
+                <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
+                <input type="submit" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer" value="Cancel">
+            </div>
         </div>
     </body>
 </html>
