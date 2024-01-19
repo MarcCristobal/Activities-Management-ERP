@@ -6,6 +6,7 @@ package cat.copernic.project2.ERP.controllers;
 
 import cat.copernic.project2.ERP.domain.User;
 import cat.copernic.project2.ERP.security.CustomAuthenticationProvider;
+import cat.copernic.project2.ERP.services.PasswordGenerator;
 import cat.copernic.project2.ERP.services.UserService;
 import java.io.IOException;
 import java.util.List;
@@ -30,12 +31,14 @@ public class UserController {
         private final UserService userService;
         private final CustomAuthenticationProvider authenticationProvider;
         private final AuthenticationManagerBuilder authenticationManagerBuilder;
+        private final PasswordGenerator passwordGenerator;
 
         @Autowired
-        public UserController(UserService userService, CustomAuthenticationProvider authenticationProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+        public UserController(UserService userService, CustomAuthenticationProvider authenticationProvider, AuthenticationManagerBuilder authenticationManagerBuilder, PasswordGenerator passwordGenerator) {
                 this.userService = userService;
                 this.authenticationProvider = authenticationProvider;
                 this.authenticationManagerBuilder = authenticationManagerBuilder;
+                this.passwordGenerator = passwordGenerator;
         }
 
         @GetMapping("/register")
@@ -76,7 +79,7 @@ public class UserController {
         }
 
         @GetMapping("/home/users/user-form")
-        public String showUserForm(Model model) {
+        public String showUserForm( Model model) {
                 User user = new User();
                 model.addAttribute("user", user);
                 return "userForm";
@@ -98,6 +101,7 @@ public class UserController {
                         user.setPhotoPath(photoPath);
 
                         // Guardamos el usuario
+                        user.setPassword(passwordGenerator.generateRandomPassword(8));
                         userService.saveOrUpdateUser(user);
                 } catch (IOException e) {
                         // Manejamos la excepción
