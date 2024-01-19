@@ -8,59 +8,68 @@
         <!-- Include Tailwind CSS -->
         <link th:href="@{/css/tailwind.css}" rel="stylesheet">
     </head>
-    <body class="bg-gray-100">
+    <body>
         <div th:replace="header :: div"></div>
         <div th:replace="nav :: div"></div>
-        
-        <div class="container mx-auto mt-8">
-            <h2 class="text-2xl font-bold mb-4">Create User</h2>
 
-            <form th:object="${user}" th:action="@{/home/users/update}" method="post" enctype="multipart/form-data" class="max-w-md mx-auto p-6 bg-white rounded-md shadow-md">
+        <div class="space-y-16 mx-8 my-6">
+            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Users</span> > New User<span></span></label>
+
+            <form th:object="${user}" th:action="@{/home/users/update}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
                 <input type="hidden" th:field="*{id}">
-                <!-- Name -->
-                <div class="mb-4">
-                    <label for="name" class="block text-gray-600 text-sm font-medium mb-2">Name:</label>
-                    <input type="text" id="name" name="name" class="w-full px-3 py-2 border rounded-md" th:field="*{name}" required>
-                </div>
+                <div class="flex flex-row flex-grow space-x-10">
 
-                <!-- Surname -->
-                <div class="mb-4">
-                    <label for="surname" class="block text-gray-600 text-sm font-medium mb-2">Surname:</label>
-                    <input type="text" id="surname" name="surname" class="w-full px-3 py-2 border rounded-md" th:field="*{surname}" required>
-                </div>
+                    <!-- Photo -->
+                    <div class="space-y-6">
+                        <img class="size-36" src="/images/usuario2.png">
+                        <label for="photo" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
+                            <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
+                            <span class="text-white">Photo</span>
+                        </label>
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden">
+                    </div> 
 
-                <!-- Email -->
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-600 text-sm font-medium mb-2">Email:</label>
-                    <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded-md" th:field="*{email}" required>
-                </div>
+                    <div class="grid-rows-1 space-y-4">    
+                        <span class="text-gray-500 text-xl mr-80 pb-5">Personal Information</span>
 
-                <!-- Role -->
-                <div class="mb-4">
-                    <label for="role" class="block text-gray-600 text-sm font-medium mb-2">Role:</label>
-                    <select id="role" name="role" class="w-full px-3 py-2 border rounded-md" th:field="*{role}" required>
-                        <option value="">Select a role</option>
-                        <option value="ACTIVITIES_COORDINATOR">Activities Coordinator</option>
-                        <option value="MONITOR">Monitor</option>
-                        <option value="CONCIERGE">Concierge</option>
-                        <option value="ADMIN">Admin</option>
-                    </select>
-                </div>
+                        <span class="flex flex-col">
+                            <label for="name" class="font-bold">Name</label>
+                            <input type="text" id="name" name="name" class="border p-1 border-gray-800" th:field="*{name}" required>
+                        </span>
 
+                        <span class="flex flex-col">
+                            <label for="name" class="font-bold">Surname</label>
+                            <input type="text" id="surname" name="surname" class="border p-1 border-gray-800"  th:field="*{surname}" required>
+                        </span>
 
-                <!-- Photo -->
-                <div class="mb-4">
-                    <label for="photo" class="block text-gray-600 text-sm font-medium mb-2">Photo:</label>
-                    <input type="file" id="photo" name="photo" accept="images/*" class="w-full px-3 py-2 border rounded-md">
-                </div>
+                        <span class="flex flex-col">
+                            <label for="email" class="font-bold">Email:</label>
+                            <input type="email" id="email" name="email" class="border p-1 border-gray-800" th:field="*{email}" required>
+                        </span>
 
+                        <span class="flex flex-row space-x-4 items-center justify-between">
+                            <label class="font-bold">Role</label>
 
-                <!-- Submit Button -->
-                <div class="mb-4">
-                    <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Create User</button>
+                            <input type="radio" class="peer/coordinator hidden" id="coordinator" name="role" value="ACTIVITIES_COORDINATOR" th:field="*{role}" required>
+                            <label for="coordinator" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/coordinator:bg-teal-500">Coordinator</label>
+
+                            <input type="radio" class="peer/monitor hidden" id="monitor" name="role" value="MONITOR" th:field="*{role}" required>
+                            <label for="monitor" class="cursor-pointer border px-1 border-gray-800 peer-checked/monitor:bg-teal-500">Monitor</label>
+
+                            <input type="radio" class="peer/concierge hidden" id="concierge" name="role" value="CONCIERGE"th:field="*{role}" required>
+                            <label for="concierge" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/concierge:bg-teal-500">Concierge</label>
+
+                            <input type="radio" class="peer/admin hidden" id="admin" name="role" value="ADMIN" th:field="*{role}" required>
+                            <label for="admin" class="cursor-pointer border px-1 border-gray-800 peer-checked/admin:bg-teal-500">Admin</label>
+                        </span>
+
+                        <span class="flex flex-row justify-end">
+                            <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
+                            <a th:href="@{/home/users}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
+                        </span>
+                    </div>
                 </div>
             </form>
         </div>
-
     </body>
 </html>

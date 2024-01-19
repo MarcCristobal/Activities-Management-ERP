@@ -94,7 +94,7 @@ public class UserController {
                                 photoPath = userService.savePhoto(photo);
                         } else {
                                 // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
-                                photoPath = "/images/usuario.png";
+                                photoPath = "/images/usuario2.png";
                         }
 
                         // Establecemos la ruta de la foto en el usuario
@@ -128,7 +128,7 @@ public class UserController {
         public String showUserProfile(@PathVariable("id") Long id, Model model) {
                 User user = userService.findById(id);
                 model.addAttribute("user", user);
-                return "userProfile";
+                return "userOverview";
         }
 
 }

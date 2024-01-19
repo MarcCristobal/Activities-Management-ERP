@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User List</title>
-    <!-- Include Tailwind CSS -->
-    <link th:href="@{/css/tailwind.css}" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
-    <div th:replace="header :: div"></div>
-    <div th:replace="nav :: div"></div>
-<div class="container mx-auto mt-8">
-    <h2 class="text-2xl font-bold mb-4">User List</h2>
-    <form th:action="@{/home/users/user-form}" method="get">
-    <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Add User</button>
-</form>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>User List</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div th:replace="header :: div"></div>
+        <div th:replace="nav :: div"></div>
 
-    <table class="table-auto w-full mt-4">
-        <thead>
-            <tr>
-                <th class="px-4 py-2">Image</th>
-                <th class="px-4 py-2">Name</th>
-                <th class="px-4 py-2">Surname</th>
-                <th class="px-4 py-2">Role</th>
-                <th class="px-4 py-2">Profile</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Iterate over a list of User objects (replace 'users' with your actual list) -->
-            <tr th:each="user : ${users}">
-                <td class="border px-4 py-2"><img th:src="@{${user.photoPath}}" alt="User Image" class="w-20 h-20 object-cover rounded-md"></td>
-                <td class="border px-4 py-2" th:text="${user.name}"></td>
-                <td class="border px-4 py-2" th:text="${user.surname}"></td>
-                <td class="border px-4 py-2" th:text="${user.role}"></td>
-                <td class="border px-4 py-2"><a th:href="@{'/profile/' + ${user.id}}" class="bg-blue-500 text-white px-4 py-2 rounded-md inline-block hover:bg-blue-600">View Profile</a></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-</body>
+        <div class="space-y-6 mx-8 my-6">
+            <label class="p-2 text-orange-500 bg-gray-200 text-sm">Users</label>
+            <div class="flex items-center">
+                <form th:action="@{/home/users/user-form}" method="get" class="flex flex-grow items-center">
+                    <button type="submit" class="w-10 h-10 cursor-pointer"><img src="/images/anadir.png"></button>
+                </form>
+
+                <form class="flex items-center">
+                    <input type="text" id="text" name="text" class="w-80 h-10 border border-gray-800 rounded-md">
+                    <button class="w-10 h-10 cursor-pointer rounded-md bg-teal-500"><img src="/images/lupa.png"></button>
+                </form>
+            </div>
+
+            <div class="grid grid-rows-1 w-9/12">
+                <span class="grid grid-cols-2 text-lg font-bold text-slate-500 px-2 mb-2">
+                    <label>Name/Surname</label>
+                    <label>Role</label>
+                </span>
+
+                <div th:each="user : ${users}">
+                    <span class="grid grid-cols-2 py-1 px-2">
+                        <span class="flex flex-row items-center space-x-3 font-semibold">
+                            <img class ="size-9" th:src="@{${user.photoPath}}">
+                            <label th:text="${user.name}"></label>
+                        </span>
+                        <span class="flex flex-row items-center justify-between">
+                            <label th:text="${user.role}"></label>
+                            <a th:href="@{'/home/users/' + ${user.id}}" class="flex items-center space-x-1 bg-teal-500 rounded-md text-slate-50 px-2 py-1">
+                                <img class="size-5" src="/images/sobre-nosotros.png">
+                                <label>Overview</label>
+                            </a>
+                        </span>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </body>
 </html>
