@@ -7,8 +7,9 @@
         <link th:href="@{/css/tailwind.css}" rel="stylesheet">
     </head>
     <body>
-        <div th:replace="header :: div"></div>
-        <div th:replace="nav :: div"></div>
+        <div th:replace="~{header :: div}"></div>
+        <div th:replace="~{nav :: div}"></div>
+
 
         <div class="space-y-6 mx-8 my-6">
             <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Activities</span><span th:text="' > ' + ${activity.name}"></span></label>
@@ -63,6 +64,6 @@
 
 
 
-        
+
     </body>
 </html>

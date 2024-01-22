@@ -11,6 +11,7 @@ import cat.copernic.project2.ERP.services.UserService;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import cat.copernic.project2.ERP.services.MailSenderService;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,13 +33,15 @@ public class UserController {
         private final CustomAuthenticationProvider authenticationProvider;
         private final AuthenticationManagerBuilder authenticationManagerBuilder;
         private final PasswordGenerator passwordGenerator;
+        private final MailSenderService javaMailSender;
 
         @Autowired
-        public UserController(UserService userService, CustomAuthenticationProvider authenticationProvider, AuthenticationManagerBuilder authenticationManagerBuilder, PasswordGenerator passwordGenerator) {
+        public UserController(UserService userService, CustomAuthenticationProvider authenticationProvider, AuthenticationManagerBuilder authenticationManagerBuilder, PasswordGenerator passwordGenerator, MailSenderService javaMailSender) {
                 this.userService = userService;
                 this.authenticationProvider = authenticationProvider;
                 this.authenticationManagerBuilder = authenticationManagerBuilder;
                 this.passwordGenerator = passwordGenerator;
+                this.javaMailSender = javaMailSender;
         }
 
         @GetMapping("/register")
@@ -102,8 +105,10 @@ public class UserController {
 
                         // Guardamos el usuario
                         user.setPassword(passwordGenerator.generateRandomPassword(8));
+                        javaMailSender.sendEmail(user.getEmail(), "Cuenta Activities ERP", "Aqui tiene sus credenciales nuevas y el link para regenerar la contraseña:"+user.getPassword());
                         userService.saveOrUpdateUser(user);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                         // Manejamos la excepción
                         System.out.println(e.getMessage());
                 }
