@@ -4,8 +4,7 @@
  */
 package cat.copernic.project2.ERP.dao;
 
-import cat.copernic.project2.ERP.domain.Activity;
-import java.util.Date;
+import cat.copernic.project2.ERP.domain.Customer;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,12 +13,9 @@ import org.springframework.data.repository.query.Param;
  *
  * @author oscar
  */
-public interface ActivityDao extends GenericDao<Activity, Long> {
+public interface CustomerDao extends GenericDao<Customer, Long> {
 
-    @Query("SELECT a FROM Activity a WHERE a.name LIKE %:name%")
-    List<Activity> findActivitiesByName(@Param("name") String name);
-
-    @Query("SELECT a FROM Activity a WHERE a.startDate >= :date")
-    List<Activity> findActivitiesByDate(@Param("date") Date date);
+    @Query("SELECT c FROM Customer c WHERE c.name LIKE %:name%")
+    List<Customer> findCustomerByName(@Param("name") String name);
 
 }

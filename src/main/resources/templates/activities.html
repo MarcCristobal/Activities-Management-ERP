@@ -17,19 +17,25 @@
                     <button type="submit" class="w-10 h-10 cursor-pointer"><img src="/images/anadir.png"></button>
                 </form>
 
-                <form class="flex items-center">
-                    <input type="text" id="text" name="text" class="w-80 h-10 border border-gray-800 rounded-md">
-                    <button class="w-10 h-10 cursor-pointer rounded-md bg-teal-500"><img src="/images/lupa.png"></button>
-                </form>
+                <div class="flex items-center">
+                    <form th:action="@{/filtered-activities-by-name}" method="get" class="flex items-center">
+                        <input type="text" id="name" name="name" class="w-80 h-10 border border-gray-800 rounded-md">
+                        <button type="submit" class="w-10 h-10 cursor-pointer rounded-md bg-teal-500">
+                            <img src="/images/lupa.png">
+                        </button>
+                    </form>
+                </div>
             </div>
             <div class="flex items-center">
                 <form class="flex flex-grow items-center">
                     <button type="submit" class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer">Add Participants</button>                   
                 </form>
 
-                <form class="flex items-center">                    
-                    <input type="text" id="date" name="date" class="text-center w-32 h-8 border rounded-md border-gray-800">
-                    <button class="w-8 h-8 cursor-pointer"><img src="/images/calendario.png"></button>
+                <form th:action="@{/filtered-activities-by-date}" method="get" class="flex items-center">                
+                    <input type="date" id="date" name="date" class="text-center w-32 h-8 border rounded-md border-gray-800">
+                    <button type = "submit" class="w-8 h-8 cursor-pointer">
+                        <img src="/images/calendario.png">
+                    </button>
                 </form>
             </div>
 
@@ -51,7 +57,5 @@
 
             </div>
         </div>
-
-
     </body>
 </html>

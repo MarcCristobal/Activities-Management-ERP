@@ -40,6 +40,12 @@
                         </span>
                     </span>
 
+                    <div th:if="${dateError}">
+                        <div class="popup">
+                            <p class="error-message" style="color: red;">The start date cannot be after the end date.</p>
+                        </div>
+                    </div>
+
                     <span class="grid grid-cols-2">
                         <span class="flex flex-col">
                             <label for="isFree" class="font-bold mr-10">Payment Activity</label>
@@ -56,21 +62,21 @@
                             <span class="flex flex-row">
                                 <label for="limited" class="font-bold">Limited</label>
                                 <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}">
-                                <label for="numberOfParticipants" class="font-bold">Num</label>
-                                <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" required>
+                                <label for="participantLimit" class="font-bold">Num</label>
+                                <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" th:field="*{participantLimit}" required>
                             </span>
                         </span>
                     </span>
 
                     <span>
                         <label for="pricePerPerson" class="font-bold">Price per person</label>
-                        <input type="pricePerPerson" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}" required>
+                        <input type="text" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}">
                         <label for="€" class="font-bold">€</label>                        
                     </span>
 
                     <span>
                         <label for="numberOfPayments" class="font-bold">Number of payments</label>
-                        <input type="numberOfPayments"id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}" required>                
+                        <input type="text"id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}">                
                     </span>
 
                     <div class="flex justify-end">
