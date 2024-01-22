@@ -34,10 +34,6 @@ public class ActivityService {
             existingActivity.setNumberOfPayments(activity.getNumberOfPayments());
             return activityDao.save(existingActivity);
         }
-        if (!activity.getIsFree()) {
-            activity.setNumberOfPayments(0);
-            activity.setPricePerPerson(0);
-        }
         return activityDao.save(activity);
     }
 
