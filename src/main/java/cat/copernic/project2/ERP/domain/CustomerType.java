@@ -6,11 +6,10 @@ package cat.copernic.project2.ERP.domain;
 
 /**
  *
- * @author brandon
+ * @author oscar
  */
-public enum UserRole {
-    ACTIVITIES_COORDINATOR,
-    MONITOR,
-    CONCIERGE,
-    ADMIN;
+public enum CustomerType {
+    STUDENT,
+    NEIGHBOR,
+    TEACHER;
 }

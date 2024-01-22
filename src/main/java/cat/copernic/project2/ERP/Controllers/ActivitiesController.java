@@ -4,8 +4,12 @@
  */
 package cat.copernic.project2.ERP.Controllers;
 
+import cat.copernic.project2.ERP.dao.ActivityDao;
 import cat.copernic.project2.ERP.domain.Activity;
 import cat.copernic.project2.ERP.services.ActivityService;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -24,6 +29,9 @@ public class ActivitiesController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private ActivityDao activityDao;
 
     @GetMapping("/activities")
     public String listActivities(Model model) {
@@ -38,9 +46,16 @@ public class ActivitiesController {
     }
 
     @PostMapping("/activities/create-activity")
-    public String createActivity(@ModelAttribute Activity activity) {
-        activityService.saveOrUpdateActivity(activity);
-        return "redirect:/activities";
+    public String createActivity(@ModelAttribute Activity activity, Model model) {
+        boolean isValid = validateDates(activity.getStartDate(), activity.getEndDate());
+
+        if (isValid) {
+            activityService.saveOrUpdateActivity(activity);
+            return "redirect:/activities";
+        } else {
+            model.addAttribute("dateError", true);
+            return "activity-form";
+        }
     }
 
     @GetMapping("/activities/edit-activity/{id}")
@@ -70,4 +85,26 @@ public class ActivitiesController {
         return "redirect:/activities";
     }
 
+    @GetMapping("/filtered-activities-by-name")
+    public String filterActivitiesByName(@RequestParam("name") String name, Model model) {
+        List<Activity> filteredActivities = activityDao.findActivitiesByName(name);
+        model.addAttribute("activities", filteredActivities);
+        return "activities";
+    }
+
+    @GetMapping("/filtered-activities-by-date")
+    public String filterActivitiesByDate(@RequestParam("date") String dateString, Model model) {
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+            List<Activity> filteredActivities = activityDao.findActivitiesByDate(date);
+            model.addAttribute("activities", filteredActivities);
+            return "activities";
+        } catch (ParseException pe) {
+            return "activities";
+        }
+    }
+
+    private boolean validateDates(Date startDate, Date endDate) {
+        return startDate == null || endDate == null || startDate.before(endDate);
+    }
 }

@@ -11,15 +11,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 /**
  *
- * @author brandon
+ * @author oscar
  */
 @Data
 @Entity
-public class User {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,22 +31,32 @@ public class User {
     private String name;
 
     @Column(length = 50)
-    private String surname;
+    private String surnames;
 
     @Column(length = 50, unique = true)
     private String email;
 
     @Column(length = 64)
-    private String password;
+    private Date birthDate;
+
+    @Column(length = 9)
+    private String dni;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private CustomerType customerType;
 
     @Column(length = 256)
     private String photoPath;
 
-    @Column(length = 5)
-    private int failedAttempts;
+    @Column(length = 50)
+    private String parentName;
 
-    private boolean accountNonLocked = true;
+    @Column(length = 9)
+    private String phone;
+
+    @Column(length = 20)
+    private String course;
+
+    @Column(length = 20)
+    private List<String> interests;
 }
