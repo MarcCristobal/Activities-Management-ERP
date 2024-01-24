@@ -23,7 +23,7 @@
                         <span th:text="'ID: ' + ${activity.id}"></span>
                     </div>
                     <div class="flex justify-between mx-2 border-l-4 border-blue-700 font-black bg-gray-200 p-1">
-                        <span th:text="'From ' + ${activity.startDate} + ' to ' + ${activity.endDate}"></span>
+                        <span th:text="'From ' + ${#dates.format(activity.startDate, 'dd/MM/yyyy')} + ' to ' + ${#dates.format(activity.endDate, 'dd/MM/yyyy')}"></span>
                         <span th:text="${activity.pricePerPerson} + ' € / ' + ${activity.numberOfPayments} + ' payments' "></span>
                         <span class="flex items-center justify-center space-x-1">
                             <img class="size-6" src="/images/mapas-y-banderas.png">

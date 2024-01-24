@@ -51,9 +51,9 @@
                             <label for="isFree" class="font-bold mr-10">Payment Activity</label>
                             <span class="flex flex-row">
                                 <label for="yes" class="font-bold">Yes</label>
-                                <input type="radio" id="isFree" class="border p-1 border-gray-800 mr-2" th:field="*{isFree}" value="true">
+                                <input type="radio" id="isFree" class="border p-1 border-gray-800 mr-2" th:field="*{isFree}" value="true" onclick="togglePaymentOptions(true)">
                                 <label for="no" class="font-bold">No</label>
-                                <input type="radio" id="isNotFree" class="border p-1 border-gray-800 mr-16" th:field="*{isFree}" value="false">
+                                <input type="radio" id="isNotFree" class="border p-1 border-gray-800 mr-16" th:field="*{isFree}" value="false" onclick="togglePaymentOptions(false)">
                             </span>
                         </span>
 
@@ -62,7 +62,7 @@
                             <span class="flex flex-row">
                                 <label for="limited" class="font-bold">Limited</label>
                                 <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}" onchange="toggleParticipantsSection()">
-                                <span class="flex flex-row hidden" id="participantsSection">
+                                <span class="flex flex-row" id="participantsSection">
                                     <label for="participantLimit" class="font-bold">Num</label>
                                     <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" th:field="*{participantLimit}">
                                 </span>
@@ -70,16 +70,20 @@
                         </span>
                     </span>
 
-                    <span>
-                        <label for="pricePerPerson" class="font-bold">Price per person</label>
-                        <input type="text" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}">
-                        <label for="€" class="font-bold">€</label>                        
-                    </span>
+                    <div class="flex flex-row" id="pricePerPersonContainer">
+                        <span>
+                            <label for="pricePerPerson" class="font-bold">Price per person</label>
+                            <input type="text" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}">
+                            <label for="euro" id="euro" class="font-bold">€</label>                        
+                        </span>
+                    </div>
 
-                    <span>
-                        <label for="numberOfPayments" class="font-bold">Number of payments</label>
-                        <input type="text"id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}">                
-                    </span>
+                    <div class="flex flex-row" id="numberOfPaymentsContainer">
+                        <span>
+                            <label for="numberOfPayments" class="font-bold">Number of payments</label>
+                            <input type="text" id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}">                
+                        </span>
+                    </div>
 
                     <div th:if="${incorrectPaymentValue}">
                         <div class="popup">
@@ -123,12 +127,38 @@
                 var participantsSection = document.getElementById("participantsSection");
 
                 if (limitedCheckbox.checked) {
-                    participantsSection.classList.remove("hidden");
+                    participantsSection.style.visibility = 'visible';
                     validateParticipantLimit();
                 } else {
-                    participantsSection.classList.add("hidden");
+                    participantsSection.style.visibility = 'hidden';
                 }
             }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                toggleParticipantsSection();
+            });
+        </script>
+
+        <script>
+            function togglePaymentOptions(isFree) {
+                var pricePerPersonContainer = document.getElementById("pricePerPersonContainer");
+                var numberOfPaymentsContainer = document.getElementById("numberOfPaymentsContainer");
+
+                if (isFree) {
+                    pricePerPersonContainer.style.visibility = 'visible';
+                    numberOfPaymentsContainer.style.visibility = 'visible';
+                    validatePaymentValues();
+                } else {
+                    pricePerPersonContainer.style.visibility = 'hidden';
+                    numberOfPaymentsContainer.style.visibility = 'hidden';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var isFreeValue = document.querySelector('input[name="isFree"]:checked').value;
+                togglePaymentOptions(isFreeValue === "true");
+                toggleParticipantsSection();
+            });
         </script>
     </body>
 </html>

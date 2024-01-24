@@ -29,9 +29,18 @@ public class ActivityService {
             existingActivity.setEndDate(activity.getEndDate());
             existingActivity.setIsFree(activity.getIsFree());
             existingActivity.setIsLimited(activity.getIsLimited());
-            existingActivity.setParticipantLimit(activity.getParticipantLimit());
-            existingActivity.setPricePerPerson(activity.getPricePerPerson());
-            existingActivity.setNumberOfPayments(activity.getNumberOfPayments());
+            if (existingActivity.getIsLimited()) {
+                existingActivity.setParticipantLimit(activity.getParticipantLimit());
+            } else {
+                existingActivity.setParticipantLimit(0);
+            }
+            if (existingActivity.getIsFree()) {
+                existingActivity.setPricePerPerson(activity.getPricePerPerson());
+                existingActivity.setNumberOfPayments(activity.getNumberOfPayments());
+            } else {
+                existingActivity.setPricePerPerson(0);
+                existingActivity.setNumberOfPayments(0);
+            }
             return activityDao.save(existingActivity);
         }
         return activityDao.save(activity);

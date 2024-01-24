@@ -111,7 +111,7 @@ public class ActivitiesController {
     }
 
     private boolean validateDates(Date startDate, Date endDate) {
-        return startDate == null || endDate == null || startDate.before(endDate);
+        return startDate.compareTo(endDate) <= 0;
     }
 
     private boolean validatePaymentValues(double pricePerPerson, int numberOfPayments) {
