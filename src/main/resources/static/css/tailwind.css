@@ -578,6 +578,10 @@ video {
   }
 }
 
+.visible {
+  visibility: visible;
+}
+
 .absolute {
   position: absolute;
 }
@@ -632,6 +636,18 @@ video {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.mr-16 {
+  margin-right: 4rem;
+}
+
+.mr-24 {
+  margin-right: 6rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
 }
 
 .block {
@@ -771,6 +787,10 @@ video {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-40 {
+  width: 10rem;
 }
 
 .min-w-36 {

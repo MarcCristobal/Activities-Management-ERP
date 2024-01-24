@@ -7,8 +7,9 @@
         <link th:href="@{/css/tailwind.css}" rel="stylesheet">
     </head>
     <body>
-        <div th:replace="header :: div"></div>
-        <div th:replace="nav :: div"></div>
+        <div th:replace="~{header :: div}"></div>
+        <div th:replace="~{nav :: div}"></div>
+
 
         <div class="space-y-6 mx-8 my-6">
             <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Activities</span><span> > Add Activity</span></label>
@@ -28,18 +29,34 @@
                         <input type="text" id="place" class="border p-1 border-gray-800" th:field="*{place}" required>                        
                     </div>
 
-                    <div class="flex flex-row">
-                        <div class="flex flex-col space-y-1">
-                            <label for="startDate" class="font-bold">Start Date</label>
-                            <input type="date" id="startDate" class="border p-1 border-gray-800 max-w-36" th:field="*{startDate}" required>  
+                    <span class="grid grid-cols-2">
+                        <span class="flex flex-col">
+                            <label for="startDate" class="font-bold mr-24">Start Date</label>
+                            <input type="date" id="startDate" class="border p-1 border-gray-800 mr-2 w-40" th:field="*{startDate}" required>                            
+                        </span>
+
+                        <span class="flex flex-col">
+                            <label for="endDate" class="font-bold">End Date</label>
+                            <input type="date" id="endDate" class="border p-1 border-gray-800 w-40" th:field="*{endDate}" required>
+                        </span>
+                    </span>
+
+                    <div th:if="${incorrectDate}">
+                        <div class="popup">
+                            <p class="error-message" style="color: red;">The start date cannot be after the end date.</p>
+                        </div>
+                    </div>
+
+                    <span class="grid grid-cols-2">
+                        <span class="flex flex-col">
                             <label for="isFree" class="font-bold mr-10">Payment Activity</label>
                             <div class="flex flex-row space-x-2">
                                 <label for="yes" class="font-bold">Yes</label>
-                                <input type="radio" id="isFree" class="border p-1 border-gray-800" th:field="*{isFree}" value="true">
+                                <input type="radio" id="isFree" class="border p-1 border-gray-800 mr-2" th:field="*{isFree}" value="true" onclick="togglePaymentOptions(true)">
                                 <label for="no" class="font-bold">No</label>
-                                <input type="radio" id="isNotFree" class="border p-1 border-gray-800" th:field="*{isFree}" value="false">
-                            </div>
-                        </div>
+                                <input type="radio" id="isNotFree" class="border p-1 border-gray-800 mr-16" th:field="*{isFree}" value="false" onclick="togglePaymentOptions(false)">
+                            </span>
+                        </span>
 
                         <div class="flex flex-col space-y-1">
                             <label for="endDate" class="font-bold">End Date</label>
@@ -47,22 +64,40 @@
                             <label for="participantLimit" class="form-label font-bold">Participants</label>
                             <div class="flex flex-row space-x-2">
                                 <label for="limited" class="font-bold">Limited</label>
-                                <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}">
-                                <label for="numberOfParticipants" class="font-bold">Num</label>
-                                <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" required>
-                            </div>
+                                <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}" onchange="toggleParticipantsSection()">
+                                <span class="flex flex-row" id="participantsSection">
+                                    <label for="participantLimit" class="font-bold">Num</label>
+                                    <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" th:field="*{participantLimit}">
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <div class="flex flex-row" id="pricePerPersonContainer">
+                        <span>
+                            <label for="pricePerPerson" class="font-bold">Price per person</label>
+                            <input type="text" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}">
+                            <label for="euro" id="euro" class="font-bold">€</label>                        
+                        </span>
+                    </div>
+
+                    <div class="flex flex-row" id="numberOfPaymentsContainer">
+                        <span>
+                            <label for="numberOfPayments" class="font-bold">Number of payments</label>
+                            <input type="text" id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}">                
+                        </span>
+                    </div>
+
+                    <div th:if="${incorrectPaymentValue}">
+                        <div class="popup">
+                            <p class="error-message" style="color: red;">Price per person and number of payments cannot be negative.</p>
                         </div>
                     </div>
 
-                    <div>
-                        <label for="pricePerPerson" class="font-bold">Price per person</label>
-                        <input type="pricePerPerson" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}" required>
-                        <label for="€" class="font-bold">€</label>                        
-                    </div>
-
-                    <div>
-                        <label for="numberOfPayments" class="font-bold">Number of payments</label>
-                        <input type="numberOfPayments"id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}" required>                
+                    <div th:if="${incorrectParticipantValue}">
+                        <div class="popup">
+                            <p class="error-message" style="color: red;">Number of participants must be at least 1.</p>
+                        </div>
                     </div>
 
 
@@ -106,5 +141,44 @@
         </div>
 
         <script th:src="@{/js/activityForm.js}"></script>
+        <script>
+            function toggleParticipantsSection() {
+                var limitedCheckbox = document.getElementById("limited");
+                var participantsSection = document.getElementById("participantsSection");
+
+                if (limitedCheckbox.checked) {
+                    participantsSection.style.visibility = 'visible';
+                    validateParticipantLimit();
+                } else {
+                    participantsSection.style.visibility = 'hidden';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                toggleParticipantsSection();
+            });
+        </script>
+
+        <script>
+            function togglePaymentOptions(isFree) {
+                var pricePerPersonContainer = document.getElementById("pricePerPersonContainer");
+                var numberOfPaymentsContainer = document.getElementById("numberOfPaymentsContainer");
+
+                if (isFree) {
+                    pricePerPersonContainer.style.visibility = 'visible';
+                    numberOfPaymentsContainer.style.visibility = 'visible';
+                    validatePaymentValues();
+                } else {
+                    pricePerPersonContainer.style.visibility = 'hidden';
+                    numberOfPaymentsContainer.style.visibility = 'hidden';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var isFreeValue = document.querySelector('input[name="isFree"]:checked').value;
+                togglePaymentOptions(isFreeValue === "true");
+                toggleParticipantsSection();
+            });
+        </script>
     </body>
 </html>
