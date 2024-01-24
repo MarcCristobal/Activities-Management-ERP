@@ -60,8 +60,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     // Si la autenticación es exitosa, resetea los intentos fallidos
                     user.setFailedAttempts(0);
                     userRepository.save(user);
+                    
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, getAuthorities(user));
+                    
+                    String nameSurname = user.getName() + " " + user.getSurname();
+                    
+                    authToken.setDetails(nameSurname);
 
-                    return new UsernamePasswordAuthenticationToken(username, password, getAuthorities(user));
+                    return authToken;
           }
 
           @Override

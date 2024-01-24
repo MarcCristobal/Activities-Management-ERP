@@ -5,7 +5,6 @@
 package cat.copernic.project2.ERP.security;
 
 import cat.copernic.project2.ERP.dao.UserDao;
-import cat.copernic.project2.ERP.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

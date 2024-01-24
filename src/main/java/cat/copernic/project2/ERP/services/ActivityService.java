@@ -21,6 +21,7 @@ public class ActivityService {
     }
 
     public Activity saveOrUpdateActivity(Activity activity) {
+        
         if (activity.getId() != null) {
             Activity existingActivity = activityDao.findById(activity.getId()).orElse(null);
             existingActivity.setName(activity.getName());
@@ -32,6 +33,8 @@ public class ActivityService {
             existingActivity.setParticipantLimit(activity.getParticipantLimit());
             existingActivity.setPricePerPerson(activity.getPricePerPerson());
             existingActivity.setNumberOfPayments(activity.getNumberOfPayments());
+            existingActivity.setResources(activity.getResources());
+            existingActivity.setRequirements(activity.getRequirements());
             return activityDao.save(existingActivity);
         }
         if (!activity.getIsFree()) {

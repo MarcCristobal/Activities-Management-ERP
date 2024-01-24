@@ -1,0 +1,99 @@
+<!-- src/main/resources/templates/user-form.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create User</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div th:replace="header :: div"></div>
+        <div th:replace="nav :: div"></div>
+
+        <div class="space-y-16 mx-8 my-6">
+            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Customers</span><span> > Edit Customer</span></label>
+
+            <form th:object="${customer}" th:action="@{/home/customers/update}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
+                <input type="hidden" th:field="*{id}">
+                <div class="flex flex-row flex-grow space-x-10">
+
+                    <!-- Photo -->
+                    <div class="space-y-6">
+                        <img class="size-36" src="/images/usuario2.png">
+                        <label for="photo" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
+                            <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
+                            <span class="text-white">Photo</span>
+                        </label>
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden">
+                    </div> 
+
+                    <div class="grid-rows-1 space-y-4">    
+                        <span class="text-gray-500 text-xl mr-80 pb-5">Personal Information</span>
+
+                        <span class="flex flex-col">
+                            <label for="name" class="font-bold">Name</label>
+                            <input type="text" id="name" name="name" class="border p-1 border-gray-800" th:field="*{name}" required>
+                        </span>
+
+                        <span class="flex flex-col">
+                            <label for="name" class="font-bold">Surname</label>
+                            <input type="text" id="surname" name="surname" class="border p-1 border-gray-800"  th:field="*{surname}" required>
+                        </span>
+
+                        <span class="flex flex-col">
+                            <label for="email" class="font-bold">Email</label>
+                            <input type="email" id="email" name="email" class="border p-1 border-gray-800" th:field="*{email}" required>
+                        </span>
+                        
+                        <span class="flex flex-row">
+                            <span class="flex flex-col">
+                                <label class="font-bold">Phone</label>
+                                <input type="text" id="phone" name="phone" class="border p-1 border-gray-800" th:field="*{phone}" required>
+                            </span>
+                            <span class="flex flex-col">
+                                <label class="font-bold">Date of Birth</label>
+                                <input type="date" id="dateOfBirth" name="dateOfBirth" class="border p-1 border-gray-800" th:field="*{dateOfBirth}" required>
+                            </span>
+                        </span>
+                        
+                        <span class="flex flex-col">
+                            <label for="email" class="font-bold">Parent / Guardian Name (if apply)</label>
+                            <input type="parentName" id="parentName" name="parentName" class="border p-1 border-gray-800" th:field="*{parentName}">
+                        </span>
+                        
+                        <span class="flex flex-col">
+                            <label for="dni" class="font-bold">DNI</label>
+                            <input type="text" id="dni" name="dni" class="border p-1 border-gray-800" th:field="*{dni}" required>
+                        </span>
+                        
+                        <span class="flex flex-col">
+                            <label for="grade" class="font-bold">Grade (if apply)</label>
+                            <input type="text" id="grade" name="grade" class="border p-1 border-gray-800" th:field="*{grade}" required>
+                        </span>
+
+                        <span class="flex flex-row space-x-4 items-center justify-between">
+                            <label class="font-bold">Role</label>
+
+                            <input type="radio" class="peer/student hidden" id="student" name="type" value="STUDENT" th:field="*{type}" required>
+                            <label for="student" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/student:bg-teal-500">Student</label>
+
+                            <input type="radio" class="peer/teacher hidden" id="teacher" name="type" value="TEACHER" th:field="*{type}" required>
+                            <label for="teacher" class="cursor-pointer border px-1 border-gray-800 peer-checked/teacher:bg-teal-500">Teacher</label>
+
+                            <input type="radio" class="peer/neighbor hidden" id="neighbor" name="type" value="NEIGHBOR"th:field="*{type}" required>
+                            <label for="neighbor" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/neighbor:bg-teal-500">Neighbor</label>
+
+                        </span>
+
+                        <span class="flex flex-row justify-end">
+                            <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
+                            <a th:href="@{/home/customers}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

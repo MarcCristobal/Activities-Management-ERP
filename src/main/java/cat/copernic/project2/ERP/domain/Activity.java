@@ -62,12 +62,12 @@ public class Activity {
 
     @ElementCollection
     @CollectionTable(name = "activity_resources", joinColumns = @JoinColumn(name = "activity_id"))
-    @Column(name = "resource")
+    @Column(name = "resources")
     private List<String> resources = new ArrayList<>();
 
     @ElementCollection
-    @CollectionTable(name = "activity_resources", joinColumns = @JoinColumn(name = "activity_id"))
-    @Column(name = "resource")
+    @CollectionTable(name = "activity_requirements", joinColumns = @JoinColumn(name = "activity_id"))
+    @Column(name = "requirements")
     private List<String> requirements = new ArrayList<>();
 
     @OneToOne

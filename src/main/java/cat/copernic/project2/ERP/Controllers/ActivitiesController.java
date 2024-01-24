@@ -6,6 +6,9 @@ package cat.copernic.project2.ERP.Controllers;
 
 import cat.copernic.project2.ERP.domain.Activity;
 import cat.copernic.project2.ERP.services.ActivityService;
+import cat.copernic.project2.ERP.services.JsonToListService;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -24,6 +28,9 @@ public class ActivitiesController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private JsonToListService jsonToListService;
 
     @GetMapping("/activities")
     public String listActivities(Model model) {
@@ -38,7 +45,16 @@ public class ActivitiesController {
     }
 
     @PostMapping("/activities/create-activity")
-    public String createActivity(@ModelAttribute Activity activity) {
+    public String createActivity(@ModelAttribute Activity activity,
+            @RequestParam("resourceListHidden") String jsonResources,
+            @RequestParam("requirementListHidden") String jsonRequirements) {
+
+        ArrayList<String> resources = jsonToListService.toList(jsonResources);
+        activity.setResources(resources);
+
+        ArrayList<String> requirements = jsonToListService.toList(jsonRequirements);
+        activity.setRequirements(requirements);
+
         activityService.saveOrUpdateActivity(activity);
         return "redirect:/activities";
     }
