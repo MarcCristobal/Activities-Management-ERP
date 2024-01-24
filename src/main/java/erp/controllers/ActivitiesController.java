@@ -42,7 +42,7 @@ public class ActivitiesController {
 
     @GetMapping("/activities/create-activity")
     public String showActivityForm(@ModelAttribute Activity activity) {
-        return "activityFform";
+        return "activityForm";
     }
 
     @PostMapping("/activities/create-activity")
