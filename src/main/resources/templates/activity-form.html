@@ -42,15 +42,15 @@
                     </span>
 
                     <div th:if="${incorrectDate}">
-                        <div class="popup">
-                            <p class="error-message" style="color: red;">The start date cannot be after the end date.</p>
+                        <div>
+                            <p class="text-red-500">The start date cannot be after the end date.</p>
                         </div>
                     </div>
 
                     <span class="grid grid-cols-2">
                         <span class="flex flex-col">
                             <label for="isFree" class="font-bold mr-10">Payment Activity</label>
-                            <div class="flex flex-row space-x-2">
+                            <span class="flex flex-row space-x-2">
                                 <label for="yes" class="font-bold">Yes</label>
                                 <input type="radio" id="isFree" class="border p-1 border-gray-800 mr-2" th:field="*{isFree}" value="true" onclick="togglePaymentOptions(true)">
                                 <label for="no" class="font-bold">No</label>
@@ -58,11 +58,9 @@
                             </span>
                         </span>
 
-                        <div class="flex flex-col space-y-1">
-                            <label for="endDate" class="font-bold">End Date</label>
-                            <input type="date" id="endDate" class="border p-1 border-gray-800 max-w-36" th:field="*{endDate}" required>
+                        <span class="flex flex-col space-y-1">
                             <label for="participantLimit" class="form-label font-bold">Participants</label>
-                            <div class="flex flex-row space-x-2">
+                            <span class="flex flex-row space-x-2">
                                 <label for="limited" class="font-bold">Limited</label>
                                 <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}" onchange="toggleParticipantsSection()">
                                 <span class="flex flex-row" id="participantsSection">
@@ -89,14 +87,14 @@
                     </div>
 
                     <div th:if="${incorrectPaymentValue}">
-                        <div class="popup">
-                            <p class="error-message" style="color: red;">Price per person and number of payments cannot be negative.</p>
+                        <div>
+                            <p class="text-red-500">Price per person and number of payments cannot be negative.</p>
                         </div>
                     </div>
 
                     <div th:if="${incorrectParticipantValue}">
-                        <div class="popup">
-                            <p class="error-message" style="color: red;">Number of participants must be at least 1.</p>
+                        <div>
+                            <p class="text-red-500">Number of participants must be at least 1.</p>
                         </div>
                     </div>
 
@@ -141,44 +139,10 @@
         </div>
 
         <script th:src="@{/js/activityForm.js}"></script>
-        <script>
-            function toggleParticipantsSection() {
-                var limitedCheckbox = document.getElementById("limited");
-                var participantsSection = document.getElementById("participantsSection");
+        
 
-                if (limitedCheckbox.checked) {
-                    participantsSection.style.visibility = 'visible';
-                    validateParticipantLimit();
-                } else {
-                    participantsSection.style.visibility = 'hidden';
-                }
-            }
+        
 
-            document.addEventListener('DOMContentLoaded', function () {
-                toggleParticipantsSection();
-            });
-        </script>
 
-        <script>
-            function togglePaymentOptions(isFree) {
-                var pricePerPersonContainer = document.getElementById("pricePerPersonContainer");
-                var numberOfPaymentsContainer = document.getElementById("numberOfPaymentsContainer");
-
-                if (isFree) {
-                    pricePerPersonContainer.style.visibility = 'visible';
-                    numberOfPaymentsContainer.style.visibility = 'visible';
-                    validatePaymentValues();
-                } else {
-                    pricePerPersonContainer.style.visibility = 'hidden';
-                    numberOfPaymentsContainer.style.visibility = 'hidden';
-                }
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                var isFreeValue = document.querySelector('input[name="isFree"]:checked').value;
-                togglePaymentOptions(isFreeValue === "true");
-                toggleParticipantsSection();
-            });
-        </script>
     </body>
 </html>

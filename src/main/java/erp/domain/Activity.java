@@ -4,6 +4,7 @@
  */
 package erp.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -68,8 +70,8 @@ public class Activity {
     private List<String> resources = new ArrayList<>();
 
     @ElementCollection
-    @CollectionTable(name = "activity_resources", joinColumns = @JoinColumn(name = "activity_id"))
-    @Column(name = "resource")
+    @CollectionTable(name = "activity_requirements", joinColumns = @JoinColumn(name = "activity_id"))
+    @Column(name = "requirement")
     private List<String> requirements = new ArrayList<>();
 
     @OneToOne

@@ -12,6 +12,24 @@ document.addEventListener('DOMContentLoaded', function () {
         updateHiddenField('requirementList');
     });
 
+    toggleParticipantsSection();
+    togglePaymentOptions();
+
+    document.getElementById("isFree").addEventListener("change", function () {
+        // Cuando se hace clic en el checkbox "Yes"
+        togglePaymentOptions(this.checked);
+    });
+
+    document.getElementById("isNotFree").addEventListener("change", function () {
+        // Cuando se hace clic en el checkbox "No"
+        togglePaymentOptions(!this.checked);
+    });
+
+    document.getElementById("limited").addEventListener("change", function () {
+        // Cuando se hace clic en el radio button "Limited"
+        toggleParticipantsSection();
+    });
+
     function addListItem(listId, inputId) {
         var input = document.getElementById(inputId);
         var list = document.getElementById(listId);
@@ -29,20 +47,16 @@ document.addEventListener('DOMContentLoaded', function () {
         // Aplica clase de Tailwind condicional basada en el índice (solo en el caso de índice impar)
         if (index % 2 !== 0) {
             newListItem.classList.add('bg-gray-200'); // Puedes ajustar el color según tus necesidades
-        }  
+        }
 
         // Agrega el nuevo elemento a la lista
         list.appendChild(newListItem);
 
         // Borra el contenido del campo de entrada
         input.value = '';
-        
-        console.log("ha pasado");
     }
 
     function updateHiddenField(listId) {
-        console.log("ha pasado");
-        
         var list = document.getElementById(listId);
         var resources = [];
 
@@ -51,10 +65,36 @@ document.addEventListener('DOMContentLoaded', function () {
             resources.push(list.children[i].textContent);
         }
 
-        // Imprime en la consola para verificar
-        console.log(listId + 'Hidden:', JSON.stringify(resources));
-
         // Actualiza el valor del campo oculto con el array de recursos
         document.getElementById(listId + 'Hidden').value = JSON.stringify(resources);
     }
+
+    function toggleParticipantsSection() {
+        var limitedCheckbox = document.getElementById("limited");
+        var participantsSection = document.getElementById("participantsSection");
+
+        if (limitedCheckbox.checked) {
+            participantsSection.classList.remove('invisible');
+            validateParticipantLimit();
+        } else {
+            participantsSection.classList.add('invisible');
+        }
+    }
+
+    function togglePaymentOptions(isFree) {
+        var pricePerPersonContainer = document.getElementById("pricePerPersonContainer");
+        var numberOfPaymentsContainer = document.getElementById("numberOfPaymentsContainer");
+
+        if (isFree) {
+            pricePerPersonContainer.classList.remove('invisible');
+            numberOfPaymentsContainer.classList.remove('invisible');
+            validatePaymentValues();
+        } else {
+            pricePerPersonContainer.classList.add('invisible');
+            numberOfPaymentsContainer.classList.add('invisible');
+        }
+    }
+
+
+
 });
