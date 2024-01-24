@@ -34,11 +34,14 @@
                             <div>
                                 <label class="font-bold text-lg">Resources:</label>
                                 <div th:each="resource : ${activity.resources}">
-                                    <span th:text="resource"></span>
+                                    <span th:text="${resource}"></span>
                                 </div>
                             </div>
                             <div>
                                 <label class="font-bold text-lg">Requirements:</label>
+                                <div th:each="requirement : ${activity.requirements}">
+                                    <span th:text="${requirement}"></span>
+                                </div>
                             </div>                        
                     </div>
                 </div>

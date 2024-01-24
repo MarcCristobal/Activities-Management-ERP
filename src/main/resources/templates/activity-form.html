@@ -79,7 +79,7 @@
                         <ul id="resourceList" class="border p-1 border-gray-800 h-64">                            
                         </ul>
 
-                        <input type="hidden" id="resourceListHidden" name="resourceListHidden">
+                        <input type="text" id="resourceListHidden" name="resourceListHidden" class="hidden" th:field="*{resources}">
 
                     </div>
                 </div>
@@ -95,10 +95,10 @@
                         <ul id="requirementList" class="border p-1 border-gray-800 h-64">                            
                         </ul>
 
-                        <input type="hidden" id="requirementListHidden" name="requirementListHidden">
+                        <input type="text" id="requirementListHidden" name="requirementListHidden" class="hidden" th:field="*{requirements}">
                     </div>
                     <div class="flex justify-end">
-                        <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
+                        <input type="submit" id="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
                         <a th:href="@{/activities}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
                     </div>
                 </div>

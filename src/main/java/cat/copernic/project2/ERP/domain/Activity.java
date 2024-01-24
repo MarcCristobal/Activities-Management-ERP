@@ -63,12 +63,12 @@ public class Activity {
     @ElementCollection
     @CollectionTable(name = "activity_resources", joinColumns = @JoinColumn(name = "activity_id"))
     @Column(name = "resources")
-    private List<String> resources = new ArrayList<>();
+    private List<String> resources;
 
     @ElementCollection
     @CollectionTable(name = "activity_requirements", joinColumns = @JoinColumn(name = "activity_id"))
     @Column(name = "requirements")
-    private List<String> requirements = new ArrayList<>();
+    private List<String> requirements;
 
     @OneToOne
     @JoinColumn(name = "monitor_id")
