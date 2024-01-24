@@ -43,7 +43,7 @@ public class Customer {
     private String dni;
 
     @Enumerated(EnumType.STRING)
-    private CustomerType customerType;
+    private CustomerType type;
 
     @Column(length = 256)
     private String photoPath;

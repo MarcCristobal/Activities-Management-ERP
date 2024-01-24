@@ -45,7 +45,7 @@ public class LoginController {
           @GetMapping("/home")
           public String postLogin(HttpServletRequest request, Authentication authentication) {
                     // Obtén el usuario actualmente autenticado
-                    User user = userService.findPersonByEmail(authentication.getName());
+                    User user = userService.findUserByEmail(authentication.getName());
 
                     // Redirige al usuario a una vista específica basada en su rol
                     switch (user.getRole()) {

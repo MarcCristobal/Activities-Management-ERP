@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Create User</title>
+        <title>Edit Customer</title>
         <!-- Include Tailwind CSS -->
         <link th:href="@{/css/tailwind.css}" rel="stylesheet">
     </head>
@@ -38,15 +38,15 @@
                         </span>
 
                         <span class="flex flex-col">
-                            <label for="name" class="font-bold">Surname</label>
-                            <input type="text" id="surname" name="surname" class="border p-1 border-gray-800"  th:field="*{surname}" required>
+                            <label for="name" class="font-bold">Surnames</label>
+                            <input type="text" id="surnames" name="surnames" class="border p-1 border-gray-800"  th:field="*{surnames}" required>
                         </span>
 
                         <span class="flex flex-col">
                             <label for="email" class="font-bold">Email</label>
                             <input type="email" id="email" name="email" class="border p-1 border-gray-800" th:field="*{email}" required>
                         </span>
-                        
+
                         <span class="flex flex-row">
                             <span class="flex flex-col">
                                 <label class="font-bold">Phone</label>
@@ -54,27 +54,27 @@
                             </span>
                             <span class="flex flex-col">
                                 <label class="font-bold">Date of Birth</label>
-                                <input type="date" id="dateOfBirth" name="dateOfBirth" class="border p-1 border-gray-800" th:field="*{dateOfBirth}" required>
+                                <input type="date" id="birthDate" name="birthDate" class="border p-1 border-gray-800" th:field="*{birthDate}" required>
                             </span>
                         </span>
-                        
+
                         <span class="flex flex-col">
                             <label for="email" class="font-bold">Parent / Guardian Name (if apply)</label>
                             <input type="parentName" id="parentName" name="parentName" class="border p-1 border-gray-800" th:field="*{parentName}">
                         </span>
-                        
+
                         <span class="flex flex-col">
                             <label for="dni" class="font-bold">DNI</label>
                             <input type="text" id="dni" name="dni" class="border p-1 border-gray-800" th:field="*{dni}" required>
                         </span>
-                        
+
                         <span class="flex flex-col">
                             <label for="grade" class="font-bold">Grade (if apply)</label>
-                            <input type="text" id="grade" name="grade" class="border p-1 border-gray-800" th:field="*{grade}" required>
+                            <input type="text" id="course" name="course" class="border p-1 border-gray-800" th:field="*{course}">
                         </span>
 
                         <span class="flex flex-row space-x-4 items-center justify-between">
-                            <label class="font-bold">Role</label>
+                            <label class="font-bold">Type</label>
 
                             <input type="radio" class="peer/student hidden" id="student" name="type" value="STUDENT" th:field="*{type}" required>
                             <label for="student" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/student:bg-teal-500">Student</label>
