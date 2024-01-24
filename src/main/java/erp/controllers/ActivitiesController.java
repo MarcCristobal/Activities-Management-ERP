@@ -42,7 +42,7 @@ public class ActivitiesController {
 
     @GetMapping("/activities/create-activity")
     public String showActivityForm(@ModelAttribute Activity activity) {
-        return "activity-form";
+        return "activityFform";
     }
 
     @PostMapping("/activities/create-activity")
@@ -61,7 +61,7 @@ public class ActivitiesController {
         } else if (!isAValidParticipantValue) {
             model.addAttribute("incorrectParticipantValue", true);
         }
-        return "activity-form";
+        return "activityForm";
     }
 
     @GetMapping("/activities/edit-activity/{id}")
@@ -70,14 +70,14 @@ public class ActivitiesController {
             Activity activity = activityService.findActivityById(id);
             model.addAttribute("activity", activity);
         }
-        return "activity-form";
+        return "activityForm";
     }
 
     @GetMapping("/activities/{id}")
     public String showActivity(@PathVariable("id") long id, Model model) {
         Activity activity = activityService.findActivityById(id);
         model.addAttribute("activity", activity);
-        return "activities-overview";
+        return "activitiesOverview";
     }
 
     @PostMapping("/activities/delete-activity/{id}")

@@ -62,11 +62,11 @@ public class UserService {
                     return userDao.findAllById(ids);
           }
 
-          public User findPersonByEmail(String email) {
+          public User findUserByEmail(String email) {
                     return userDao.findByEmail(email);
           }
 
-          public User findPersonByName(String name) {
+          public User findUserByName(String name) {
                     return userDao.findByName(name);
           }
 

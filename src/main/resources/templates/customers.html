@@ -22,7 +22,7 @@
 
             <div class="grid grid-rows-1 w-9/12">
                 <span class="grid grid-cols-3 text-lg font-bold text-slate-500 px-2 mb-2">
-                    <label>Name/Surname</label>
+                    <label>Name/Surnames</label>
                     <label>Type</label>
                     <label>Grade</label>
                 </span>
@@ -31,13 +31,13 @@
                     <span class="grid grid-cols-3 py-1 px-2">
                         <span class="flex flex-row items-center space-x-3 font-semibold">
                             <img class ="size-9" th:src="@{${customer.photoPath}}">
-                            <label th:text="${customer.name}"></label>
+                            <label th:text="${customer.name} + ' ' + ${customer.surnames}"></label>
                         </span>
                         <span class="flex flex-row items-center">
                             <label th:text="${customer.type}"></label>
                         </span>
                         <span class="flex flex-row items-center justify-between">
-                            <label th:text="${customer.grade}"></label>
+                            <label th:text="${customer.course}"></label>
                             <a th:href="@{'/home/customers/' + ${customer.id}}" class="flex items-center space-x-1 bg-teal-500 rounded-md text-slate-50 px-2 py-1">
                                 <img class="size-5" src="/images/sobre-nosotros.png">
                                 <label>Overview</label>

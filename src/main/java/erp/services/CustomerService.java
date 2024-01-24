@@ -28,7 +28,7 @@ public class CustomerService {
             existingCustomer.setEmail(customer.getEmail());
             existingCustomer.setBirthDate(customer.getBirthDate());
             existingCustomer.setDni(customer.getDni());
-            existingCustomer.setCustomerType(customer.getCustomerType());
+            existingCustomer.setType(customer.getType());
             existingCustomer.setPhotoPath(customer.getPhotoPath());
             existingCustomer.setParentName(customer.getParentName());
             existingCustomer.setPhone(customer.getPhone());

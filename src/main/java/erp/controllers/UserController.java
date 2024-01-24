@@ -69,7 +69,7 @@ public class UserController {
         }
 
         @GetMapping("/home/users")
-        public String showAllPersons(Model model) {
+        public String showAllUsers(Model model) {
                 List<User> users = userService.getAllUsers();
                 model.addAttribute("users", users);
                 return "users";

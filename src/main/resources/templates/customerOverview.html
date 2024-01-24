@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Create User</title>
+        <title>Customer Information</title>
         <!-- Include Tailwind CSS -->
         <link th:href="@{/css/tailwind.css}" rel="stylesheet">
     </head>
@@ -13,7 +13,7 @@
         <div th:replace="nav :: div"></div>
 
         <div class="space-y-16 mx-8 my-6">
-            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Users</span> > New User<span></span></label>
+            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Customer</span> > Customer Information<span></span></label>
 
             <div th:object="${customer}" th:action="@{/home/customers/update}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
 
@@ -35,7 +35,7 @@
 
 
                     <div class="grid-rows-1 space-y-4">    
-                        <div class="text-2xl mr-80" th:text="${customer.name} + ' ' + ${customer.surname}"></div>
+                        <div class="text-2xl mr-80" th:text="${customer.name} + ' ' + ${customer.surnames}"></div>
 
                         <div class="text-gray-500 text-xl mr-80">Personal Information</div>
 
@@ -46,7 +46,8 @@
                             </span>
                             <span class="flex flex-col">
                                 <label class="font-bold">Date of Birth</label>
-                                <label th:text="${customer.dateOfBirth}"></label>
+                                <label th:text="${#dates.format(customer.birthDate, 'dd/MM/yyyy')}"></label>
+                                
                             </span>
                         </span>
 
@@ -67,7 +68,7 @@
 
                         <span class="flex flex-col">
                             <label class="font-bold">Grade</label>
-                            <label th:text="${customer.grade}"></label>
+                            <label th:text="${customer.course}"></label>
                         </span>
                     </div>
                 </div>
