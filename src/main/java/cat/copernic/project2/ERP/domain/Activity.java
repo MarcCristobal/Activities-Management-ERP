@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 /**
  *
@@ -54,6 +55,7 @@ public class Activity {
     @Column(length = 10)
     private int participantLimit;
 
+    @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "###,###.##")
     @Column(length = 10)
     private double pricePerPerson;
 
@@ -88,6 +90,10 @@ public class Activity {
 
     public void setIsLimited(boolean isLimited) {
         this.isLimited = isLimited;
+    }
+
+    public String getPricePerPersonAsString() {
+        return String.valueOf(this.pricePerPerson);
     }
 
 }
