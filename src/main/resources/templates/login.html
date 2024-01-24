@@ -17,12 +17,11 @@
                 <section class="w-96 bg-white p-8 rounded shadow-md shadow-slate-500">
                     <p th:if="${error}" th:text="${error}" class="bg-red-500 text-black p-4 rounded-md"></p>
 
-                    <form th:action="@{/}" method="post" class="flex flex-col text-left">
+                    <form th:action="@{/}" method="post" class="flex flex-col text-center">
                         <input type="text" id="username" name="username" class="p-2 mb-4 border rounded placeholder:text-slate-500" placeholder="Username:">                        
                         <input type="password" id="password" name="password" class="p-2 mb-4 border rounded placeholder:text-slate-500" placeholder="Password:">
-                        <div th:if="${hasNotUsers}">
-                            <a href="/register" class="bg-teal-500 text-white p-2 rounded">Register</a>
-
+                        <div th:if="${hasNotUsers}" class="flex justify-center mb-4">
+                            <button th:text=" 'Register' "type="button" onclick="location.href = '/register'" class="flex flex-grow bg-teal-500 text-white text-center p-2 rounded"></button>
                         </div>
                         <button type="submit" class="bg-teal-500 text-white p-2 rounded">Log-in</button>
                     </form>
