@@ -40,7 +40,7 @@
                         </span>
                     </span>
 
-                    <div th:if="${dateError}">
+                    <div th:if="${incorrectDate}">
                         <div class="popup">
                             <p class="error-message" style="color: red;">The start date cannot be after the end date.</p>
                         </div>
@@ -61,9 +61,11 @@
                             <label for="participantLimit" class="form-label font-bold">Participants</label>
                             <span class="flex flex-row">
                                 <label for="limited" class="font-bold">Limited</label>
-                                <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}">
-                                <label for="participantLimit" class="font-bold">Num</label>
-                                <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" th:field="*{participantLimit}" required>
+                                <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}" onchange="toggleParticipantsSection()">
+                                <span class="flex flex-row hidden" id="participantsSection">
+                                    <label for="participantLimit" class="font-bold">Num</label>
+                                    <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" th:field="*{participantLimit}">
+                                </span>
                             </span>
                         </span>
                     </span>
@@ -79,6 +81,18 @@
                         <input type="text"id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}">                
                     </span>
 
+                    <div th:if="${incorrectPaymentValue}">
+                        <div class="popup">
+                            <p class="error-message" style="color: red;">Price per person and number of payments cannot be negative.</p>
+                        </div>
+                    </div>
+
+                    <div th:if="${incorrectParticipantValue}">
+                        <div class="popup">
+                            <p class="error-message" style="color: red;">Number of participants must be at least 1.</p>
+                        </div>
+                    </div>
+
                     <div class="flex justify-end">
                         <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
                         <a th:href="@{/activities}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
@@ -90,9 +104,9 @@
                                     <input type="text" id="resource" class="border p-1 border-gray-800">
                                     <input type="button" class="bg-teal-600 text-white px-1 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Add">
                                     <div id="resourcelist" class="border p-1 border-gray-800 w-full mt-4"></div>
-                
+
                                 </div>
-                
+
                                 <div class="grid grid-rows-1 space-y-2">
                                     <span class="text-gray-500 text-xl">Requirements</span>
                                     <input type="text" id="requirement" class="border p-1 border-gray-800">
@@ -103,5 +117,18 @@
 
             </form>
         </div>
+        <script>
+            function toggleParticipantsSection() {
+                var limitedCheckbox = document.getElementById("limited");
+                var participantsSection = document.getElementById("participantsSection");
+
+                if (limitedCheckbox.checked) {
+                    participantsSection.classList.remove("hidden");
+                    validateParticipantLimit();
+                } else {
+                    participantsSection.classList.add("hidden");
+                }
+            }
+        </script>
     </body>
 </html>

@@ -47,15 +47,21 @@ public class ActivitiesController {
 
     @PostMapping("/activities/create-activity")
     public String createActivity(@ModelAttribute Activity activity, Model model) {
-        boolean isValid = validateDates(activity.getStartDate(), activity.getEndDate());
+        boolean isAValidDate = validateDates(activity.getStartDate(), activity.getEndDate());
+        boolean isAValidPaymentValue = validatePaymentValues(activity.getPricePerPerson(), activity.getNumberOfPayments());
+        boolean isAValidParticipantValue = activity.getIsLimited() ? validateParticipantLimit(activity.getParticipantLimit()) : true;
 
-        if (isValid) {
+        if (isAValidDate && isAValidPaymentValue && isAValidParticipantValue) {
             activityService.saveOrUpdateActivity(activity);
             return "redirect:/activities";
-        } else {
-            model.addAttribute("dateError", true);
-            return "activity-form";
+        } else if (!isAValidDate) {
+            model.addAttribute("incorrectDate", true);
+        } else if (!isAValidPaymentValue) {
+            model.addAttribute("incorrectPaymentValue", true);
+        } else if (!isAValidParticipantValue) {
+            model.addAttribute("incorrectParticipantValue", true);
         }
+        return "activity-form";
     }
 
     @GetMapping("/activities/edit-activity/{id}")
@@ -106,5 +112,13 @@ public class ActivitiesController {
 
     private boolean validateDates(Date startDate, Date endDate) {
         return startDate == null || endDate == null || startDate.before(endDate);
+    }
+
+    private boolean validatePaymentValues(double pricePerPerson, int numberOfPayments) {
+        return !(pricePerPerson < 0 || numberOfPayments < 0);
+    }
+
+    private boolean validateParticipantLimit(int participantLimit) {
+        return !(participantLimit < 1);
     }
 }
