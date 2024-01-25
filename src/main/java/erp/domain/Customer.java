@@ -43,7 +43,7 @@ public class Customer {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
 
-    @Column(length = 9)
+    @Column(length = 9, unique = true)
     private String dni;
 
     @Enumerated(EnumType.STRING)
