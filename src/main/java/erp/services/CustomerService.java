@@ -5,6 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.CustomerDao;
 import erp.domain.Customer;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -53,5 +58,15 @@ public class CustomerService {
 
     public Customer findCustomerById(Long id) {
         return customerDao.findById(id).orElse(null);
+    }
+
+    public String savePhoto(MultipartFile photo) throws IOException {
+        // Generamos un nombre de archivo único
+        String filename = UUID.randomUUID().toString() + ".jpg";
+
+        // Guardamos el archivo en el sistema de archivos
+        Files.copy(photo.getInputStream(), Paths.get("/images/userImages/" + filename));
+
+        return filename;
     }
 }
