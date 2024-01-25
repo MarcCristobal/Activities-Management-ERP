@@ -4,12 +4,14 @@
         <h1 class="text-3xl text-center font-bold">ACTIVITIES MANAGEMENT</h1>
     </div>
     <div class="w-60 min-w-60 flex space-x-2 justify-center items-center relative" th:if="${#authorization.expression('isAuthenticated()')}">
-        <label th:text="${#authentication.details}"></label>
+       <label th:text="${#authentication.details['name']}"></label>
         <img class="size-12" src="/images/usuario.png">
         <img class="size-4 cursor-pointer" src="/images/flecha-hacia-abajo.png" onclick="toggleDropdown()">
         <div id="dropdown" style="display: none; position: absolute; top: 100%; left: 0; background-color: #f9f9f9; min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; color: black;">
-            <a>
-                <span>Perfil</span></a>
+            <form th:action="@{/home/users/{id}(id=${#authentication.details['id']})}" method="GET">
+
+                <input type="submit" value="Perfil">
+            </form>
             <form th:action="@{/my/ownlogout}" method="POST">
                 <input type="submit" value="Logout">
             </form>
@@ -34,3 +36,4 @@
 
 
 </div>
+

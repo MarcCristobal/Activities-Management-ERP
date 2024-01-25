@@ -7,6 +7,7 @@ package erp.services;
 
 import erp.dao.UserDao;
 import erp.domain.User;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,8 @@ public class LoginAttemptService {
         User user = userDao.findByEmail(username);
         user.setFailedAttempts(user.getFailedAttempts()+1);
         if (user.getFailedAttempts() >= MAX_ATTEMPT) {
-            user.setAccountNonLocked(false); // Bloquea la cuenta del usuario
+            user.setAccountNonLocked(false);
+            user.setLockTime(LocalDateTime.now());// Bloquea la cuenta del usuario
         }
         userDao.save(user); // Guarda los cambios en la base de datos*/
     }
@@ -45,4 +47,3 @@ public class LoginAttemptService {
         return !user.isAccountNonLocked();
     }
 }
-

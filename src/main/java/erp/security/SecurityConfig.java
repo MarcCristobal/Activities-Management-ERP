@@ -4,7 +4,7 @@
  */
 package erp.security;
 
-import erp.security.CustomAuthenticationFailureHandler;
+
 import erp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +59,7 @@ public class SecurityConfig {
           public PasswordEncoder passwordEncoder() {
                     return new BCryptPasswordEncoder();
           }
+          
 
           @Bean
           public AuthenticationEntryPoint authenticationEntryPoint() {

@@ -32,11 +32,11 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
                 String username = request.getParameter("username");
                 
                 if (exception instanceof UserBlockedException) {
-                        loginAttemptService.incrementFailedAttempts(username);
                         response.sendRedirect("/?error=" + URLEncoder.encode("Tu cuenta ha sido bloqueada debido a demasiados intentos fallidos de inicio de sesión.", "UTF-8") + "&username=" + (username != null ? URLEncoder.encode(username, "UTF-8") : ""));
                 }else if(exception instanceof UsernameNotFoundException) {
                         response.sendRedirect("/?error=" + URLEncoder.encode("Usuario o Contraseña incorrectos.", "UTF-8") + "&username=" + (username != null ? URLEncoder.encode(username, "UTF-8") : ""));
                 }else if(exception instanceof BadCredentialsException){
+                        loginAttemptService.incrementFailedAttempts(username);
                         response.sendRedirect("/?error=" + URLEncoder.encode("Usuario o Contraseña incorrectos.", "UTF-8") + "&username=" + (username != null ? URLEncoder.encode(username, "UTF-8") : ""));
                 }
                 else {
@@ -50,3 +50,4 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         }
 
 }
+

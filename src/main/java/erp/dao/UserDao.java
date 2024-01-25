@@ -5,6 +5,7 @@
 package erp.dao;
 
 import erp.domain.User;
+import java.util.List;
 
 /**
  *
@@ -14,5 +15,8 @@ public interface UserDao extends GenericDao<User, Long> {
 
         User findByEmail(String email);
         User findByName(String name);
+        List<User> findByAccountNonLockedFalse();
         
 }
+
+

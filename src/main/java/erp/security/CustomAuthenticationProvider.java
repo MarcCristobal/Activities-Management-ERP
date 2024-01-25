@@ -4,11 +4,12 @@
  */
 package erp.security;
 
-
 import erp.dao.UserDao;
 import erp.domain.User;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,57 +26,59 @@ import org.springframework.stereotype.Component;
  *
  * @author brandon
  */
-
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-          private final int MAX_ATTEMPTS = 3;
-          private final UserDao userRepository;
-          private final PasswordEncoder passwordEncoder;
+        private final int MAX_ATTEMPTS = 3;
+        private final UserDao userRepository;
+        private final PasswordEncoder passwordEncoder;
 
-          @Autowired
-          public CustomAuthenticationProvider(UserDao userRepository, PasswordEncoder passwordEncoder) {
-                    this.userRepository = userRepository;
-                    this.passwordEncoder = passwordEncoder;
-          }
+        @Autowired
+        public CustomAuthenticationProvider(UserDao userRepository, PasswordEncoder passwordEncoder) {
+                this.userRepository = userRepository;
+                this.passwordEncoder = passwordEncoder;
+        }
 
-          @Override
-          public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                    String username = authentication.getName();
-                    String password = authentication.getCredentials().toString();
-                    User user = userRepository.findByEmail(username);
-                    if (user == null) {
-                              throw new UsernameNotFoundException("Usuario no encontrado");
-                    }
-                    if (!user.isAccountNonLocked()) {
-                              throw new UserBlockedException("La cuenta está bloqueada");
-                    }
-                    if (!passwordEncoder.matches(password, user.getPassword())) {
-                              // Incrementa el número de intentos fallidos y guarda el usuario
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+                String username = authentication.getName();
+                String password = authentication.getCredentials().toString();
+                User user = userRepository.findByEmail(username);
+                if (user == null) {
+                        throw new UsernameNotFoundException("Usuario no encontrado");
+                }
+                if (!user.isAccountNonLocked()) {
+                        throw new UserBlockedException("La cuenta está bloqueada");
+                }
+                if (!passwordEncoder.matches(password, user.getPassword())) {
+                        // Incrementa el número de intentos fallidos y guarda el usuario
 
-                              // Lanza una excepción personalizada
-                              throw new BadCredentialsException("Contraseña incorrecta. Te quedan " + (MAX_ATTEMPTS - user.getFailedAttempts()) + " intentos.");
-                    }
+                        // Lanza una excepción personalizada
+                        throw new BadCredentialsException("Contraseña incorrecta. Te quedan " + (MAX_ATTEMPTS - user.getFailedAttempts()) + " intentos.");
+                }
 
-                    // Si la autenticación es exitosa, resetea los intentos fallidos
-                    user.setFailedAttempts(0);
-                    userRepository.save(user);
+                // Si la autenticación es exitosa, resetea los intentos fallidos
+                user.setFailedAttempts(0);
+                userRepository.save(user);
 
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, getAuthorities(user));
-                    
-                    String nameSurname = user.getName() + " " + user.getSurname();
-                    
-                    authToken.setDetails(nameSurname);
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, getAuthorities(user));
 
-                    return authToken;
-          }
+                Map<String, Object> details = new HashMap<>();
+                details.put("id", Long.valueOf(user.getId()));
+                details.put("name", user.getName());
 
-          @Override
-          public boolean supports(Class<?> authentication) {
-                    return authentication.equals(UsernamePasswordAuthenticationToken.class);
-          }
+                // Guarda los detalles en el token
+                authToken.setDetails(details);
 
-          private Collection<? extends GrantedAuthority> getAuthorities(User user) {
-                    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
-          }
+                return authToken;
+        }
+
+        @Override
+        public boolean supports(Class<?> authentication) {
+                return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        }
+
+        private Collection<? extends GrantedAuthority> getAuthorities(User user) {
+                return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        }
 }

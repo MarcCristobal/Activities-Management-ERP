@@ -34,5 +34,4 @@ public class PasswordGenerator {
                     System.out.println("Contraseña generada: "+password);
                     return password.toString();
           }
-
 }

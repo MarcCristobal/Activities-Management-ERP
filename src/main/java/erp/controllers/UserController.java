@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import erp.services.MailSenderService;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +32,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
         private final UserService userService;
-        private final PasswordGenerator passwordGenerator;
-        private final MailSenderService javaMailSender;
+        
 
         @Autowired
-        public UserController(UserService userService, PasswordGenerator passwordGenerator, MailSenderService javaMailSender) {
+        public UserController(UserService userService) {
                 this.userService = userService;
-                this.passwordGenerator = passwordGenerator;
-                this.javaMailSender = javaMailSender;
+                
         }
 
         @GetMapping("/register")
@@ -69,14 +71,17 @@ public class UserController {
         }
 
         @GetMapping("/home/users")
-        public String showAllUsers(Model model) {
+        public String showAllPersons(Model model) {
                 List<User> users = userService.getAllUsers();
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                User user = userService.findUserByEmail(authentication.getName());
+                users.remove(user);
                 model.addAttribute("users", users);
                 return "users";
         }
 
         @GetMapping("/home/users/user-form")
-        public String showUserForm( Model model) {
+        public String showUserForm(Model model) {
                 User user = new User();
                 model.addAttribute("user", user);
                 return "userForm";
@@ -98,24 +103,31 @@ public class UserController {
                         user.setPhotoPath(photoPath);
 
                         // Guardamos el usuario
-                        user.setPassword(passwordGenerator.generateRandomPassword(8));
-                        javaMailSender.sendEmail(user.getEmail(), "Cuenta Activities ERP", "Aqui tiene sus credenciales nuevas y el link para regenerar la contraseña:"+user.getPassword());
+                        
                         userService.saveOrUpdateUser(user);
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                         // Manejamos la excepción
                         System.out.println(e.getMessage());
                 }
 
                 return "redirect:/home/users";
         }
+        
 
         @GetMapping("/home/users/update/{id}")
         public String showUpdateForm(@PathVariable("id") long id, Model model) {
-                User person = userService.findById(id);
-                model.addAttribute("user", person);
-                return "userForm";
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                User existinguser = userService.findUserByEmail(auth.getName());
+                User user = userService.findById(id);
+                user.setPassword(null);
+                model.addAttribute("user", user);
+                if(existinguser.equals(user)){
+                        return "editProfile";
+                }else{
+                         return "userForm";
+                }
         }
+        
 
         @PostMapping("/home/users/delete/{id}")
         public String deleteUser(@PathVariable("id") long id) {
@@ -131,3 +143,4 @@ public class UserController {
         }
 
 }
+
