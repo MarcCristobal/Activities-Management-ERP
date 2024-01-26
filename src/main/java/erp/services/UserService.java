@@ -119,5 +119,8 @@ public class UserService {
         public List<User> getLockedUsers(){
                 return userDao.findByAccountNonLockedFalse();
         }
+       public List<User> findUsersByName(String name){
+                return userDao.findUsersByName(name);
+        }
 
 }

@@ -4,6 +4,7 @@
  */
 package erp.controllers;
 
+import erp.domain.Activity;
 import erp.domain.User;
 import erp.services.PasswordGenerator;
 import erp.services.UserService;
@@ -32,12 +33,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
         private final UserService userService;
-        
 
         @Autowired
         public UserController(UserService userService) {
                 this.userService = userService;
-                
+
         }
 
         @GetMapping("/register")
@@ -103,7 +103,6 @@ public class UserController {
                         user.setPhotoPath(photoPath);
 
                         // Guardamos el usuario
-                        
                         userService.saveOrUpdateUser(user);
                 } catch (IOException e) {
                         // Manejamos la excepción
@@ -112,7 +111,6 @@ public class UserController {
 
                 return "redirect:/home/users";
         }
-        
 
         @GetMapping("/home/users/update/{id}")
         public String showUpdateForm(@PathVariable("id") long id, Model model) {
@@ -121,13 +119,12 @@ public class UserController {
                 User user = userService.findById(id);
                 user.setPassword(null);
                 model.addAttribute("user", user);
-                if(existinguser.equals(user)){
+                if (existinguser.equals(user)) {
                         return "editProfile";
-                }else{
-                         return "userForm";
+                } else {
+                        return "userForm";
                 }
         }
-        
 
         @PostMapping("/home/users/delete/{id}")
         public String deleteUser(@PathVariable("id") long id) {
@@ -142,5 +139,11 @@ public class UserController {
                 return "userOverview";
         }
 
-}
+        @GetMapping("/filtered-users-by-name")
+        public String filterUsersByName(@RequestParam("name") String name, Model model) {
+                List<User> filteredUsers = userService.findUsersByName(name);
+                model.addAttribute("users", filteredUsers);
+                return "users";
+        }
 
+}
