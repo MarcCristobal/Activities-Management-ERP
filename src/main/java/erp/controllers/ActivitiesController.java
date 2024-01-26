@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class ActivitiesController {
-
+    
     @Autowired
     private ActivityService activityService;
 
@@ -46,13 +46,15 @@ public class ActivitiesController {
     }
 
     @PostMapping("/activities/create-activity")
-    public String createActivity(@ModelAttribute Activity activity, Model model) {
+    public String createActivity(@ModelAttribute Activity activity, Model model,
+            @RequestParam("resourceListHidden") String resourceJson, @RequestParam("requirementListHidden") String requirementJson) {
+        
         boolean isAValidDate = validateDates(activity.getStartDate(), activity.getEndDate());
         boolean isAValidPaymentValue = validatePaymentValues(activity.getPricePerPerson(), activity.getNumberOfPayments());
         boolean isAValidParticipantValue = activity.getIsLimited() ? validateParticipantLimit(activity.getParticipantLimit()) : true;
 
         if (isAValidDate && isAValidPaymentValue && isAValidParticipantValue) {
-            activityService.saveOrUpdateActivity(activity);
+            activityService.saveOrUpdateActivity(activity, resourceJson, requirementJson);
             return "redirect:/activities";
         } else if (!isAValidDate) {
             model.addAttribute("incorrectDate", true);

@@ -110,9 +110,13 @@
                     </div>
                     <div>
                         <ul id="resourceList" class="border p-1 border-gray-800 h-64">                            
+                            <li th:each="resource, iterStat : ${activity.resources}" 
+                                th:text="${resource}"
+                                th:classappend="${iterStat.index % 2 == 1 ? 'bg-gray-200' : ''}">
+                            </li>
                         </ul>
 
-                        <input type="text" id="resourceListHidden" name="resourceListHidden" class="hidden" th:field="*{resources}">
+                        <input type="text" id="resourceListHidden" name="resourceListHidden" class="hidden">
 
                     </div>
                 </div>
@@ -126,9 +130,13 @@
                     </div>
                     <div class="pb-10">
                         <ul id="requirementList" class="border p-1 border-gray-800 h-64">                            
+                            <li th:each="requirement, iterStat : ${activity.requirements}" 
+                                th:text="${requirement}"
+                                th:classappend="${iterStat.index % 2 == 1 ? 'bg-gray-200' : ''}">
+                            </li>
                         </ul>
 
-                        <input type="text" id="requirementListHidden" name="requirementListHidden" class="hidden" th:field="*{requirements}">
+                        <input type="text" id="requirementListHidden" name="requirementListHidden" class="hidden">
                     </div>
                     <div class="flex justify-end">
                         <input type="submit" id="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
@@ -139,9 +147,9 @@
         </div>
 
         <script th:src="@{/js/activityForm.js}"></script>
-        
 
-        
+
+
 
 
     </body>
