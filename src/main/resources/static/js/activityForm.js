@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateHiddenField('requirementList');
     });
 
-    toggleParticipantsSection();
-    togglePaymentOptions();
-
     document.getElementById("isFree").addEventListener("change", function () {
         // Cuando se hace clic en el checkbox "Yes"
         togglePaymentOptions(this.checked);
@@ -29,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // Cuando se hace clic en el radio button "Limited"
         toggleParticipantsSection();
     });
+
+    toggleParticipantsSection();
+    togglePaymentOptions();
 
     function addListItem(listId, inputId) {
         var input = document.getElementById(inputId);
@@ -94,7 +94,5 @@ document.addEventListener('DOMContentLoaded', function () {
             numberOfPaymentsContainer.classList.add('invisible');
         }
     }
-
-
 
 });
