@@ -19,9 +19,11 @@
                     <button type="submit" class="w-10 h-10 cursor-pointer"><img src="/images/anadir.png"></button>
                 </form>
 
-                <form class="flex items-center">
-                    <input type="text" id="text" name="text" class="w-80 h-10 border border-gray-800 rounded-md">
-                    <button class="w-10 h-10 cursor-pointer rounded-md bg-teal-500"><img src="/images/lupa.png"></button>
+                <form th:action="@{/filtered-users-by-name}" method="get" class="flex items-center">
+                    <input type="text" id="name" name="name" class="w-80 h-10 border border-gray-800 rounded-md">
+                    <button type="submit" class="w-10 h-10 cursor-pointer rounded-md bg-teal-500">
+                        <img src="/images/lupa.png">
+                    </button>
                 </form>
             </div>
 

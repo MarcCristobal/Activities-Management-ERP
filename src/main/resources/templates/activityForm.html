@@ -15,7 +15,6 @@
             <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Activities</span><span> > Add Activity</span></label>
             <form class="grid grid-cols-3 gap-20" th:object="${activity}" th:action="@{/activities/create-activity}" method="post">
                 <input type=hidden th:field="*{id}">
-
                 <div class="space-y-2">
                     <div class="text-gray-500 text-xl">Information</div>
 
@@ -130,6 +129,7 @@
 
                         <input type="text" id="requirementListHidden" name="requirementListHidden" class="hidden" th:field="*{requirements}">
                     </div>
+
                     <div class="flex justify-end">
                         <input type="submit" id="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
                         <a th:href="@{/activities}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
@@ -139,9 +139,9 @@
         </div>
 
         <script th:src="@{/js/activityForm.js}"></script>
-        
 
-        
+
+
 
 
     </body>

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.ActivityDao;
 import erp.domain.Activity;
+import java.util.Date;
 
 /**
  *
@@ -43,7 +44,7 @@ public class ActivityService {
                 existingActivity.setPricePerPerson(0);
                 existingActivity.setNumberOfPayments(0);
             }
-            
+
             return activityDao.save(existingActivity);
         }
         return activityDao.save(activity);
@@ -63,5 +64,17 @@ public class ActivityService {
 
     public Activity findActivityById(Long id) {
         return activityDao.findById(id).orElse(null);
+    }
+
+    public boolean validateDates(Date startDate, Date endDate) {
+        return startDate.compareTo(endDate) <= 0;
+    }
+
+    public boolean validatePaymentValues(double pricePerPerson, int numberOfPayments) {
+        return !(pricePerPerson < 0 || numberOfPayments < 0);
+    }
+
+    public boolean validateParticipantLimit(int participantLimit) {
+        return !(participantLimit < 1);
     }
 }
