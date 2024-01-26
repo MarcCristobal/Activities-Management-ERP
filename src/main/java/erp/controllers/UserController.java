@@ -4,6 +4,8 @@
  */
 package erp.controllers;
 
+import erp.dao.UserDao;
+import erp.domain.Activity;
 import erp.domain.User;
 import erp.services.PasswordGenerator;
 import erp.services.UserService;
@@ -31,116 +33,123 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class UserController {
 
-        private final UserService userService;
-        
+    private final UserService userService;
 
-        @Autowired
-        public UserController(UserService userService) {
-                this.userService = userService;
-                
+    private final UserDao userDao;
+
+    @Autowired
+    public UserController(UserService userService, UserDao userDao) {
+        this.userService = userService;
+        this.userDao = userDao;
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(User user) {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo) {
+        try {
+            String photoPath;
+            if (photo != null && !photo.isEmpty()) {
+                // Si el usuario ha seleccionado una foto, la procesamos y guardamos
+                photoPath = userService.savePhoto(photo);
+            } else {
+                // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
+                photoPath = "/images/usuario.png";
+            }
+
+            // Establecemos la ruta de la foto en el usuario
+            user.setPhotoPath(photoPath);
+
+            // Guardamos el usuario
+            userService.saveOrUpdateUser(user);
+        } catch (IOException e) {
+            // Manejamos la excepción
+            System.out.println(e.getMessage());
         }
 
-        @GetMapping("/register")
-        public String showRegistrationForm(User user) {
-                return "register";
+        return "redirect:/login";
+    }
+
+    @GetMapping("/home/users")
+    public String showAllPersons(Model model) {
+        List<User> users = userService.getAllUsers();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(authentication.getName());
+        users.remove(user);
+        model.addAttribute("users", users);
+        return "users";
+    }
+
+    @GetMapping("/home/users/user-form")
+    public String showUserForm(Model model) {
+        User user = new User();
+        model.addAttribute("user", user);
+        return "userForm";
+    }
+
+    @PostMapping("/home/users/update")
+    public String updateUser(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo) {
+        try {
+            String photoPath;
+            if (photo != null && !photo.isEmpty()) {
+                // Si el usuario ha seleccionado una foto, la procesamos y guardamos
+                photoPath = userService.savePhoto(photo);
+            } else {
+                // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
+                photoPath = "/images/usuario2.png";
+            }
+
+            // Establecemos la ruta de la foto en el usuario
+            user.setPhotoPath(photoPath);
+
+            // Guardamos el usuario
+            userService.saveOrUpdateUser(user);
+        } catch (IOException e) {
+            // Manejamos la excepción
+            System.out.println(e.getMessage());
         }
 
-        @PostMapping("/register")
-        public String register(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo) {
-                try {
-                        String photoPath;
-                        if (photo != null && !photo.isEmpty()) {
-                                // Si el usuario ha seleccionado una foto, la procesamos y guardamos
-                                photoPath = userService.savePhoto(photo);
-                        } else {
-                                // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
-                                photoPath = "/images/usuario.png";
-                        }
+        return "redirect:/home/users";
+    }
 
-                        // Establecemos la ruta de la foto en el usuario
-                        user.setPhotoPath(photoPath);
-
-                        // Guardamos el usuario
-                        userService.saveOrUpdateUser(user);
-                } catch (IOException e) {
-                        // Manejamos la excepción
-                        System.out.println(e.getMessage());
-                }
-
-                return "redirect:/login";
+    @GetMapping("/home/users/update/{id}")
+    public String showUpdateForm(@PathVariable("id") long id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User existinguser = userService.findUserByEmail(auth.getName());
+        User user = userService.findById(id);
+        user.setPassword(null);
+        model.addAttribute("user", user);
+        if (existinguser.equals(user)) {
+            return "editProfile";
+        } else {
+            return "userForm";
         }
+    }
 
-        @GetMapping("/home/users")
-        public String showAllPersons(Model model) {
-                List<User> users = userService.getAllUsers();
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                User user = userService.findUserByEmail(authentication.getName());
-                users.remove(user);
-                model.addAttribute("users", users);
-                return "users";
-        }
+    @GetMapping("/filtered-users-by-name")
+    public String filterUsersByName(@RequestParam("name") String name, Model model) {
+        List<User> filteredUsers = userDao.findUsersByName(name);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(auth.getName());
+        filteredUsers.remove(user);
+        model.addAttribute("users", filteredUsers);
+        return "users";
+    }
 
-        @GetMapping("/home/users/user-form")
-        public String showUserForm(Model model) {
-                User user = new User();
-                model.addAttribute("user", user);
-                return "userForm";
-        }
+    @PostMapping("/home/users/delete/{id}")
+    public String deleteUser(@PathVariable("id") long id) {
+        userService.deleteUser(id);
+        return "redirect:/home/users";
+    }
 
-        @PostMapping("/home/users/update")
-        public String updateUser(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo) {
-                try {
-                        String photoPath;
-                        if (photo != null && !photo.isEmpty()) {
-                                // Si el usuario ha seleccionado una foto, la procesamos y guardamos
-                                photoPath = userService.savePhoto(photo);
-                        } else {
-                                // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
-                                photoPath = "/images/usuario2.png";
-                        }
-
-                        // Establecemos la ruta de la foto en el usuario
-                        user.setPhotoPath(photoPath);
-
-                        // Guardamos el usuario
-                        
-                        userService.saveOrUpdateUser(user);
-                } catch (IOException e) {
-                        // Manejamos la excepción
-                        System.out.println(e.getMessage());
-                }
-
-                return "redirect:/home/users";
-        }
-        
-
-        @GetMapping("/home/users/update/{id}")
-        public String showUpdateForm(@PathVariable("id") long id, Model model) {
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                User existinguser = userService.findUserByEmail(auth.getName());
-                User user = userService.findById(id);
-                user.setPassword(null);
-                model.addAttribute("user", user);
-                if(existinguser.equals(user)){
-                        return "editProfile";
-                }else{
-                         return "userForm";
-                }
-        }
-        
-
-        @PostMapping("/home/users/delete/{id}")
-        public String deleteUser(@PathVariable("id") long id) {
-                userService.deleteUser(id);
-                return "redirect:/home/users";
-        }
-
-        @GetMapping("/home/users/{id}")
-        public String showUserProfile(@PathVariable("id") Long id, Model model) {
-                User user = userService.findById(id);
-                model.addAttribute("user", user);
-                return "userOverview";
-        }
+    @GetMapping("/home/users/{id}")
+    public String showUserProfile(@PathVariable("id") Long id, Model model) {
+        User user = userService.findById(id);
+        model.addAttribute("user", user);
+        return "userOverview";
+    }
 
 }
-

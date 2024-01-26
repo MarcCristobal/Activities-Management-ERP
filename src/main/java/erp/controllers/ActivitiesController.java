@@ -49,9 +49,9 @@ public class ActivitiesController {
     public String createActivity(@ModelAttribute Activity activity, Model model,
             @RequestParam("resourceListHidden") String resourceJson, @RequestParam("requirementListHidden") String requirementJson) {
         
-        boolean isAValidDate = validateDates(activity.getStartDate(), activity.getEndDate());
-        boolean isAValidPaymentValue = validatePaymentValues(activity.getPricePerPerson(), activity.getNumberOfPayments());
-        boolean isAValidParticipantValue = activity.getIsLimited() ? validateParticipantLimit(activity.getParticipantLimit()) : true;
+        boolean isAValidDate = activityService.validateDates(activity.getStartDate(), activity.getEndDate());
+        boolean isAValidPaymentValue = activityService.validatePaymentValues(activity.getPricePerPerson(), activity.getNumberOfPayments());
+        boolean isAValidParticipantValue = activity.getIsLimited() ? activityService.validateParticipantLimit(activity.getParticipantLimit()) : true;
 
         if (isAValidDate && isAValidPaymentValue && isAValidParticipantValue) {
             activityService.saveOrUpdateActivity(activity, resourceJson, requirementJson);
@@ -102,25 +102,18 @@ public class ActivitiesController {
 
     @GetMapping("/filtered-activities-by-date")
     public String filterActivitiesByDate(@RequestParam("date") String dateString, Model model) {
-        try {
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-            List<Activity> filteredActivities = activityDao.findActivitiesByDate(date);
-            model.addAttribute("activities", filteredActivities);
-            return "activities";
-        } catch (ParseException pe) {
-            return "activities";
+        if (dateString == null || dateString.isEmpty()) {
+            List<Activity> allActivities = activityService.getAllActivities();
+            model.addAttribute("activities", allActivities);
+        } else {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                List<Activity> filteredActivities = activityDao.findActivitiesByDate(date);
+                model.addAttribute("activities", filteredActivities);
+            } catch (ParseException pe) {
+                return "activities";
+            }
         }
-    }
-
-    private boolean validateDates(Date startDate, Date endDate) {
-        return startDate.compareTo(endDate) <= 0;
-    }
-
-    private boolean validatePaymentValues(double pricePerPerson, int numberOfPayments) {
-        return !(pricePerPerson < 0 || numberOfPayments < 0);
-    }
-
-    private boolean validateParticipantLimit(int participantLimit) {
-        return !(participantLimit < 1);
+        return "activities";
     }
 }
