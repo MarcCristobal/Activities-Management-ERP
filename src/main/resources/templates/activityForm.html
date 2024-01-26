@@ -109,9 +109,10 @@
                     </div>
                     <div>
                         <ul id="resourceList" class="border p-1 border-gray-800 h-64">                            
-                            <li th:each="resource, iterStat : ${activity.resources}" 
-                                th:text="${resource}"
-                                th:classappend="${iterStat.index % 2 == 1 ? 'bg-gray-200' : ''}">
+                            <li th:each="resource : ${activity.resources}"
+                                class="flex items-center justify-between group">
+                                <span th:text="${resource}"></span>
+                                <img class="size-4 invisible transition duration-300 ease-in-out group-hover:visible" src="/images/contenedor-de-basura2.png">
                             </li>
                         </ul>
 
@@ -129,9 +130,10 @@
                     </div>
                     <div class="pb-10">
                         <ul id="requirementList" class="border p-1 border-gray-800 h-64">                            
-                            <li th:each="requirement, iterStat : ${activity.requirements}" 
-                                th:text="${requirement}"
-                                th:classappend="${iterStat.index % 2 == 1 ? 'bg-gray-200' : ''}">
+                            <li th:each="requirement : ${activity.requirements}"                                 
+                                class="flex items-center justify-between group">
+                                <span th:text="${requirement}"></span>
+                                <img class="size-4 invisible transition duration-300 ease-in-out group-hover:visible" src="/images/contenedor-de-basura2.png">
                             </li>
                         </ul>
 
