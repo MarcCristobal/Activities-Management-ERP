@@ -4,6 +4,7 @@
  */
 package erp.controllers;
 
+import erp.dao.UserDao;
 import erp.domain.Activity;
 import erp.domain.User;
 import erp.services.PasswordGenerator;
@@ -37,7 +38,6 @@ public class UserController {
         @Autowired
         public UserController(UserService userService) {
                 this.userService = userService;
-
         }
 
         @GetMapping("/register")
@@ -126,6 +126,16 @@ public class UserController {
                 }
         }
 
+        @GetMapping("/filtered-users-by-name")
+        public String filterUsersByName(@RequestParam("name") String name, Model model) {
+                List<User> filteredUsers = userService.findUsersByName(name);
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                User user = userService.findUserByEmail(auth.getName());
+                filteredUsers.remove(user);
+                model.addAttribute("users", filteredUsers);
+                return "users";
+        }
+
         @PostMapping("/home/users/delete/{id}")
         public String deleteUser(@PathVariable("id") long id) {
                 userService.deleteUser(id);
@@ -137,13 +147,6 @@ public class UserController {
                 User user = userService.findById(id);
                 model.addAttribute("user", user);
                 return "userOverview";
-        }
-
-        @GetMapping("/filtered-users-by-name")
-        public String filterUsersByName(@RequestParam("name") String name, Model model) {
-                List<User> filteredUsers = userService.findUsersByName(name);
-                model.addAttribute("users", filteredUsers);
-                return "users";
         }
 
 }

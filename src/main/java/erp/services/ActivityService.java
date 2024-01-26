@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.ActivityDao;
 import erp.domain.Activity;
+import java.util.Date;
 
 /**
  *
@@ -12,15 +13,18 @@ import erp.domain.Activity;
  */
 @Service
 public class ActivityService {
-
+    
     private final ActivityDao activityDao;
-
+    
     @Autowired
     public ActivityService(ActivityDao activitiesDao) {
         this.activityDao = activitiesDao;
     }
-
-    public Activity saveOrUpdateActivity(Activity activity) {
+    
+    @Autowired
+    private JsonConversionService jsonConversionService;
+    
+    public Activity saveOrUpdateActivity(Activity activity, String resourceJson, String requirementJson) {
         if (activity.getId() != null) {
             Activity existingActivity = activityDao.findById(activity.getId()).orElse(null);
             existingActivity.setName(activity.getName());
@@ -29,8 +33,8 @@ public class ActivityService {
             existingActivity.setEndDate(activity.getEndDate());
             existingActivity.setIsFree(activity.getIsFree());
             existingActivity.setIsLimited(activity.getIsLimited());
-            existingActivity.setResources(activity.getResources());
-            existingActivity.setRequirements(activity.getRequirements());
+            existingActivity.setResources(jsonConversionService.toList(resourceJson));
+            existingActivity.setRequirements(jsonConversionService.toList(requirementJson));
             if (existingActivity.getIsLimited()) {
                 existingActivity.setParticipantLimit(activity.getParticipantLimit());
             } else {
@@ -43,25 +47,37 @@ public class ActivityService {
                 existingActivity.setPricePerPerson(0);
                 existingActivity.setNumberOfPayments(0);
             }
-            
+
             return activityDao.save(existingActivity);
         }
         return activityDao.save(activity);
     }
-
+    
     public void deleteActivity(Long id) {
         activityDao.deleteById(id);
     }
-
+    
     public Activity findById(Long id) {
         return activityDao.findById(id).orElse(null);
     }
-
+    
     public List<Activity> getAllActivities() {
         return activityDao.findAll();
     }
-
+    
     public Activity findActivityById(Long id) {
         return activityDao.findById(id).orElse(null);
+    }
+
+    public boolean validateDates(Date startDate, Date endDate) {
+        return startDate.compareTo(endDate) <= 0;
+    }
+
+    public boolean validatePaymentValues(double pricePerPerson, int numberOfPayments) {
+        return !(pricePerPerson < 0 || numberOfPayments < 0);
+    }
+
+    public boolean validateParticipantLimit(int participantLimit) {
+        return !(participantLimit < 1);
     }
 }

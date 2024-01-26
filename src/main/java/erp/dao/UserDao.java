@@ -4,6 +4,7 @@
  */
 package erp.dao;
 
+import erp.domain.Activity;
 import erp.domain.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
