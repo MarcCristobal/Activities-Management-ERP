@@ -8,6 +8,7 @@ import erp.domain.Customer;
 import erp.services.CustomerService;
 import java.io.IOException;
 import java.util.List;
+import java.util.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CustomerController {
 
     private final CustomerService customerService;
-
+    private Queue<Customer> customersCSV;
     @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
@@ -75,7 +76,26 @@ public class CustomerController {
             System.out.println(e.getMessage());
         }
 
-        return "redirect:/home/customers";
+        return "redirect:/editCustomer";
+    }
+    @PostMapping("/upload")
+    public String upload(@RequestParam("file") MultipartFile file) {
+              System.out.println("Hola");
+        customersCSV = customerService.loadCustomersFromCsv(file);
+              System.out.println("No pete");
+        return "redirect:/editCustomer";
+    }
+
+    @GetMapping("/editCustomer")
+    public String editCustomer(Model model) {
+        if (!customersCSV.isEmpty()) {
+            Customer customer = customersCSV.poll();
+                  System.out.println(customer);
+            model.addAttribute("customer", customer);
+            return "customerForm";  // tu vista
+        } else {
+            return "redirect:/home/customers";  // tu vista cuando todos los clientes han sido revisados
+        }
     }
 
     @GetMapping("/home/customers/update/{id}")
