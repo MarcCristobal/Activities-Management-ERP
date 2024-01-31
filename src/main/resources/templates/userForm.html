@@ -21,7 +21,7 @@
                     <!-- Photo -->
                     <div class="space-y-6">
                         <input type="file" id="photo" name="photo" accept="image/*" class="hidden" onchange="loadFile(event)">
-                        <img id="output" class="size-36" th:src="${user.photoPath}">
+                        <img id="output" class="size-36" th:src="@{'/images/userImages/serve/' + ${user.photoPath}}">
                         <label for="photo" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
                             <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
                             <span class="text-white">Photo</span>

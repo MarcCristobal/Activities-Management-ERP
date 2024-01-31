@@ -106,25 +106,35 @@ public class UserService {
         public String savePhoto(MultipartFile photo, User user) throws IOException {
                 // Generamos un nombre de archivo único
                 String filename;
-                if (user.getPhotoPath() != null && !user.getPhotoPath().equals("/images/usuario2.png")) {
-                        // Si el usuario ya tiene una imagen asignada que no es la imagen por defecto,
-                        // usamos el mismo nombre de archivo para sobrescribir la imagen anterior
+                if (photo != null && !photo.isEmpty()) {
+                        if (user.getPhotoPath() != null && !user.getPhotoPath().equals("usuario2.png")) {
+                                // Si el usuario ya tiene una imagen asignada que no es la imagen por defecto,
+                                // usamos el mismo nombre de archivo para sobrescribir la imagen anterior
+                                filename = user.getPhotoPath();
+                                // Obtenemos la ruta absoluta del directorio del proyecto
+                                String projectDirectory = new File(".").getAbsolutePath();
+                                // Creamos la ruta completa al archivo
+                                Path filePath = Paths.get(projectDirectory, "/src/main/resources/static/images/userImages/", filename);
+                                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
+                                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                        } else {
+                                // Si el usuario no tiene una imagen asignada o si tiene la imagen por defecto,
+                                // generamos un nuevo nombre de archivo
+                                filename = UUID.randomUUID().toString() + ".jpg";
+                                // Obtenemos la ruta absoluta del directorio del proyecto
+                                String projectDirectory = new File(".").getAbsolutePath();
+                                // Creamos la ruta completa al archivo
+                                Path filePath = Paths.get(projectDirectory, "/src/main/resources/static/images/userImages/", filename);
+                                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
+                                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                        }
+                } else if (user.getPhotoPath() != null) {
+                        // Si no se sube una nueva foto, usa la foto actual del usuario
                         filename = user.getPhotoPath();
                 } else {
-                        // Si el usuario no tiene una imagen asignada o si tiene la imagen por defecto,
-                        // generamos un nuevo nombre de archivo
-                        filename = UUID.randomUUID().toString() + ".jpg";
+                        // Si no hay foto actual y no se sube una nueva foto, usa la imagen por defecto
+                        filename = "usuario2.png";
                 }
-
-                // Obtenemos la ruta absoluta del directorio del proyecto
-                String projectDirectory = new File(".").getAbsolutePath();
-
-                // Creamos la ruta completa al archivo
-                Path filePath = Paths.get(projectDirectory, "/src/main/resources/static/images/userImages/", filename);
-
-                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
-                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
                 // Devolvemos solo el nombre del archivo, no la ruta completa
                 return filename;
         }

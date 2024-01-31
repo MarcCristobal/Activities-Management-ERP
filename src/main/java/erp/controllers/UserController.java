@@ -7,8 +7,13 @@ package erp.controllers;
 import erp.domain.User;
 import erp.services.UserService;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -68,7 +73,8 @@ public class UserController {
         public String showAllPersons(Model model) {
                 List<User> users = userService.getAllUsers();
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                User user = userService.findUserByEmail(authentication.getName());
+                Long userId = (Long) ((Map<String, Object>) authentication.getDetails()).get("id");
+                User user = userService.findById(userId);
                 users.remove(user);
                 model.addAttribute("users", users);
                 return "users";
@@ -84,25 +90,54 @@ public class UserController {
 
         @PostMapping("/home/users/update")
         public String updateUser(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo) {
-                try {
-                        String photoPath;
-                        if (photo != null && !photo.isEmpty()) {
-                                // Si el usuario ha seleccionado una foto, la procesamos y guardamos
-                                photoPath = userService.savePhoto(photo, user);
-                        } else {
-                                // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
-                                photoPath = "usuario2.png";
-                        }
+                String photoPath;
+                User oldUser = null;
 
-                        // Establecemos la ruta de la foto en el usuario
-                        user.setPhotoPath(photoPath);
-
-                        // Guardamos el usuario
-                        userService.saveOrUpdateUser(user);
-                } catch (IOException e) {
-                        // Manejamos la excepción
-                        System.out.println(e.getMessage());
+                // Comprueba si el usuario ya existe
+                if (user.getId() != null) {
+                        oldUser = userService.findById(user.getId());
                 }
+
+                try {
+                        // Si no se proporciona una nueva foto, usa la foto actual del usuario
+                        photoPath = userService.savePhoto(photo, oldUser != null ? oldUser : user);
+                        user.setPhotoPath(photoPath);
+                } catch (IOException ex) {
+                        Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                // Guardamos el usuario
+                userService.saveOrUpdateUser(user);
+
+                return "redirect:/home/users";
+        }
+
+        @PostMapping("/home/users/updateCurrentUser")
+        public String updateCurrentUser(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo) {
+                String photoPath;
+                User oldUser = userService.findById(user.getId());
+                try {
+                        // Si no se proporciona una nueva foto, usa la foto actual del usuario
+                        photoPath = userService.savePhoto(photo, oldUser);
+
+                        user.setPhotoPath(photoPath);
+                } catch (IOException ex) {
+                        Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                // Guarda el usuario
+                userService.saveOrUpdateUser(user);
+
+                // Actualiza los detalles de autenticación
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(
+                        user.getEmail(), auth.getCredentials(), auth.getAuthorities());
+                Map<String, Object> details = new HashMap<>();
+                details.put("id", Long.valueOf(user.getId()));
+                details.put("name", user.getName());
+                details.put("photoPath", user.getPhotoPath());
+                newAuth.setDetails(details);
+                SecurityContextHolder.getContext().setAuthentication(newAuth);
 
                 return "redirect:/home/users";
         }
@@ -110,11 +145,12 @@ public class UserController {
         @GetMapping("/home/users/update/{id}")
         public String showUpdateForm(@PathVariable("id") long id, Model model) {
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                User existinguser = userService.findUserByEmail(auth.getName());
+                Long userId = (Long) ((Map<String, Object>) auth.getDetails()).get("id");
+                User existinguser = userService.findById(userId);
                 User user = userService.findById(id);
                 user.setPassword(null);
                 model.addAttribute("user", user);
-                if (existinguser.equals(user)) {
+                if (existinguser != null && existinguser.equals(user)) {
                         return "editProfile";
                 } else {
                         return "userForm";
@@ -142,6 +178,14 @@ public class UserController {
                 User user = userService.findById(id);
                 model.addAttribute("user", user);
                 return "userOverview";
+        }
+
+        @GetMapping("/header")
+        public String getHeader(Model model) {
+
+                // Luego, devuelves la vista que contiene el HTML del encabezado
+                // Asegúrate de que esta vista solo contenga el HTML del encabezado y no de toda la página
+                return "header";
         }
 
 }
