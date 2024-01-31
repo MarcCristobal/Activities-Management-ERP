@@ -84,8 +84,15 @@
 
                             <input type="radio" class="peer/neighbor hidden" id="neighbor" name="type" value="Veí"th:field="*{type}" required>
                             <label for="neighbor" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/neighbor:bg-teal-500">Neighbor</label>
-                            
+
                         </span>
+                        <!-- ... tus otros campos ... -->
+
+                        <input type="hidden" id="activityNamesString" name="activityNamesString" th:field="*{activityNamesString}">
+                        <input type="hidden" id="interests" name="interests" th:field="*{interests}">
+
+                        <!-- ... tus otros campos ... -->
+
                         <span class="flex flex-row justify-end">
                             <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
                             <a th:href="@{/home/customers}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>

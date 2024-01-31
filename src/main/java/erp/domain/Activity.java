@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -75,6 +76,10 @@ public class Activity {
     @OneToOne
     @JoinColumn(name = "monitor_id")
     private User monitor;
+    
+    @ManyToMany(mappedBy = "activities")
+    private List<Customer> customers = new ArrayList<>();
+
 
     public boolean getIsFree() {
         return isFree;
