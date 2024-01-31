@@ -66,6 +66,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 Map<String, Object> details = new HashMap<>();
                 details.put("id", Long.valueOf(user.getId()));
                 details.put("name", user.getName());
+                details.put("photoPath", user.getPhotoPath());
 
                 // Guarda los detalles en el token
                 authToken.setDetails(details);

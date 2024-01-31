@@ -4,17 +4,11 @@
  */
 package erp.controllers;
 
-import erp.dao.UserDao;
-import erp.domain.Activity;
 import erp.domain.User;
-import erp.services.PasswordGenerator;
 import erp.services.UserService;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import erp.services.MailSenderService;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -83,6 +77,7 @@ public class UserController {
         @GetMapping("/home/users/user-form")
         public String showUserForm(Model model) {
                 User user = new User();
+                user.setPhotoPath("/images/usuario2.png");
                 model.addAttribute("user", user);
                 return "userForm";
         }
