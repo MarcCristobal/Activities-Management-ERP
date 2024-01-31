@@ -45,10 +45,10 @@ public class UserController {
                         String photoPath;
                         if (photo != null && !photo.isEmpty()) {
                                 // Si el usuario ha seleccionado una foto, la procesamos y guardamos
-                                photoPath = userService.savePhoto(photo);
+                                photoPath = userService.savePhoto(photo, user);
                         } else {
                                 // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
-                                photoPath = "/images/usuario.png";
+                                photoPath = "usuario2.png";
                         }
 
                         // Establecemos la ruta de la foto en el usuario
@@ -77,7 +77,7 @@ public class UserController {
         @GetMapping("/home/users/user-form")
         public String showUserForm(Model model) {
                 User user = new User();
-                user.setPhotoPath("/images/usuario2.png");
+                user.setPhotoPath("usuario2.png");
                 model.addAttribute("user", user);
                 return "userForm";
         }
@@ -88,10 +88,10 @@ public class UserController {
                         String photoPath;
                         if (photo != null && !photo.isEmpty()) {
                                 // Si el usuario ha seleccionado una foto, la procesamos y guardamos
-                                photoPath = userService.savePhoto(photo);
+                                photoPath = userService.savePhoto(photo, user);
                         } else {
                                 // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
-                                photoPath = "/images/usuario2.png";
+                                photoPath = "usuario2.png";
                         }
 
                         // Establecemos la ruta de la foto en el usuario
