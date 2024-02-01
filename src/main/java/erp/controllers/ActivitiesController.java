@@ -4,12 +4,8 @@
  */
 package erp.controllers;
 
-import erp.dao.ActivityDao;
 import erp.domain.Activity;
 import erp.services.ActivityService;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,12 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class ActivitiesController {
-    
-    @Autowired
-    private ActivityService activityService;
 
     @Autowired
-    private ActivityDao activityDao;
+    private ActivityService activityService;
 
     @GetMapping("/activities")
     public String listActivities(Model model) {
@@ -48,7 +41,7 @@ public class ActivitiesController {
     @PostMapping("/activities/create-activity")
     public String createActivity(@ModelAttribute Activity activity, Model model,
             @RequestParam("resourceListHidden") String resourceJson, @RequestParam("requirementListHidden") String requirementJson) {
-        
+
         boolean isAValidDate = activityService.validateDates(activity.getStartDate(), activity.getEndDate());
         boolean isAValidPaymentValue = activityService.validatePaymentValues(activity.getPricePerPerson(), activity.getNumberOfPayments());
         boolean isAValidParticipantValue = activity.getIsLimited() ? activityService.validateParticipantLimit(activity.getParticipantLimit()) : true;
@@ -95,25 +88,15 @@ public class ActivitiesController {
 
     @GetMapping("/filtered-activities-by-name")
     public String filterActivitiesByName(@RequestParam("name") String name, Model model) {
-        List<Activity> filteredActivities = activityDao.findActivitiesByName(name);
+        List<Activity> filteredActivities = activityService.findActivitiesByName(name);
         model.addAttribute("activities", filteredActivities);
         return "activities";
     }
 
     @GetMapping("/filtered-activities-by-date")
     public String filterActivitiesByDate(@RequestParam("date") String dateString, Model model) {
-        if (dateString == null || dateString.isEmpty()) {
-            List<Activity> allActivities = activityService.getAllActivities();
-            model.addAttribute("activities", allActivities);
-        } else {
-            try {
-                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-                List<Activity> filteredActivities = activityDao.findActivitiesByDate(date);
-                model.addAttribute("activities", filteredActivities);
-            } catch (ParseException pe) {
-                return "activities";
-            }
-        }
+        List<Activity> filteredActivities = activityService.findActivitiesByDate(dateString);
+        model.addAttribute("activities", filteredActivities);
         return "activities";
     }
 }

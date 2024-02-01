@@ -1,4 +1,3 @@
-<!-- src/main/resources/templates/user-form.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
@@ -21,16 +20,18 @@
 
                     <!-- Photo -->
                     <div class="space-y-6">
-                        <img class="size-36" src="/images/usuario2.png">
+                        <img id="previewImage" class="size-36" th:src="@{${customer.photoPath}}">
                         <label for="photo" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
                             <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
                             <span class="text-white">Photo</span>
                         </label>
-                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden">
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden" onchange="previewImage(this)">
                     </div> 
 
                     <div class="grid-rows-1 space-y-4">    
                         <span class="text-gray-500 text-xl mr-80 pb-5">Personal Information</span>
+
+                        <input type="hidden" th:field="*{photoPath}">
 
                         <span class="flex flex-col">
                             <label for="name" class="font-bold">Name</label>
@@ -95,5 +96,6 @@
                 </div>
             </form>
         </div>
+        <script th:src="@{/js/customerForm.js}"></script>
     </body>
 </html>

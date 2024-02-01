@@ -6,6 +6,7 @@ package erp.controllers;
 
 import erp.domain.Customer;
 import erp.services.CustomerService;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class CustomerController {
     @GetMapping("/home/customers")
     public String showAllCustomers(Model model) {
         List<Customer> customers = customerService.getAllCustomers();
+        customers.forEach(customer -> {
+            if (customer.getPhotoPath() != null) {
+                customer.setPhotoPath(customer.getPhotoPath());
+            }
+        });
         model.addAttribute("customers", customers);
         return "customers";
     }
@@ -54,24 +60,17 @@ public class CustomerController {
     }
 
     @PostMapping("/home/customers/update")
-    public String updateCustomer(@ModelAttribute Customer customer, @RequestParam("photo") MultipartFile photo) {
+    public String updateCustomer(@ModelAttribute Customer customer, @RequestParam("photo") MultipartFile photo, Model model) {
         try {
-            String photoPath;
             if (photo != null && !photo.isEmpty()) {
-                // Si el usuario ha seleccionado una foto, la procesamos y guardamos
-                photoPath = customerService.savePhoto(photo);
-            } else {
-                // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
-                photoPath = "/images/usuario2.png";
+                String photoPath = customerService.savePhoto(photo);
+                customer.setPhotoPath(photoPath);
             }
-
-            // Establecemos la ruta de la foto en el usuario
-            customer.setPhotoPath(photoPath);
-
-            // Guardamos el usuario
             customerService.saveOrUpdateCustomer(customer);
+
+            model.addAttribute("customerId", customer.getId());
+
         } catch (IOException e) {
-            // Manejamos la excepción
             System.out.println(e.getMessage());
         }
 
@@ -89,5 +88,12 @@ public class CustomerController {
     public String deleteCustomer(@PathVariable("id") long id) {
         customerService.deleteCustomer(id);
         return "redirect:/home/customers";
+    }
+
+    @GetMapping("/filtered-customers-by-name")
+    public String filterActivitiesByName(@RequestParam("name") String name, Model model) {
+        List<Customer> filteredCustomers = customerService.findCustomersByName(name);
+        model.addAttribute("customers", filteredCustomers);
+        return "customers";
     }
 }
