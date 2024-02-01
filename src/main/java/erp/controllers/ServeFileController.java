@@ -21,7 +21,7 @@ public class ServeFileController {
 
         @GetMapping("/images/userImages/serve/{filename:.+}")
         public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-                Resource file = new FileSystemResource("src/main/resources/static/images/userImages/" + filename);
+                Resource file = new FileSystemResource("./userImages/" + filename);
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                         .header(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate")

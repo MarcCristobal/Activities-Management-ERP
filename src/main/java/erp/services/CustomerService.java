@@ -23,9 +23,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  *
@@ -84,7 +83,7 @@ public class CustomerService {
                 }
                 return customerDao.save(customer);
         }
-
+        
         public void deleteCustomer(Long id) {
                 customerDao.deleteById(id);
         }
@@ -132,10 +131,10 @@ public class CustomerService {
                                 customers.add(customer);
                         }
                 } catch (IOException e) {
-                        System.out.println(e.getMessage());
+                         System.out.println(e.getMessage());
                 }
 
                 return customers;
         }
-
+        
 }

@@ -16,7 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,7 +72,7 @@ public class Customer {
         @CsvBindByName(column = "Curs (Només per estudiants)")
         @Column(length = 20)
         private String course;
-
+        
         @CsvBindByName(column = "Interessos")
         @Column(length = 256)
         private String interests;
