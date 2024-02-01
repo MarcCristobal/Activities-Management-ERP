@@ -27,9 +27,11 @@
                 </div>
             </div>
             <div class="flex items-center">
-                <form class="flex flex-grow items-center">
-                    <button type="submit" class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer">Add Participants</button>                   
+                <form id="uploadForm" class="flex flex-grow items-center" method="POST" action="/upload" enctype="multipart/form-data">
+                    <input type="file" name="file" accept=".csv" style="display: none;" id="fileUpload" />
+                    <button type="button" class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer" onclick="handleClick();">Add Participants</button>
                 </form>
+
 
                 <form th:action="@{/filtered-activities-by-date}" method="get" class="flex items-center">                
                     <input type="date" id="date" name="date" class="text-center w-32 h-8 border rounded-md border-gray-800">
@@ -54,8 +56,18 @@
                         </button>
                     </form>
                 </div>
-
             </div>
         </div>
+        <script>
+            function handleClick() {
+                var fileUpload = document.getElementById('fileUpload');
+                fileUpload.click();
+                fileUpload.onchange = function () {
+                    if (fileUpload.value != '') {
+                        document.getElementById('uploadForm').submit();
+                    }
+                };
+            }
+        </script>
     </body>
 </html>

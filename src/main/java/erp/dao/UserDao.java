@@ -4,7 +4,6 @@
  */
 package erp.dao;
 
-import erp.domain.Activity;
 import erp.domain.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
@@ -18,10 +17,9 @@ public interface UserDao extends GenericDao<User, Long> {
 
         User findByEmail(String email);
         User findByName(String name);
-        List<User> findByAccountNonLockedFalse();
-        
-        @Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
+        @Query("SELECT a FROM User a WHERE a.name LIKE %:name%")
         List<User> findUsersByName(@Param("name") String name);
+        List<User> findByAccountNonLockedFalse();
         
 }
 

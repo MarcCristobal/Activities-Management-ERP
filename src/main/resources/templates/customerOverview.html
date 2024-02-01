@@ -21,7 +21,7 @@
 
                     <!-- Photo -->
                     <div class="space-y-6">
-                        <img class="size-36" th:src="@{${customer.photoPath}}">
+                        <img class="size-36" th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}">
                         <a th:href="@{'/home/customers/update/' + ${customer.id}}" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center space-x-1 py-1">
                             <img class="size-5" src="/images/lapiz.png">
                             <label class="text-slate-50">Edit</label>

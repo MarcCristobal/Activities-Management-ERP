@@ -15,19 +15,19 @@
         <div class="space-y-16 mx-8 my-6">
             <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Users</span> > Edit Profile<span></span></label>
 
-            <form th:object="${user}" th:action="@{/home/users/update}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
+            <form th:object="${user}" th:action="@{/home/users/updateCurrentUser}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
                 <input type="hidden" th:field="*{id}">
                 <input type="hidden" th:field="*{role}">
                 <div class="flex flex-row flex-grow space-x-10">
 
                     <!-- Photo -->
                     <div class="space-y-6">
-                        <img class="size-36" src="/images/usuario2.png">
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden" onchange="loadFile(event)">
+                        <img id="output" class="size-36" th:src="@{'/images/userImages/serve/' + ${user.photoPath}}">
                         <label for="photo" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
                             <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
                             <span class="text-white">Photo</span>
                         </label>
-                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden">
                     </div> 
 
                     <div class="grid-rows-1 space-y-4">    
@@ -57,7 +57,7 @@
                         </span>
                         <!-- Botón para editar la contraseña -->
                         <span class="flex flex-row justify-end">
-                            <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
+                            <input id="submit-button" type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
                             <a th:href="@{/home/users}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
                         </span>
                     </div>
@@ -85,6 +85,24 @@
                 document.getElementById('editPasswordButton').innerText = 'Editar contraseña';
                 document.getElementById('editPasswordButton').onclick = showPasswordField;
             }
+            var loadFile = function (event) {
+                var output = document.getElementById('output');
+                output.src = URL.createObjectURL(event.target.files[0]);
+                output.onload = function () {
+                    URL.revokeObjectURL(output.src) // libera el objeto URL
+                }
+            };
+            $('#submit-button').click(function () {
+                // Aquí va el código para enviar el formulario
+
+                // Una vez que el formulario se ha enviado con éxito, actualiza el encabezado
+                $.ajax({
+                    url: '/header',
+                    success: function (data) {
+                        $('#id-del-encabezado').html(data);
+                    }
+                });
+            });
         </script>
     </body>
 </html>

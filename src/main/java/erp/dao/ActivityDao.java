@@ -16,10 +16,13 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ActivityDao extends GenericDao<Activity, Long> {
 
-    @Query("SELECT a FROM Activity a WHERE a.name LIKE %:name%")
-    List<Activity> findActivitiesByName(@Param("name") String name);
+        @Query("SELECT a FROM Activity a WHERE a.name LIKE %:name%")
+        List<Activity> findActivitiesByName(@Param("name") String name);
 
-    @Query("SELECT a FROM Activity a WHERE a.startDate >= :date")
-    List<Activity> findActivitiesByDate(@Param("date") Date date);
+        @Query("SELECT a FROM Activity a WHERE a.startDate >= :date")
+        List<Activity> findActivitiesByDate(@Param("date") Date date);
+
+        @Query("SELECT a FROM Activity a WHERE a.name = :name")
+        Activity findActivityByNameExact(@Param("name") String name);
 
 }
