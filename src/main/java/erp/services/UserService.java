@@ -56,7 +56,7 @@ public class UserService {
                 } else {
                         if (!hasUsers()) {
                                 String randomPassword = passwordGenerator.generateRandomPassword(8);
-                                //javaMailSender.sendEmail(user.getEmail(), "Cuenta Activities ERP", "Aqui tiene sus credenciales nuevas y el link para regenerar la contraseña:" + randomPassword);
+                                javaMailSender.sendEmail(user.getEmail(), "Cuenta Activities ERP", "Aqui tiene sus credenciales nuevas y el link para regenerar la contraseña:" + randomPassword);
 
                                 // Codifica la contraseña y la guarda en el usuario
                                 String encodedPassword = passwordEncoder.encode(randomPassword);
@@ -114,7 +114,7 @@ public class UserService {
                                 // Obtenemos la ruta absoluta del directorio del proyecto
                                 String projectDirectory = new File(".").getAbsolutePath();
                                 // Creamos la ruta completa al archivo
-                                Path filePath = Paths.get(projectDirectory, "/src/main/resources/static/images/userImages/", filename);
+                                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
                                 // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
                                 Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                         } else {
@@ -124,7 +124,7 @@ public class UserService {
                                 // Obtenemos la ruta absoluta del directorio del proyecto
                                 String projectDirectory = new File(".").getAbsolutePath();
                                 // Creamos la ruta completa al archivo
-                                Path filePath = Paths.get(projectDirectory, "/src/main/resources/static/images/userImages/", filename);
+                                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
                                 // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
                                 Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                         }
@@ -135,7 +135,7 @@ public class UserService {
                         // Si no hay foto actual y no se sube una nueva foto, usa la imagen por defecto
                         filename = "usuario2.png";
                 }
-                // Devolvemos solo el nombre del archivo, no la ruta completa
+                // Devolvemos solo el nombre del archivo,
                 return filename;
         }
 

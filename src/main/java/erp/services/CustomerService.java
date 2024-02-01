@@ -110,7 +110,7 @@ public class CustomerService {
                                 // Obtenemos la ruta absoluta del directorio del proyecto
                                 String projectDirectory = new File(".").getAbsolutePath();
                                 // Creamos la ruta completa al archivo
-                                Path filePath = Paths.get(projectDirectory, "/src/main/resources/static/images/userImages/", filename);
+                                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
                                 // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
                                 Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                         } else {
@@ -120,7 +120,7 @@ public class CustomerService {
                                 // Obtenemos la ruta absoluta del directorio del proyecto
                                 String projectDirectory = new File(".").getAbsolutePath();
                                 // Creamos la ruta completa al archivo
-                                Path filePath = Paths.get(projectDirectory, "/src/main/resources/static/images/userImages/", filename);
+                                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
                                 // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
                                 Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                         }

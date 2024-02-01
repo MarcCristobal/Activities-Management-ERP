@@ -103,7 +103,7 @@ public class UserController {
                         photoPath = userService.savePhoto(photo, oldUser != null ? oldUser : user);
                         user.setPhotoPath(photoPath);
                 } catch (IOException ex) {
-                        Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println(ex.getMessage());
                 }
 
                 // Guardamos el usuario

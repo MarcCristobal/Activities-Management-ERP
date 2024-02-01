@@ -40,7 +40,7 @@ public class StartupConfig {
                                         Files.copy(defaultImage.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
                               } catch (IOException e) {
                                         // Manejar la excepción
-                                        e.printStackTrace();
+                                        System.out.println(e.getMessage());
                               }
                     }
           }
