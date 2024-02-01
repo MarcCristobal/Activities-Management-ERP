@@ -1,19 +1,29 @@
 <div class="w-screen h-auto flex items-center justify-center text-white px-8 py-4 bg-orange-500">
-    <img class="w-60 min-w-60" src="/images/NicolauCopernic-LOGO.png">
-    <div class="flex-grow">                   
+    <img class="w-60 min-w-60" src="/images/NicolauCopernic-LOGO.png" />
+    <div class="flex-grow">
         <h1 class="text-3xl text-center font-bold">ACTIVITIES MANAGEMENT</h1>
     </div>
-    <div class="w-60 min-w-60 flex space-x-2 justify-center items-center relative" th:if="${#authorization.expression('isAuthenticated()')}">
-       <label th:text="${#authentication.details['name']}"></label>
-        <img class="size-12" src="/images/usuario.png">
-        <img class="size-4 cursor-pointer" src="/images/flecha-hacia-abajo.png" onclick="toggleDropdown()">
-        <div id="dropdown" style="display: none; position: absolute; top: 100%; left: 0; background-color: #f9f9f9; min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; color: black;">
+    <div class="w-60 min-w-60 flex space-x-2 justify-center items-center relative"
+         th:if="${#authorization.expression('isAuthenticated()')}">
+        <label th:text="${#authentication.details['name']}"></label>
+        <img class="size-12" src="/images/usuario.png" />
+        <img class="size-4 cursor-pointer" src="/images/flecha-hacia-abajo.png" onclick="toggleDropdown()" />
+        <div id="dropdown" style="
+             display: none;
+             position: absolute;
+             top: 100%;
+             left: 0;
+             background-color: #f9f9f9;
+             min-width: 160px;
+             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+             z-index: 1;
+             color: black;
+             ">
             <form th:action="@{/home/users/{id}(id=${#authentication.details['id']})}" method="GET">
-
-                <input type="submit" value="Perfil">
+                <input type="submit" value="Perfil" />
             </form>
             <form th:action="@{/my/ownlogout}" method="POST">
-                <input type="submit" value="Logout">
+                <input type="submit" value="Logout" />
             </form>
         </div>
     </div>
@@ -29,11 +39,8 @@
         }
     </script>
 
-    <div class="w-60 min-w-60 flex space-x-2 justify-center items-center" th:unless="${#authorization.expression('isAuthenticated()')}">
+    <div class="w-60 min-w-60 flex space-x-2 justify-center items-center"
+         th:unless="${#authorization.expression('isAuthenticated()')}">
         <!-- Contenido en blanco -->
     </div>
-
-
-
 </div>
-

@@ -4,5 +4,5 @@
 
 /* Agrega esta regla para ocultar la barra de desplazamiento */
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
