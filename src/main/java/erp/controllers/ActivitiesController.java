@@ -23,8 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ActivitiesController {
 
+    private final ActivityService activityService;
+    
     @Autowired
-    private ActivityService activityService;
+    public ActivitiesController(ActivityService activityService){
+        this.activityService = activityService;
+    }
 
     @GetMapping("/activities")
     public String listActivities(Model model) {
@@ -99,4 +103,8 @@ public class ActivitiesController {
         model.addAttribute("activities", filteredActivities);
         return "activities";
     }
+    
+    
+    
+    
 }

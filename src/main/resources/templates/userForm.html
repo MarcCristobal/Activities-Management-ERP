@@ -1,13 +1,15 @@
 <!-- src/main/resources/templates/user-form.html -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Create User</title>
         <!-- Include Tailwind CSS -->
-        <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
     </head>
+
     <body>
         <div th:replace="~{header :: div}"></div>
         <div th:replace="~{nav :: div}"></div>
@@ -28,43 +30,56 @@
                         </label>
                     </div> 
 
-                    <div class="grid-rows-1 space-y-4">    
-                        <span class="text-gray-500 text-xl mr-80 pb-5">Personal Information</span>
+                    <div class="grid-rows-1 space-y-4">
+                        <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
 
                         <span class="flex flex-col">
                             <label for="name" class="font-bold">Name</label>
-                            <input type="text" id="name" name="name" class="border p-1 border-gray-800" th:field="*{name}" required>
+                            <input type="text" id="name" name="name" class="border border-gray-800 p-1" th:field="*{name}" required />
                         </span>
 
                         <span class="flex flex-col">
                             <label for="name" class="font-bold">Surname</label>
-                            <input type="text" id="surname" name="surname" class="border p-1 border-gray-800"  th:field="*{surname}" required>
+                            <input type="text" id="surname" name="surname" class="border border-gray-800 p-1" th:field="*{surname}"
+                                   required />
                         </span>
 
                         <span class="flex flex-col">
                             <label for="email" class="font-bold">Email:</label>
-                            <input type="email" id="email" name="email" class="border p-1 border-gray-800" th:field="*{email}" required>
+                            <input type="email" id="email" name="email" class="border border-gray-800 p-1" th:field="*{email}"
+                                   required />
                         </span>
 
-                        <span class="flex flex-row space-x-4 items-center justify-between">
+                        <span class="flex flex-row items-center justify-between space-x-4">
                             <label class="font-bold">Role</label>
 
-                            <input type="radio" class="peer/coordinator hidden" id="coordinator" name="role" value="ACTIVITIES_COORDINATOR" th:field="*{role}" required>
-                            <label for="coordinator" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/coordinator:bg-teal-500">Coordinator</label>
+                            <input type="radio" class="peer/coordinator hidden" id="coordinator" name="role"
+                                   value="ACTIVITIES_COORDINATOR" th:field="*{role}" required />
+                            <label for="coordinator"
+                                   class="cursor-pointer border border-gray-800 bg-gray-200 px-1 peer-checked/coordinator:bg-teal-500">Coordinator</label>
 
-                            <input type="radio" class="peer/monitor hidden" id="monitor" name="role" value="MONITOR" th:field="*{role}" required>
-                            <label for="monitor" class="cursor-pointer border px-1 border-gray-800 peer-checked/monitor:bg-teal-500">Monitor</label>
+                            <input type="radio" class="peer/monitor hidden" id="monitor" name="role" value="MONITOR" th:field="*{role}"
+                                   required />
+                            <label for="monitor"
+                                   class="cursor-pointer border border-gray-800 px-1 peer-checked/monitor:bg-teal-500">Monitor</label>
 
-                            <input type="radio" class="peer/concierge hidden" id="concierge" name="role" value="CONCIERGE"th:field="*{role}" required>
-                            <label for="concierge" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/concierge:bg-teal-500">Concierge</label>
+                            <input type="radio" class="peer/concierge hidden" id="concierge" name="role" value="CONCIERGE"
+                                   th:field="*{role}" required />
+                            <label for="concierge"
+                                   class="cursor-pointer border border-gray-800 bg-gray-200 px-1 peer-checked/concierge:bg-teal-500">Concierge</label>
 
-                            <input type="radio" class="peer/admin hidden" id="admin" name="role" value="ADMIN" th:field="*{role}" required>
-                            <label for="admin" class="cursor-pointer border px-1 border-gray-800 peer-checked/admin:bg-teal-500">Admin</label>
+                            <input type="radio" class="peer/admin hidden" id="admin" name="role" value="ADMIN" th:field="*{role}"
+                                   required />
+                            <label for="admin"
+                                   class="cursor-pointer border border-gray-800 px-1 peer-checked/admin:bg-teal-500">Admin</label>
                         </span>
 
                         <span class="flex flex-row justify-end">
-                            <input type="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
-                            <a th:href="@{/home/users}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
+                            <input type="submit"
+                                   class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
+                                   value="Accept" />
+                            <a th:href="@{/home/users}"
+                               class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
                         </span>
                     </div>
                 </div>
@@ -80,4 +95,5 @@
             };
         </script>
     </body>
+
 </html>

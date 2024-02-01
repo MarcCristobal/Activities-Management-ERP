@@ -5,7 +5,6 @@
 package erp.controllers;
 
 import erp.domain.Customer;
-import erp.domain.User;
 import erp.services.CustomerService;
 import java.io.IOException;
 import java.util.List;
@@ -54,13 +53,6 @@ public class CustomerController {
         Customer customer = customerService.findCustomerById(id);
         model.addAttribute("customer", customer);
         return "customerOverview";
-    }
-
-    @GetMapping("/home/customers/show-participant-list")
-    public String showParticipants(Model model) {
-        // List<User> customers = userService.getAllUsers();
-        //model.addAttribute("customers", customers);
-        return "participantList";
     }
 
     @PostMapping("/home/customers/update")
@@ -128,5 +120,24 @@ public class CustomerController {
         List<Customer> filteredCustomers = customerService.findCustomersByName(name);
         model.addAttribute("customers", filteredCustomers);
         return "customers";
+    }
+
+    @GetMapping("/home/activities/show-participant-list/{id}")
+    public String showParticipants(
+            @PathVariable("id") Long id, Model model) {
+        model.addAttribute("customers", customerService.getActivityCustomers(id));
+        model.addAttribute("activity_id", id);
+        return "participantList";
+    }
+
+    @PostMapping("/update-activity-customers")
+    public String updateActivityCustomers(@RequestParam("activity_id") long id,
+            @RequestParam("selectedCustomers") List<Long> selectedCustomers, Model model) {
+        customerService.removeCustomersFromActivity(id, selectedCustomers);
+
+        model.addAttribute("customers", customerService.getActivityCustomers(id));
+        model.addAttribute("activity_id", id);
+
+        return "participantList";
     }
 }

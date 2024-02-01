@@ -1,6 +1,5 @@
 package erp.services;
 
-import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import erp.dao.CustomerDao;
 import erp.domain.Activity;
 import erp.domain.Customer;
+import jakarta.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -85,6 +85,7 @@ public class CustomerService {
         return customerDao.save(customer);
     }
 
+    @Transactional
     public void deleteCustomer(Long id) {
         customerDao.deleteById(id);
     }
@@ -162,6 +163,15 @@ public class CustomerService {
 
     public List<Customer> findCustomersByName(String name) {
         return customerDao.findCustomersByName(name);
+    }
+    
+    public List<Customer> getActivityCustomers(Long id){
+        return customerDao.findCustomerByActivityId(id);
+    }
+    
+    @Transactional
+    public void removeCustomersFromActivity(Long activityId, List<Long> customerIds) {
+        customerDao.removeCustomersFromActivity(activityId, customerIds);
     }
 
 }

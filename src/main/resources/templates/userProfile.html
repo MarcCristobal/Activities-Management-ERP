@@ -1,12 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>User Profile</title>
         <!-- Include Tailwind CSS -->
-        <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
     </head>
+
     <body class="bg-gray-100">
         <div th:replace="~{header :: div}"></div>
         <div th:replace="~{nav :: div}"></div>
@@ -24,6 +26,5 @@
             </div>
         </div>
     </body>
+
 </html>
-
-
