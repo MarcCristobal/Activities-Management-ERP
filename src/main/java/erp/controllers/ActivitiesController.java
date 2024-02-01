@@ -86,12 +86,12 @@ public class ActivitiesController {
         return "redirect:/activities";
     }
 
-    @GetMapping("/filtered-activities-by-name")
-    public String filterActivitiesByName(@RequestParam("name") String name, Model model) {
-        List<Activity> filteredActivities = activityService.findActivitiesByName(name);
-        model.addAttribute("activities", filteredActivities);
-        return "activities";
-    }
+        @GetMapping("/filtered-activities-by-name")
+        public String filterActivitiesByName(@RequestParam("name") String name, Model model) {
+                List<Activity> filteredActivities = activityService.findActivitiesByName(name);
+                model.addAttribute("activities", filteredActivities);
+                return "activities";
+        }
 
     @GetMapping("/filtered-activities-by-date")
     public String filterActivitiesByDate(@RequestParam("date") String dateString, Model model) {

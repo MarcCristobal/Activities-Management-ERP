@@ -9,7 +9,7 @@ package erp.domain;
  * @author oscar
  */
 public enum CustomerType {
-    STUDENT,
-    NEIGHBOR,
-    TEACHER;
+    Estudiant,
+    Veí,
+    Professor;
 }
