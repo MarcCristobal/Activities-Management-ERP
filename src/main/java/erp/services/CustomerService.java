@@ -27,7 +27,6 @@ import java.util.Queue;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
-
 /**
  *
  * @author oscar
@@ -99,41 +98,41 @@ public class CustomerService {
         return customerDao.findById(id).orElse(null);
     }
 
-        public String savePhoto(MultipartFile photo, Customer customer) throws IOException {
-                // Generamos un nombre de archivo único
-                String filename;
-                if (photo != null && !photo.isEmpty()) {
-                        if (customer.getPhotoPath() != null && !customer.getPhotoPath().equals("usuario2.png")) {
-                                // Si el usuario ya tiene una imagen asignada que no es la imagen por defecto,
-                                // usamos el mismo nombre de archivo para sobrescribir la imagen anterior
-                                filename = customer.getPhotoPath();
-                                // Obtenemos la ruta absoluta del directorio del proyecto
-                                String projectDirectory = new File(".").getAbsolutePath();
-                                // Creamos la ruta completa al archivo
-                                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
-                                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
-                                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                        } else {
-                                // Si el usuario no tiene una imagen asignada o si tiene la imagen por defecto,
-                                // generamos un nuevo nombre de archivo
-                                filename = UUID.randomUUID().toString() + ".jpg";
-                                // Obtenemos la ruta absoluta del directorio del proyecto
-                                String projectDirectory = new File(".").getAbsolutePath();
-                                // Creamos la ruta completa al archivo
-                                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
-                                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
-                                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                        }
-                } else if (customer.getPhotoPath() != null) {
-                        // Si no se sube una nueva foto, usa la foto actual del usuario
-                        filename = customer.getPhotoPath();
-                } else {
-                        // Si no hay foto actual y no se sube una nueva foto, usa la imagen por defecto
-                        filename = "usuario2.png";
-                }
-                // Devolvemos solo el nombre del archivo, no la ruta completa
-                return filename;
+    public String savePhoto(MultipartFile photo, Customer customer) throws IOException {
+        // Generamos un nombre de archivo único
+        String filename;
+        if (photo != null && !photo.isEmpty()) {
+            if (customer.getPhotoPath() != null && !customer.getPhotoPath().equals("usuario2.png")) {
+                // Si el usuario ya tiene una imagen asignada que no es la imagen por defecto,
+                // usamos el mismo nombre de archivo para sobrescribir la imagen anterior
+                filename = customer.getPhotoPath();
+                // Obtenemos la ruta absoluta del directorio del proyecto
+                String projectDirectory = new File(".").getAbsolutePath();
+                // Creamos la ruta completa al archivo
+                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
+                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
+                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                // Si el usuario no tiene una imagen asignada o si tiene la imagen por defecto,
+                // generamos un nuevo nombre de archivo
+                filename = UUID.randomUUID().toString() + ".jpg";
+                // Obtenemos la ruta absoluta del directorio del proyecto
+                String projectDirectory = new File(".").getAbsolutePath();
+                // Creamos la ruta completa al archivo
+                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
+                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
+                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } else if (customer.getPhotoPath() != null) {
+            // Si no se sube una nueva foto, usa la foto actual del usuario
+            filename = customer.getPhotoPath();
+        } else {
+            // Si no hay foto actual y no se sube una nueva foto, usa la imagen por defecto
+            filename = "usuario2.png";
         }
+        // Devolvemos solo el nombre del archivo, no la ruta completa
+        return filename;
+    }
 
     public Queue<Customer> loadCustomersFromCsv(MultipartFile file) {
         System.out.println("Entre al metodo ");
@@ -165,11 +164,11 @@ public class CustomerService {
     public List<Customer> findCustomersByName(String name) {
         return customerDao.findCustomersByName(name);
     }
-    
-    public List<Customer> getActivityCustomers(Long id){
+
+    public List<Customer> getActivityCustomers(Long id) {
         return customerDao.findCustomerByActivityId(id);
     }
-    
+
     @Transactional
     public void removeCustomersFromActivity(Long activityId, List<Long> customerIds) {
         customerDao.removeCustomersFromActivity(activityId, customerIds);
