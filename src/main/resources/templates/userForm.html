@@ -14,23 +14,21 @@
         <div th:replace="~{header :: div}"></div>
         <div th:replace="~{nav :: div}"></div>
 
-        <div class="mx-8 my-6 space-y-16">
-            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500">Users</span> > New User<span></span></label>
+        <div class="space-y-16 mx-8 my-6">
+            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Users</span> > New User<span></span></label>
+            <form th:object="${user}" th:action="@{/home/users/update}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
+                <input type="hidden" th:field="*{id}">
+                <div class="flex flex-row flex-grow space-x-10">
 
-            <form th:object="${user}" th:action="@{/home/users/update}" method="post" enctype="multipart/form-data"
-                  class="grid grid-rows-1">
-                <input type="hidden" th:field="*{id}" />
-                <div class="flex flex-grow flex-row space-x-10">
                     <!-- Photo -->
                     <div class="space-y-6">
-                        <img class="size-36" src="/images/usuario2.png" />
-                        <label for="photo"
-                               class="flex min-w-36 max-w-36 cursor-pointer items-center justify-center rounded-md bg-teal-500 py-1">
-                            <img class="mr-2 h-6 w-6" src="/images/subir-archivo.png" />
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden" onchange="loadFile(event)">
+                        <img id="output" class="size-36" th:src="@{'/images/userImages/serve/' + ${user.photoPath}}">
+                        <label for="photo" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
+                            <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
                             <span class="text-white">Photo</span>
                         </label>
-                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden" />
-                    </div>
+                    </div> 
 
                     <div class="grid-rows-1 space-y-4">
                         <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
@@ -87,6 +85,15 @@
                 </div>
             </form>
         </div>
+        <script>
+            var loadFile = function (event) {
+                var output = document.getElementById('output');
+                output.src = URL.createObjectURL(event.target.files[0]);
+                output.onload = function () {
+                    URL.revokeObjectURL(output.src) // libera el objeto URL
+                }
+            };
+        </script>
     </body>
 
 </html>

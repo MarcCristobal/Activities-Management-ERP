@@ -31,7 +31,6 @@ public class UserLockService {
         List<User> lockedUsers = userService.getLockedUsers();
         
         for (User user : lockedUsers) {
-                System.out.println("Hola");
             if (user.getLockTime().isBefore(LocalDateTime.now().minusMinutes(1))) {
                     user.setFailedAttempts(0);
                 user.setAccountNonLocked(true);

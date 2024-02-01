@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class JsonConversionService {
 
     private final ObjectMapper objectMapper;
-
+    
     public JsonConversionService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }

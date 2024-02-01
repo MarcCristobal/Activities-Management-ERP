@@ -16,10 +16,10 @@
         <div class="mx-8 my-6 space-y-6">
             <label class="bg-gray-200 p-2 text-sm text-orange-500">Customers</label>
             <div class="flex items-center justify-end">
-                <form class="flex items-center">
-                    <input type="text" id="text" name="text" class="h-10 w-80 rounded-md border border-gray-800" />
-                    <button class="h-10 w-10 cursor-pointer rounded-md bg-teal-500">
-                        <img src="/images/lupa.png" />
+                <form th:action="@{/filtered-customers-by-name}" method="get" class="flex items-center">
+                    <input type="text" id="name" name="name" class="w-80 h-10 border border-gray-800 rounded-md">
+                    <button type="submit" class="w-10 h-10 cursor-pointer rounded-md bg-teal-500">
+                        <img src="/images/lupa.png">
                     </button>
                 </form>
             </div>
@@ -34,7 +34,7 @@
                 <div th:each="customer : ${customers}">
                     <span class="grid grid-cols-3 px-2 py-1">
                         <span class="flex flex-row items-center space-x-3 font-semibold">
-                            <img class="size-9" th:src="@{${customer.photoPath}}" />
+                            <img class ="size-9" th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}">
                             <label th:text="${customer.name} + ' ' + ${customer.surnames}"></label>
                         </span>
                         <span class="flex flex-row items-center">

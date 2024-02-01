@@ -49,8 +49,7 @@
                 </div>
 
                 <div class="flex flex-col space-y-4">
-                    <a
-                        class="flex min-w-36 max-w-36 cursor-pointer items-center items-center justify-center space-x-1 rounded-md bg-neutral-500 py-1">
+                    <a th:href="@{'/home/activities/show-participant-list/' + ${activity.id}}" class="flex min-w-36 max-w-36 cursor-pointer items-center items-center justify-center space-x-1 rounded-md bg-neutral-500 py-1">
                         <img class="size-5" src="/images/actividad2.png" />
                         <label class="text-slate-50">Participants</label>
                     </a>

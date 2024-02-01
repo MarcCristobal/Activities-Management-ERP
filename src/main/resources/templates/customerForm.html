@@ -1,5 +1,4 @@
-<!-- src/main/resources/templates/user-form.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
     <head>
@@ -24,17 +23,18 @@
                 <div class="flex flex-grow flex-row space-x-10">
                     <!-- Photo -->
                     <div class="space-y-6">
-                        <img class="size-36" src="/images/usuario2.png" />
-                        <label for="photo"
-                               class="flex min-w-36 max-w-36 cursor-pointer items-center justify-center rounded-md bg-teal-500 py-1">
-                            <img class="mr-2 h-6 w-6" src="/images/subir-archivo.png" />
+                        <img id="previewImage" class="size-36" th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}">
+                        <label for="photo" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
+                            <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
                             <span class="text-white">Photo</span>
                         </label>
-                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden" />
-                    </div>
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden" onchange="previewImage(this)">
+                    </div> 
 
                     <div class="grid-rows-1 space-y-4">
                         <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
+
+                        <input type="hidden" th:field="*{photoPath}">
 
                         <span class="flex flex-col">
                             <label for="name" class="font-bold">Name</label>
@@ -60,9 +60,8 @@
                                        required />
                             </span>
                             <span class="flex flex-col">
-                                <label class="font-bold">Date of Birth</label>
-                                <input type="date" id="birthDate" name="birthDate" class="border border-gray-800 p-1"
-                                       th:field="*{birthDate}" required />
+                                <label for="birthDate" class="font-bold">Date of Birth</label>
+                                <input type="date" id="birthDate" name="birthDate" class="border p-1 border-gray-800" th:field="*{birthDate}" required>
                             </span>
                         </span>
 
@@ -85,21 +84,22 @@
                         <span class="flex flex-row items-center justify-between space-x-4">
                             <label class="font-bold">Type</label>
 
-                            <input type="radio" class="peer/student hidden" id="student" name="type" value="STUDENT" th:field="*{type}"
-                                   required />
-                            <label for="student"
-                                   class="cursor-pointer border border-gray-800 bg-gray-200 px-1 peer-checked/student:bg-teal-500">Student</label>
+                            <input type="radio" class="peer/student hidden" id="student" name="type" value="Estudiant" th:field="*{type}" required>
+                            <label for="student" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/student:bg-teal-500">Student</label>
 
-                            <input type="radio" class="peer/teacher hidden" id="teacher" name="type" value="TEACHER" th:field="*{type}"
-                                   required />
-                            <label for="teacher"
-                                   class="cursor-pointer border border-gray-800 px-1 peer-checked/teacher:bg-teal-500">Teacher</label>
+                            <input type="radio" class="peer/teacher hidden" id="teacher" name="type" value="Professor" th:field="*{type}" required>
+                            <label for="teacher" class="cursor-pointer border px-1 border-gray-800 peer-checked/teacher:bg-teal-500">Teacher</label>
 
-                            <input type="radio" class="peer/neighbor hidden" id="neighbor" name="type" value="NEIGHBOR"
-                                   th:field="*{type}" required />
-                            <label for="neighbor"
-                                   class="cursor-pointer border border-gray-800 bg-gray-200 px-1 peer-checked/neighbor:bg-teal-500">Neighbor</label>
+                            <input type="radio" class="peer/neighbor hidden" id="neighbor" name="type" value="Veí"th:field="*{type}" required>
+                            <label for="neighbor" class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/neighbor:bg-teal-500">Neighbor</label>
+
                         </span>
+                        <!-- ... tus otros campos ... -->
+
+                        <input type="hidden" id="activityNamesString" name="activityNamesString" th:field="*{activityNamesString}">
+                        <input type="hidden" id="interests" name="interests" th:field="*{interests}">
+
+                        <!-- ... tus otros campos ... -->
 
                         <span class="flex flex-row justify-end">
                             <input type="submit"
@@ -112,6 +112,7 @@
                 </div>
             </form>
         </div>
+        <script th:src="@{/js/customerForm.js}"></script>
     </body>
 
 </html>
