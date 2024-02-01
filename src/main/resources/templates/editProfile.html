@@ -1,19 +1,22 @@
 <!-- src/main/resources/templates/user-form.html -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Create User</title>
         <!-- Include Tailwind CSS -->
-        <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
     </head>
+
     <body>
         <div th:replace="~{header :: div}"></div>
         <div th:replace="~{nav :: div}"></div>
 
-        <div class="space-y-16 mx-8 my-6">
-            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Users</span> > Edit Profile<span></span></label>
+        <div class="mx-8 my-6 space-y-16">
+            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500">Users</span> > Edit
+                Profile<span></span></label>
 
             <form th:object="${user}" th:action="@{/home/users/updateCurrentUser}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
                 <input type="hidden" th:field="*{id}">
@@ -30,30 +33,36 @@
                         </label>
                     </div> 
 
-                    <div class="grid-rows-1 space-y-4">    
-                        <span class="text-gray-500 text-xl mr-80 pb-5">Personal Information</span>
+                    <div class="grid-rows-1 space-y-4">
+                        <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
 
                         <span class="flex flex-col">
                             <label for="name" class="font-bold">Name</label>
-                            <input type="text" id="name" name="name" class="border p-1 border-gray-800" th:field="*{name}" required>
+                            <input type="text" id="name" name="name" class="border border-gray-800 p-1" th:field="*{name}" required />
                         </span>
 
                         <span class="flex flex-col">
                             <label for="name" class="font-bold">Surname</label>
-                            <input type="text" id="surname" name="surname" class="border p-1 border-gray-800"  th:field="*{surname}" required>
+                            <input type="text" id="surname" name="surname" class="border border-gray-800 p-1" th:field="*{surname}"
+                                   required />
                         </span>
 
                         <span class="flex flex-col">
                             <label for="email" class="font-bold">Email:</label>
-                            <input type="email" id="email" name="email" class="border p-1 border-gray-800" th:field="*{email}" required>
+                            <input type="email" id="email" name="email" class="border border-gray-800 p-1" th:field="*{email}"
+                                   required />
                         </span>
-                        <div id="passwordField" style="display: none;">
+                        <div id="passwordField" style="display: none">
                             <label for="password" class="font-bold">Contraseña:</label>
-                            <input type="password" id="password" name="password" class="border p-1 border-gray-800" th:field="*{password}"  pattern=".{8,}" title="8 characters minimum">
+                            <input type="password" id="password" name="password" class="border border-gray-800 p-1"
+                                   th:field="*{password}" pattern=".{8,}" title="8 characters minimum" />
                         </div>
-                        <span class="flex flex-row space-x-4 items-center justify-between">
-                            <button type="button" id="editPasswordButton" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer" onclick="showPasswordField()">Editar contraseña</button>
-
+                        <span class="flex flex-row items-center justify-between space-x-4">
+                            <button type="button" id="editPasswordButton"
+                                    class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white"
+                                    onclick="showPasswordField()">
+                                Editar contraseña
+                            </button>
                         </span>
                         <!-- Botón para editar la contraseña -->
                         <span class="flex flex-row justify-end">
@@ -67,23 +76,27 @@
         <script>
             function showPasswordField() {
                 // Muestra el campo de contraseña
-                document.getElementById('passwordField').style.display = 'block';
+                document.getElementById("passwordField").style.display = "block";
 
                 // Cambia el texto y la función del botón
-                document.getElementById('editPasswordButton').innerText = 'Cancelar edición de contraseña';
-                document.getElementById('editPasswordButton').onclick = hidePasswordField;
+                document.getElementById("editPasswordButton").innerText =
+                        "Cancelar edición de contraseña";
+                document.getElementById("editPasswordButton").onclick =
+                        hidePasswordField;
             }
 
             function hidePasswordField() {
                 // Oculta el campo de contraseña
-                document.getElementById('passwordField').style.display = 'none';
+                document.getElementById("passwordField").style.display = "none";
 
                 // Limpia el campo de contraseña
-                document.getElementById('password').value = '';
+                document.getElementById("password").value = "";
 
                 // Cambia el texto y la función del botón
-                document.getElementById('editPasswordButton').innerText = 'Editar contraseña';
-                document.getElementById('editPasswordButton').onclick = showPasswordField;
+                document.getElementById("editPasswordButton").innerText =
+                        "Editar contraseña";
+                document.getElementById("editPasswordButton").onclick =
+                        showPasswordField;
             }
             var loadFile = function (event) {
                 var output = document.getElementById('output');
@@ -105,4 +118,5 @@
             });
         </script>
     </body>
+
 </html>

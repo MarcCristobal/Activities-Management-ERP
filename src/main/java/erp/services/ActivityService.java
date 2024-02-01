@@ -4,7 +4,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.ActivityDao;
+import erp.dao.CustomerDao;
 import erp.domain.Activity;
+import erp.domain.Customer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -14,16 +19,19 @@ import java.util.Date;
 @Service
 public class ActivityService {
     
+    private final CustomerDao customerDao;
+
     private final ActivityDao activityDao;
-    
+
     @Autowired
-    public ActivityService(ActivityDao activitiesDao) {
+    public ActivityService(ActivityDao activitiesDao, CustomerDao customerDao) {
         this.activityDao = activitiesDao;
+        this.customerDao = customerDao;
     }
-    
+
     @Autowired
     private JsonConversionService jsonConversionService;
-    
+
     public Activity saveOrUpdateActivity(Activity activity, String resourceJson, String requirementJson) {
         if (activity.getId() != null) {
             Activity existingActivity = activityDao.findById(activity.getId()).orElse(null);
@@ -52,21 +60,38 @@ public class ActivityService {
         }
         return activityDao.save(activity);
     }
-    
+
     public void deleteActivity(Long id) {
         activityDao.deleteById(id);
     }
-    
+
     public Activity findById(Long id) {
         return activityDao.findById(id).orElse(null);
     }
-    
+
     public List<Activity> getAllActivities() {
         return activityDao.findAll();
     }
-    
+
     public Activity findActivityById(Long id) {
         return activityDao.findById(id).orElse(null);
+    }
+
+    public List<Activity> findActivitiesByName(String name) {
+        return activityDao.findActivitiesByName(name);
+    }
+
+    public List<Activity> findActivitiesByDate(String dateString) {
+        if (dateString == null || dateString.isEmpty()) {
+            return getAllActivities();
+        } else {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                return activityDao.findActivitiesByDate(date);
+            } catch (ParseException pe) {
+                return Collections.emptyList();
+            }
+        }
     }
 
     public boolean validateDates(Date startDate, Date endDate) {
@@ -80,4 +105,5 @@ public class ActivityService {
     public boolean validateParticipantLimit(int participantLimit) {
         return !(participantLimit < 1);
     }
+    
 }

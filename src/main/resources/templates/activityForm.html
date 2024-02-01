@@ -1,59 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
+
     <head>
         <title>Activity Information</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
     </head>
+
     <body>
         <div th:replace="~{header :: div}"></div>
         <div th:replace="~{nav :: div}"></div>
 
-
-        <div class="space-y-6 mx-8 my-6">
-            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Activities</span><span> > Add Activity</span></label>
-            <form class="grid grid-cols-3 gap-20" th:object="${activity}" th:action="@{/activities/create-activity}" method="post">
-                <input type=hidden th:field="*{id}">
+        <div class="mx-8 my-6 space-y-6">
+            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500">Activities</span><span> > Add
+                    Activity</span></label>
+            <form class="grid grid-cols-3 gap-20" th:object="${activity}" th:action="@{/activities/create-activity}"
+                  method="post">
+                <input type="hidden" th:field="*{id}" />
                 <div class="space-y-2">
-                    <div class="text-gray-500 text-xl">Information</div>
+                    <div class="text-xl text-gray-500">Information</div>
 
                     <div class="flex flex-col">
-                        <label for="name" class="font-bold">Title</label>                        
-                        <input type="text" id="name" class="border p-1 border-gray-800" th:field="*{name}" required>
+                        <label for="name" class="font-bold">Title</label>
+                        <input type="text" id="name" class="border border-gray-800 p-1" th:field="*{name}" required />
                     </div>
 
                     <div class="flex flex-col">
                         <label for="place" class="font-bold">Place</label>
-                        <input type="text" id="place" class="border p-1 border-gray-800" th:field="*{place}" required>                        
+                        <input type="text" id="place" class="border border-gray-800 p-1" th:field="*{place}" required />
                     </div>
 
                     <span class="grid grid-cols-2">
                         <span class="flex flex-col">
-                            <label for="startDate" class="font-bold mr-24">Start Date</label>
-                            <input type="date" id="startDate" class="border p-1 border-gray-800 mr-2 w-40" th:field="*{startDate}" required>                            
+                            <label for="startDate" class="mr-24 font-bold">Start Date</label>
+                            <input type="date" id="startDate" class="mr-2 w-40 border border-gray-800 p-1" th:field="*{startDate}"
+                                   required />
                         </span>
 
                         <span class="flex flex-col">
                             <label for="endDate" class="font-bold">End Date</label>
-                            <input type="date" id="endDate" class="border p-1 border-gray-800 w-40" th:field="*{endDate}" required>
+                            <input type="date" id="endDate" class="w-40 border border-gray-800 p-1" th:field="*{endDate}" required />
                         </span>
                     </span>
 
                     <div th:if="${incorrectDate}">
                         <div>
-                            <p class="text-red-500">The start date cannot be after the end date.</p>
+                            <p class="text-red-500">
+                                The start date cannot be after the end date.
+                            </p>
                         </div>
                     </div>
 
                     <span class="grid grid-cols-2">
                         <span class="flex flex-col">
-                            <label for="isFree" class="font-bold mr-10">Payment Activity</label>
+                            <label for="isFree" class="mr-10 font-bold">Payment Activity</label>
                             <span class="flex flex-row space-x-2">
                                 <label for="yes" class="font-bold">Yes</label>
-                                <input type="radio" id="isFree" class="border p-1 border-gray-800 mr-2" th:field="*{isFree}" value="true" onclick="togglePaymentOptions(true)">
+                                <input type="radio" id="isFree" class="mr-2 border border-gray-800 p-1" th:field="*{isFree}" value="true"
+                                       onclick="togglePaymentOptions(true)" />
                                 <label for="no" class="font-bold">No</label>
-                                <input type="radio" id="isNotFree" class="border p-1 border-gray-800 mr-16" th:field="*{isFree}" value="false" onclick="togglePaymentOptions(false)">
+                                <input type="radio" id="isNotFree" class="mr-16 border border-gray-800 p-1" th:field="*{isFree}"
+                                       value="false" onclick="togglePaymentOptions(false)" />
                             </span>
                         </span>
 
@@ -61,10 +69,12 @@
                             <label for="participantLimit" class="form-label font-bold">Participants</label>
                             <span class="flex flex-row space-x-2">
                                 <label for="limited" class="font-bold">Limited</label>
-                                <input type="checkbox" id="limited" class="border p-1 border-gray-800" th:field="*{isLimited}" onchange="toggleParticipantsSection()">
+                                <input type="checkbox" id="limited" class="border border-gray-800 p-1" th:field="*{isLimited}"
+                                       onchange="toggleParticipantsSection()" />
                                 <span class="flex flex-row" id="participantsSection">
                                     <label for="participantLimit" class="font-bold">Num</label>
-                                    <input type="text" id="participantLimit" class="border p-1 w-12 border-gray-800" th:field="*{participantLimit}">
+                                    <input type="text" id="participantLimit" class="w-12 border border-gray-800 p-1"
+                                           th:field="*{participantLimit}" />
                                 </span>
                             </span>
                         </span>
@@ -73,84 +83,90 @@
                     <div class="flex flex-row" id="pricePerPersonContainer">
                         <span>
                             <label for="pricePerPerson" class="font-bold">Price per person</label>
-                            <input type="text" id="pricePerPerson" class="border p-1 border-gray-800 w-10" th:field="*{pricePerPerson}">
-                            <label for="euro" id="euro" class="font-bold">€</label>                        
+                            <input type="text" id="pricePerPerson" class="w-10 border border-gray-800 p-1"
+                                   th:field="*{pricePerPerson}" />
+                            <label for="euro" id="euro" class="font-bold">€</label>
                         </span>
                     </div>
 
                     <div class="flex flex-row" id="numberOfPaymentsContainer">
                         <span>
                             <label for="numberOfPayments" class="font-bold">Number of payments</label>
-                            <input type="text" id="numberOfPayments" class="border p-1 border-gray-800 w-10" th:field="*{numberOfPayments}">                
+                            <input type="text" id="numberOfPayments" class="w-10 border border-gray-800 p-1"
+                                   th:field="*{numberOfPayments}" />
                         </span>
                     </div>
 
                     <div th:if="${incorrectPaymentValue}">
                         <div>
-                            <p class="text-red-500">Price per person and number of payments cannot be negative.</p>
+                            <p class="text-red-500">
+                                Price per person and number of payments cannot be negative.
+                            </p>
                         </div>
                     </div>
 
                     <div th:if="${incorrectParticipantValue}">
                         <div>
-                            <p class="text-red-500">Number of participants must be at least 1.</p>
+                            <p class="text-red-500">
+                                Number of participants must be at least 1.
+                            </p>
                         </div>
                     </div>
-
-
                 </div>
 
                 <!-- Recursos -->
                 <div class="space-y-2">
-                    <div class="text-gray-500 text-xl mb-8">Resources</div>
+                    <div class="mb-8 text-xl text-gray-500">Resources</div>
                     <div class="flex">
-                        <input type="text" id="resource" class="flex-grow border p-1 border-gray-800">
-                        <input type="button" id="addResource" class="bg-teal-600 text-white px-1 rounded-md font-bold cursor-pointer" value="Add">
+                        <input type="text" id="resource" class="flex-grow border border-gray-800 p-1" />
+                        <input type="button" id="addResource" class="cursor-pointer rounded-md bg-teal-600 px-1 font-bold text-white"
+                               value="Add" />
                     </div>
                     <div>
-                        <ul id="resourceList" class="border p-1 border-gray-800 h-64">                            
-                            <li th:each="resource, iterStat : ${activity.resources}" 
-                                th:text="${resource}"
-                                th:classappend="${iterStat.index % 2 == 1 ? 'bg-gray-200' : ''}">
+                        <ul id="resourceList" class="h-64 border border-gray-800 p-1">
+                            <li th:each="resource : ${activity.resources}" class="group flex items-center justify-between">
+                                <span th:text="${resource}"></span>
+                                <img class="invisible size-4 transition duration-300 ease-in-out group-hover:visible"
+                                     src="/images/contenedor-de-basura2.png" />
                             </li>
                         </ul>
 
-                        <input type="text" id="resourceListHidden" name="resourceListHidden" class="hidden">
-
+                        <input type="text" id="resourceListHidden" name="resourceListHidden" class="hidden" />
                     </div>
                 </div>
 
                 <!-- Requisitos -->
                 <div class="space-y-2">
-                    <div class="text-gray-500 text-xl mb-8">Requirements</div>
+                    <div class="mb-8 text-xl text-gray-500">Requirements</div>
                     <div class="flex">
-                        <input type="text" id="requirement" class="flex-grow border p-1 border-gray-800">
-                        <input type="button" id="addRequirement" class="bg-teal-600 text-white px-1 rounded-md font-bold cursor-pointer" value="Add">
+                        <input type="text" id="requirement" class="flex-grow border border-gray-800 p-1" />
+                        <input type="button" id="addRequirement"
+                               class="cursor-pointer rounded-md bg-teal-600 px-1 font-bold text-white" value="Add" />
                     </div>
                     <div class="pb-10">
-                        <ul id="requirementList" class="border p-1 border-gray-800 h-64">                            
-                            <li th:each="requirement, iterStat : ${activity.requirements}" 
-                                th:text="${requirement}"
-                                th:classappend="${iterStat.index % 2 == 1 ? 'bg-gray-200' : ''}">
+                        <ul id="requirementList" class="h-64 border border-gray-800 p-1">
+                            <li th:each="requirement : ${activity.requirements}" class="group flex items-center justify-between">
+                                <span th:text="${requirement}"></span>
+                                <img class="invisible size-4 transition duration-300 ease-in-out group-hover:visible"
+                                     src="/images/contenedor-de-basura2.png" />
                             </li>
                         </ul>
 
-                        <input type="text" id="requirementListHidden" name="requirementListHidden" class="hidden">
+                        <input type="text" id="requirementListHidden" name="requirementListHidden" class="hidden" />
                     </div>
 
                     <div class="flex justify-end">
-                        <input type="submit" id="submit" class="bg-teal-600 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer mr-2" value="Accept">
-                        <a th:href="@{/activities}" class="bg-red-500 text-white px-4 rounded-t-md rounded-b-md font-bold text-lg cursor-pointer">Cancel</a>
+                        <input type="submit" id="submit"
+                               class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
+                               value="Accept" />
+                        <a th:href="@{/activities}"
+                           class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
                     </div>
                 </div>
             </form>
         </div>
 
         <script th:src="@{/js/activityForm.js}"></script>
-
-
-
-
-
     </body>
+
 </html>

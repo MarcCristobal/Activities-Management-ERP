@@ -24,5 +24,5 @@ public interface ActivityDao extends GenericDao<Activity, Long> {
 
         @Query("SELECT a FROM Activity a WHERE a.name = :name")
         Activity findActivityByNameExact(@Param("name") String name);
-
+        
 }
