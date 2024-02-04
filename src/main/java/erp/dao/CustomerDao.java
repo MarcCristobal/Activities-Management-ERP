@@ -5,6 +5,8 @@
 package erp.dao;
 
 import erp.domain.Customer;
+import erp.domain.User;
+
 import java.util.List;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +18,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface CustomerDao extends GenericDao<Customer, Long> {
 
+    Customer findByEmail(String email);
     @Query("SELECT c FROM Customer c WHERE c.name LIKE %:name% OR c.surnames LIKE %:name% OR CONCAT(c.name, ' ', c.surnames) LIKE %:name%")
     List<Customer> findCustomersByName(@Param("name") String name);
 

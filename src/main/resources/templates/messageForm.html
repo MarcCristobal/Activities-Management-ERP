@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Create Message</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+    </head>
+<body>
+    <div th:replace="~{header :: div}"></div>
+    <div th:replace="~{nav :: div}"></div>
+    <div class="mx-8 my-6 space-y-16">
+        <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500">Communications</span><span> > New Message</span></label>
+        <form th:object = "${message}" th:action="@{/home/communications/send-message}" method="post" class="grid grid-rows-1">
+            <input type="hidden" th:field="*{id}" />
+            <div class="flex flex-grow flex-row space-x-10">
+                <div class="grid-rows-1 space-y-4">
+                    <span class="flex flex-col">
+                        <label class="font-bold">Subject</label>
+                    <input class="border border-gray-800 p-1 " id="subject" th:field="*{subject}" name="subject" required>
+                    </span>
+
+                                <!-- Lista de destinatarios -->
+                    <div class="flex flex-row space-x-4">
+                        <label class="font-bold">Destinatarios</label>
+                        <ul id="recipients" class="flex flex-row space-x-2">
+                            <!-- Se llenará dinámicamente con JavaScript -->
+                        </ul>
+                    </div>
+
+                    <!-- Campo oculto para los IDs de los destinatarios -->
+                    <input type="hidden" id="recipientIds" th:field="*{userRecipients}" />
+
+                    <!-- Tabla de usuarios -->
+                    <div class="flex flex-row space-x-4">
+                        <label class="font-bold">Seleccionar destinatarios</label>
+                        <table>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.name}"></td>
+                                <td><button type="button" onclick="addRecipient('${user.id}', '${user.name}')">Añadir</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- Campo para el contenido del mensaje -->
+                    <div class="flex flex-row space-x-4">
+                        <label class="font-bold">Contenido del mensaje</label>
+                        <textarea id="content" th:field="*{content}" rows="4" cols="50"></textarea>
+                    </div> 
+                    <input type="hidden" id="recipientIds" th:field="*{userRecipients}" />
+
+
+
+
+            <span class="flex flex-row justify-end">
+                <input type="submit"
+                    class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
+                    value="Send" />
+                <a th:href="@{/home/communications}"
+                    class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
+            </span>
+
+            </div>
+            </div>
+            </form>
+            </div>
+            <script>
+          // Añade un destinatario a la lista
+function addRecipient(id, name) {
+    // Añade el ID del usuario seleccionado al campo oculto
+    var recipientIds = document.getElementById('recipientIds');
+    recipientIds.value += id + ',';
+
+    // Añade el nombre del usuario seleccionado a la lista de destinatarios
+    var recipientsList = document.getElementById('recipients');
+    var li = document.createElement('li');
+    li.appendChild(document.createTextNode(name));
+
+    // Añade un botón para eliminar el destinatario
+    var removeButton = document.createElement('button');
+    removeButton.innerHTML = 'Eliminar';
+    removeButton.onclick = function() {
+        var li = this.parentNode;
+        li.parentNode.removeChild(li);
+        recipientIds.value = recipientIds.value.replace(id + ',', '');
+    };
+    li.appendChild(removeButton);
+
+    recipientsList.appendChild(li);
+}
+
+// Elimina un destinatario de la lista
+function removeRecipient(id, name) {
+    var li = document.getElementById(id);
+    li.parentNode.removeChild(li);
+
+    // Elimina el ID del usuario del campo oculto
+    var recipientIds = document.getElementById('recipientIds');
+    recipientIds.value = recipientIds.value.replace(id + ',', '');
+}
+
+        </script>
+    </body>
+</html>
