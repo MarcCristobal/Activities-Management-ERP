@@ -16,6 +16,7 @@ import erp.domain.Activity;
 import erp.domain.Customer;
 import erp.domain.Message;
 import erp.domain.User;
+import jakarta.transaction.Transactional;
 
 /**
  *
@@ -95,5 +96,20 @@ public class MessagingService {
 
         messageRepository.save(reply);
     }
+    public List<Message> getAllMessages() {
+        
+        return messageRepository.findAll();
+    }
+    public Message getMessageById(long id) {
+        return messageRepository.findById(id).orElse(null);
+    }
+    @Transactional
+    public void deleteMessage(long id){
+        messageRepository.deleteById(id);
+    }
+    public List<Message> findAllUserMessages(Long userId) {
+        return messageRepository.findMessagesByUserRecipients(userId);
+    }
+
 }
 

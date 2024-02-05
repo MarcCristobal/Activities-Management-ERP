@@ -31,12 +31,14 @@
                             <label th:text="${message.subject}"></label>
                         </span>
                         <span class="flex flex-row items-center">
-                            <label th:text="${message.to}"></label>
+                            <div th:each="user : ${message.userRecipients}">
+                                <p th:text="${user.name}"></p>
+                            </div>
                         </span>
                         <span class="flex flex-row items-center justify-between">
-                            <label th:text="${message.date}"></label>
-                            <a th:href="@{'/home/messages/' + ${message.id}}"
-                               class="flex items-center space-x-1 rounded-md bg-teal-500 px-2 py-1 text-slate-50">
+                            
+                            <a th:href="@{'/home/communications/message-overview/' + ${message.id}}"
+                                class="flex items-center space-x-1 rounded-md bg-teal-500 px-2 py-1 text-slate-50">
                                 <img class="size-5" src="/images/sobre-nosotros.png" />
                                 <label>Show Message</label>
                             </a>
@@ -46,5 +48,4 @@
             </div>
         </div>
     </body>
-
 </html>
