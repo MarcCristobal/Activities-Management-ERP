@@ -1,6 +1,7 @@
 package erp.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,49 +41,57 @@ public class MessagingService {
     @Autowired
     private MailSenderService mailSenderService;
 
-    public void sendMessage(Long senderId, HashMap<Class<?>, List<String>> recipientsMap, String subject, String content) {
+
+    public void sendMessage(Long senderId, String userRecipients, String customerRecipients, String activityRecipients,String subject, String content) {
         User sender = userRepository.findById(senderId).orElse(null);
-
-        for (Map.Entry<Class<?>, List<String>> entry : recipientsMap.entrySet()) {
-            Class<?> key = entry.getKey();
-            List<String> recipientEmails = entry.getValue();
-
-            List<User> userRecipients = new ArrayList<>();
-            List<Customer> customerRecipients = new ArrayList<>();
-
-            for (String email : recipientEmails) {
-                if (key.equals(User.class)) {
-                    User user = userRepository.findByEmail(email);
-                    if (user != null) {
-                        userRecipients.add(user);
-                    }
-                } else if (key.equals(Customer.class)) {
-                    Customer customer = customerRepository.findByEmail(email);
-                    if (customer != null) {
-                        customerRecipients.add(customer);
-                        mailSenderService.sendEmail(customer.getEmail(), subject, content);
-                    }
-                } else if (key.equals(Activity.class)) {
-                    Activity activity = activityRepository.findById(Long.parseLong(email)).orElse(null);
-                    if (activity != null) {
-                        for (Customer participant : activity.getCustomers()) {
-                            customerRecipients.add(participant);
-                            mailSenderService.sendEmail(participant.getEmail(), subject, content);
-                        }
-                    }
-                }
-            }
 
             Message message = new Message();
             message.setSender(sender);
-            message.setUserRecipients(userRecipients);
-            message.setCustomerRecipients(customerRecipients);
             message.setSubject(subject);
             message.setContent(content);
+            processIds(message, userRecipients, customerRecipients, activityRecipients);
 
             messageRepository.save(message);
+        
+    }
+    public void processIds(Message message, String userIDs, String customerIDs, String activityIDs) {
+        List<String> userList = userIDs != null ? Arrays.asList(userIDs.split(",")) : new ArrayList<>();
+        List<String> customerList = customerIDs != null ? Arrays.asList(customerIDs.split(",")) : new ArrayList<>();
+        List<String> activityList = activityIDs != null ? Arrays.asList(activityIDs.split(",")) : new ArrayList<>();
+    
+        for (String userID : userList) {
+            if (!userID.isEmpty()) {
+                User user = userRepository.findById(Long.parseLong(userID)).orElse(null);
+                if (user != null) {
+                    message.getUserRecipients().add(user);
+                }
+            }
+        }
+    
+        for (String customerID : customerList) {
+            if (!customerID.isEmpty()) {
+                Customer customer = customerRepository.findById(Long.parseLong(customerID)).orElse(null);
+                if (customer != null) {
+                    message.getCustomerRecipients().add(customer);
+                    mailSenderService.sendEmail(customer.getEmail(), message.getSubject(), message.getContent());
+                }
+            }
+        }
+    
+        for (String activityID : activityList) {
+            if (!activityID.isEmpty()) {
+                Activity activity = activityRepository.findById(Long.parseLong(activityID)).orElse(null);
+                if (activity != null) {
+                    List<Customer> participants = activity.getCustomers();
+                    for (Customer participant : participants) {
+                        message.getCustomerRecipients().add(participant);
+                    }
+                }
+            }
         }
     }
+    
+    
     public void replyToMessage(Long senderId, Long originalMessageId, String content) {
         User sender = userRepository.findById(senderId).orElse(null);
         Message originalMessage = messageRepository.findById(originalMessageId).orElse(null);

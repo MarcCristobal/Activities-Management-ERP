@@ -27,7 +27,6 @@ import erp.services.CustomerService;
 import erp.services.MessagingService;
 import erp.services.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -83,27 +82,11 @@ public class MessagingController {
         }
 
         @PostMapping("/home/communications/send-message")
-        public String sendMessage(@ModelAttribute Message message, @RequestParam String userRecipients, @RequestParam String customerRecipients, Model model) {
+        public String sendMessage(@ModelAttribute Message message, @RequestParam String userRecipients, @RequestParam String customerRecipients, @RequestParam String activityRecipients, Model model) {
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 Long userId = (Long) ((Map<String, Object>) auth.getDetails()).get("id");
 
-                List<String> emails = new ArrayList<>();
-                if (userRecipients != null && !userRecipients.isEmpty()) {
-                        String[] recipientIds = userRecipients.split(",");
-                        for (String id : recipientIds) {
-                                if (id != null && !id.isEmpty()) {
-                                        User user = userService.findById(Long.parseLong(id));
-                                        if (user != null) {
-                                                emails.add(user.getEmail());
-                                        }
-                                }
-                        }
-                }
-
-                HashMap<Class<?>, List<String>> recipientsMap = new HashMap<>();
-                recipientsMap.put(User.class, emails);
-
-                messagingService.sendMessage(userId, recipientsMap, message.getSubject(), message.getContent());
+                messagingService.sendMessage(userId, userRecipients, customerRecipients, activityRecipients, message.getSubject(), message.getContent());
 
                 return "redirect:/home/communications";
 
