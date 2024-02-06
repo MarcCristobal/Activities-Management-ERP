@@ -21,28 +21,25 @@ import org.springframework.core.io.Resource;
 @Component
 public class StartupConfig {
 
-          @PostConstruct
-          public void init() {
-                    createDirectoryAndCopyDefaultImageIfNotExists("./userImages/", "static/images/userImages/usuario2.png");
-          }
+    @PostConstruct
+    public void init() {
+        createDirectoryAndCopyDefaultImageIfNotExists("./userImages/", "static/images/userImages/usuario2.png");
+    }
 
+    public void createDirectoryAndCopyDefaultImageIfNotExists(String directoryPath, String defaultImagePath) {
+        Path dirPath = Paths.get(directoryPath);
+        if (!Files.exists(dirPath)) {
+            try {
+                Files.createDirectories(dirPath);
 
-
-          public void createDirectoryAndCopyDefaultImageIfNotExists(String directoryPath, String defaultImagePath) {
-                    Path dirPath = Paths.get(directoryPath);
-                    if (!Files.exists(dirPath)) {
-                              try {
-                                        Files.createDirectories(dirPath);
-
-                                        // Copia la imagen por defecto al nuevo directorio
-                                        Resource defaultImage = new ClassPathResource(defaultImagePath);
-                                        Path targetPath = dirPath.resolve(defaultImage.getFilename());
-                                        Files.copy(defaultImage.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-                              } catch (IOException e) {
-                                        // Manejar la excepción
-                                        System.out.println(e.getMessage());
-                              }
-                    }
-          }
-
+                // Copia la imagen por defecto al nuevo directorio
+                Resource defaultImage = new ClassPathResource(defaultImagePath);
+                Path targetPath = dirPath.resolve(defaultImage.getFilename());
+                Files.copy(defaultImage.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                // Manejar la excepción
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 }

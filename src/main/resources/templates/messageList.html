@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Message List</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+    </head>
+
+    <body>
+        <div th:replace="header :: div"></div>
+        <div th:replace="nav :: div"></div>
+
+        <div class="mx-8 my-6 space-y-6">
+            <label class="bg-gray-200 p-2 text-sm text-orange-500">Messages</label>
+            <form th:action="@{/home/communications/message-form}" method="get" class="flex flex-grow items-center">
+                <button type="submit" class="w-10 h-10 cursor-pointer"><img src="/images/anadir.png"></button>
+            </form>
+            <div class="grid w-9/12 grid-rows-1">
+                <span class="mb-2 grid grid-cols-3 px-2 text-lg font-bold text-slate-500">
+                    <label>Subject</label>
+                    <label>To</label>
+                    <label>Date</label>
+                </span>
+
+                <div th:each="message : ${messages}">
+                    <span class="grid grid-cols-3 px-2 py-1">
+                        <span class="flex flex-row items-center space-x-3 font-semibold">
+                            <label th:text="${message.subject}"></label>
+                        </span>
+                        <span class="flex flex-row items-center">
+                            <div th:each="user : ${message.userRecipients}">
+                                <p th:text="${user.name}"></p>
+                            </div>
+                        </span>
+                        <span class="flex flex-row items-center justify-between">
+                            
+                            <a th:href="@{'/home/communications/message-overview/' + ${message.id}}"
+                                class="flex items-center space-x-1 rounded-md bg-teal-500 px-2 py-1 text-slate-50">
+                                <img class="size-5" src="/images/sobre-nosotros.png" />
+                                <label>Show Message</label>
+                            </a>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
