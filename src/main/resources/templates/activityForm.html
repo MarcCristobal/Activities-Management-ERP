@@ -13,7 +13,7 @@
         <div th:replace="~{nav :: div}"></div>
 
         <div class="mx-8 my-6 space-y-6">
-            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500">Activities</span><span> > Add
+            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500"><a th:href="@{/activities}">Activities</a></span><span> > Add
                     Activity</span></label>
             <form class="grid grid-cols-3 gap-20" th:object="${activity}" th:action="@{/activities/create-activity}"
                   method="post">
@@ -165,7 +165,6 @@
                 </div>
             </form>
         </div>
-
         <script th:src="@{/js/activityForm.js}"></script>
     </body>
 

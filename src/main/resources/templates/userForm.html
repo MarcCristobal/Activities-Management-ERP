@@ -15,7 +15,7 @@
         <div th:replace="~{nav :: div}"></div>
 
         <div class="space-y-16 mx-8 my-6">
-            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500">Users</span> > New User<span></span></label>
+            <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500"><a th:href="@{/home/users}">Users</a></span> > New User<span></span></label>
             <form th:object="${user}" th:action="@{/home/users/update}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
                 <input type="hidden" th:field="*{id}">
                 <div class="flex flex-row flex-grow space-x-10">

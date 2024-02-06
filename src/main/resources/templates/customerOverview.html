@@ -15,8 +15,7 @@
         <div th:replace="~{nav :: div}"></div>
 
         <div class="mx-8 my-6 space-y-16">
-            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500">Customer</span> > Customer
-                Information<span></span></label>
+            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500"><a th:href="@{/home/customers}">Customers</a></span><span th:text="' > ' + ${customer.name} + ' ' + ${customer.surnames}"></span></label>
 
             <div th:object="${customer}" th:action="@{/home/customers/update}" method="post" enctype="multipart/form-data"
                  class="grid grid-rows-1">

@@ -6,6 +6,8 @@ package erp.controllers;
 
 import erp.domain.Activity;
 import erp.services.ActivityService;
+import erp.services.JsonConversionService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,10 +26,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ActivitiesController {
 
     private final ActivityService activityService;
-    
+    private final JsonConversionService jsonConversionService;
+
     @Autowired
-    public ActivitiesController(ActivityService activityService){
+    public ActivitiesController(ActivityService activityService, JsonConversionService jsonConversionService) {
         this.activityService = activityService;
+        this.jsonConversionService = jsonConversionService;
     }
 
     @GetMapping("/activities")
@@ -42,6 +46,7 @@ public class ActivitiesController {
         return "activityForm";
     }
 
+    @Transactional
     @PostMapping("/activities/create-activity")
     public String createActivity(@ModelAttribute Activity activity, Model model,
             @RequestParam("resourceListHidden") String resourceJson, @RequestParam("requirementListHidden") String requirementJson) {
@@ -53,16 +58,21 @@ public class ActivitiesController {
         if (isAValidDate && isAValidPaymentValue && isAValidParticipantValue) {
             activityService.saveOrUpdateActivity(activity, resourceJson, requirementJson);
             return "redirect:/activities";
-        } else if (!isAValidDate) {
-            model.addAttribute("incorrectDate", true);
-        } else if (!isAValidPaymentValue) {
-            model.addAttribute("incorrectPaymentValue", true);
-        } else if (!isAValidParticipantValue) {
-            model.addAttribute("incorrectParticipantValue", true);
+        } else {
+            // Aquí almacenamos los recursos y requisitos en el modelo para que se vuelvan a mostrar en la vista
+            activity.setResources(jsonConversionService.toList(resourceJson));
+            activity.setRequirements(jsonConversionService.toList(requirementJson));
+
+            model.addAttribute("activity", activity);
+            model.addAttribute("incorrectDate", !isAValidDate);
+            model.addAttribute("incorrectPaymentValue", !isAValidPaymentValue);
+            model.addAttribute("incorrectParticipantValue", !isAValidParticipantValue);
+
+            return "activityForm";
         }
-        return "activityForm";
     }
 
+    @Transactional
     @GetMapping("/activities/edit-activity/{id}")
     public String editActivity(@PathVariable("id") long id, Model model) {
         if (id > 0) {
@@ -79,6 +89,7 @@ public class ActivitiesController {
         return "activitiesOverview";
     }
 
+    @Transactional
     @PostMapping("/activities/delete-activity/{id}")
     public String deleteActivity(@PathVariable("id") long id, Model model) {
         activityService.deleteActivity(id);
@@ -90,12 +101,12 @@ public class ActivitiesController {
         return "redirect:/activities";
     }
 
-        @GetMapping("/filtered-activities-by-name")
-        public String filterActivitiesByName(@RequestParam("name") String name, Model model) {
-                List<Activity> filteredActivities = activityService.findActivitiesByName(name);
-                model.addAttribute("activities", filteredActivities);
-                return "activities";
-        }
+    @GetMapping("/filtered-activities-by-name")
+    public String filterActivitiesByName(@RequestParam("name") String name, Model model) {
+        List<Activity> filteredActivities = activityService.findActivitiesByName(name);
+        model.addAttribute("activities", filteredActivities);
+        return "activities";
+    }
 
     @GetMapping("/filtered-activities-by-date")
     public String filterActivitiesByDate(@RequestParam("date") String dateString, Model model) {
@@ -103,8 +114,5 @@ public class ActivitiesController {
         model.addAttribute("activities", filteredActivities);
         return "activities";
     }
-    
-    
-    
-    
+
 }
