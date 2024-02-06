@@ -14,7 +14,12 @@
         <div th:replace="~{nav :: div}"></div>
 
         <div class="mx-8 my-6 space-y-6">
-            <label class="bg-gray-200 p-2 text-sm text-orange-500">Customers</label>
+            <label class="bg-gray-200 p-2 text-sm">
+                <span class="text-orange-500">
+                    <a th:href="@{/activities}">Activities</a>
+                </span>
+                <span th:text="' > ' + ${activity.name} + ' > Participant List'"></span>
+            </label>
             <div class="flex items-center justify-end">
                 <form class="flex items-center">
                     <input type="text" id="text" name="text" class="h-10 w-80 rounded-md border border-gray-800" />

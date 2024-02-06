@@ -4,9 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.ActivityDao;
-import erp.dao.CustomerDao;
 import erp.domain.Activity;
-import erp.domain.Customer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -18,15 +16,12 @@ import java.util.Date;
  */
 @Service
 public class ActivityService {
-    
-    private final CustomerDao customerDao;
 
     private final ActivityDao activityDao;
 
     @Autowired
-    public ActivityService(ActivityDao activitiesDao, CustomerDao customerDao) {
+    public ActivityService(ActivityDao activitiesDao) {
         this.activityDao = activitiesDao;
-        this.customerDao = customerDao;
     }
 
     @Autowired
@@ -105,5 +100,5 @@ public class ActivityService {
     public boolean validateParticipantLimit(int participantLimit) {
         return !(participantLimit < 1);
     }
-    
+
 }
