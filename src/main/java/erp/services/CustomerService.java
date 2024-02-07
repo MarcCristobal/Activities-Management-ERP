@@ -56,10 +56,11 @@ public class CustomerService {
             existingCustomer.setPhone(customer.getPhone());
             existingCustomer.setCourse(customer.getCourse());
             existingCustomer.setInterests(customer.getInterests());
+            existingCustomer.setActivityNamesString(customer.getActivityNamesString());
 
             // Añadir actividades a la lista de actividades del cliente
             if (customer.getActivityNamesString() != null) {
-                String[] activityNames = customer.getActivityNamesString().split(",");
+                String[] activityNames = customer.getActivityNamesString().split(";");
                 for (String activityName : activityNames) {
                     Activity activity = activityDao.findActivityByNameExact(activityName.trim());
                     if (activity != null) {
@@ -126,6 +127,9 @@ public class CustomerService {
 
     public List<Customer> findCustomersByName(String name) {
         return customerDao.findCustomersByName(name);
+    }
+    public Customer findCustomerByEmail(String email){
+        return customerDao.findByEmail(email);
     }
 
     public List<Customer> getActivityCustomers(Long id) {

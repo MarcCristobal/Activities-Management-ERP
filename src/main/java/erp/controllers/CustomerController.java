@@ -13,12 +13,21 @@ import erp.services.FormService;
 import erp.services.PhotoStorageService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,19 +78,68 @@ public class CustomerController {
 
     @Transactional
     @PostMapping("/home/customers/update")
-    public String updateCustomer(@ModelAttribute Customer customer, @RequestParam("photo") MultipartFile photo,
-            Model model) {
-        String photoPath;
-        Customer oldCustomer = null;
+    public String updateCustomer(@Valid @ModelAttribute Customer customer, BindingResult result,
+            @RequestParam("photo") MultipartFile photo, Model model, @RequestParam List<String> selectedActivities) {
+        if (result.hasErrors()) {
+            // Aquí, puedes agregar los errores al modelo para que puedan ser mostrados en
+            // la vista
+            model.addAttribute("errors", result.getAllErrors());
+            // Añade los atributos necesarios al modelo antes de redirigir
+            List<Activity> activities = activityService.getAllActivities();
+            model.addAttribute("activities", activities);
+            model.addAttribute("selectedActivityNames", selectedActivities);
+            return "customerForm"; // Redirige de vuelta al formulario
+        }
 
-        // Comprueba si el usuario ya existe
+        String photoPath;
+        Customer existingCustomer = null;
+
         if (customer.getId() != null) {
-            oldCustomer = customerService.findCustomerById(customer.getId());
+            existingCustomer = customerService.findCustomerByEmail(customer.getEmail());
+            if (existingCustomer != null) {
+                customer.setId(existingCustomer.getId());
+                // Si el cliente existe, obtén las actividades seleccionadas previamente
+                List<String> oldActivityNames = new ArrayList<>(
+                        Arrays.asList(existingCustomer.getActivityNamesString().split(";")));
+                // Crea una copia de las actividades antiguas
+                List<String> copyOfOldActivityNames = new ArrayList<>(oldActivityNames);
+                // Retén solo las actividades que están presentes en ambas listas (las que no se
+                // han quitado)
+                oldActivityNames.retainAll(selectedActivities);
+                // Añade las nuevas actividades seleccionadas a la lista (las que se han
+                // añadido)
+                oldActivityNames.addAll(selectedActivities);
+                // Elimina duplicados
+                oldActivityNames = oldActivityNames.stream().distinct().collect(Collectors.toList());
+                // Actualiza las actividades del cliente
+                customer.setActivityNamesString(String.join(";", oldActivityNames));
+            } else {
+                // Combina las actividades seleccionadas con las existentes
+                customer.setActivityNamesString(String.join(";", selectedActivities));
+            }
+
+        } else {
+            existingCustomer = customerService.findCustomerByEmail(customer.getEmail());
+            if (existingCustomer != null) {
+                customer.setId(existingCustomer.getId());
+                List<String> oldActivityNames = new ArrayList<>(
+                        Arrays.asList(existingCustomer.getActivityNamesString().split(";")));
+                // Añade las nuevas actividades seleccionadas a la lista
+                oldActivityNames.addAll(selectedActivities);
+                // Elimina duplicados
+                oldActivityNames = oldActivityNames.stream().distinct().collect(Collectors.toList());
+                // Actualiza las actividades del cliente
+                customer.setActivityNamesString(String.join(";", oldActivityNames));
+
+            } else {
+                customer.setActivityNamesString(String.join(";", selectedActivities));
+            }
+
         }
 
         try {
             // Si no se proporciona una nueva foto, usa la foto actual del usuario
-            photoPath = photoStorageService.savePhoto(photo, oldCustomer != null ? oldCustomer : customer);
+            photoPath = photoStorageService.savePhoto(photo, existingCustomer != null ? existingCustomer : customer);
             customer.setPhotoPath(photoPath);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -89,6 +147,10 @@ public class CustomerController {
 
         // Guardamos el usuario
         customerService.saveOrUpdateCustomer(customer);
+
+        if (customersCSV != null && !customersCSV.isEmpty()) {
+            customersCSV.poll(); // Quita el cliente de la cola solo después de que se haya procesado con éxito
+        }
 
         return "redirect:/editCustomer";
     }
@@ -107,12 +169,16 @@ public class CustomerController {
         if (customersCSV == null || customersCSV.isEmpty()) {
             return "redirect:/home/customers"; // tu vista cuando todos los clientes han sido revisados
         } else {
-            Customer customer = customersCSV.poll();
+            Customer customer = customersCSV.peek(); // Usa peek en lugar de poll para no quitar el cliente de la cola
             if (customer.getPhotoPath() == null) {
                 customer.setPhotoPath("usuario2.png");
             }
             List<Activity> activities = activityService.getAllActivities();
             model.addAttribute("activities", activities);
+
+            List<String> selectedActivityNames = Arrays.asList(customer.getActivityNamesString().split(";"));
+            model.addAttribute("selectedActivityNames", selectedActivityNames);
+
             System.out.println(customer);
             model.addAttribute("customer", customer);
             return "customerForm"; // tu vista
@@ -122,7 +188,10 @@ public class CustomerController {
     @GetMapping("/home/customers/update/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
         Customer customer = customerService.findCustomerById(id);
-        
+        List<Activity> activities = activityService.getAllActivities();
+        model.addAttribute("activities", activities);
+        List<String> selectedActivityNames = Arrays.asList(customer.getActivityNamesString().split(";"));
+        model.addAttribute("selectedActivityNames", selectedActivityNames);
         model.addAttribute("customer", customer);
         return "customerForm";
     }
@@ -172,6 +241,7 @@ public class CustomerController {
 
         return "participantList";
     }
+
     @GetMapping("/show-inscription-form")
     public String showInscriptionForm(Model model) {
         Form form = formService.initForm();
@@ -181,24 +251,23 @@ public class CustomerController {
         model.addAttribute("intereses", form.getIntereses());
         return "inscriptionForm";
     }
-    
 
     @PostMapping("/form")
     public String recibirFormulario(@ModelAttribute Form form, @RequestParam("photo") MultipartFile photo,
-            Model model) {
+            Model model, @RequestParam List<String> selectedActivities) {
         String photoPath;
         try {
             // Si se proporciona una nueva foto, guarda la foto y establece la ruta de la
             // foto en el objeto Form
             photoPath = photoStorageService.savePhoto(photo, form);
             form.setPhotoPath(photoPath);
-            
+            form.setActivityNamesString(String.join(";", selectedActivities));
             // Escribe los datos del Customer en el CSV
             formService.escribirformEnCsv(form);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-        System.out.println(form.getInterests()+"dsa");
+        System.out.println(form.getInterests() + "dsa");
         // Redirige a una pantalla de confirmación
         return "redirect:/home/communications";
     }

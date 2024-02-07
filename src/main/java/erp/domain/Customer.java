@@ -16,6 +16,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.Pattern;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +53,7 @@ public class Customer implements PhotoEntity{
         private Date birthDate;
 
         @CsvBindByName(column = "DNI")
+        @Pattern(regexp = "[XYZ]?[0-9]{7,8}[A-HJ-NP-TV-Z]", message = "Formato de DNI/NIE inválido")
         @Column(length = 9, unique = true)
         private String dni;
 
@@ -68,6 +71,7 @@ public class Customer implements PhotoEntity{
         private String parentName;
 
         @CsvBindByName(column = "Telèfon")
+        @Pattern(regexp = "[0-9]{9}", message = "Formato de teléfono inválido")
         @Column(length = 9)
         private String phone;
 

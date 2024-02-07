@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -14,10 +15,12 @@ public class Form implements PhotoEntity{
     private String email;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
+    @Pattern(regexp = "[XYZ]?[0-9]{7,8}[A-HJ-NP-TV-Z]", message = "Formato de DNI/NIE inválido")
     private String dni;
     private CustomerType type;
     private String photoPath = "usuario2.png";
     private String parentName;
+    @Pattern(regexp = "[0-9]{9}", message = "Formato de teléfono inválido")
     private String phone;
     private List<Activity> activities;
     private String activityNamesString;

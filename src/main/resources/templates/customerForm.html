@@ -21,6 +21,8 @@
         <form th:object="${customer}" th:action="@{/home/customers/update}" method="post" enctype="multipart/form-data"
             class="grid grid-rows-1">
             <input type="hidden" th:field="*{id}" />
+            
+            
             <div class="flex flex-grow flex-row space-x-10">
                 <!-- Photo -->
                 <div class="space-y-6">
@@ -36,6 +38,15 @@
                 </div>
 
                 <div class="grid-rows-1 space-y-4">
+                    
+                    <div th:if="${#fields.hasErrors('*')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">¡Error!</strong>
+                        <span class="block sm:inline">Hay errores en tu formulario:</span>
+                        <ul>
+                            <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+                        </ul>
+                    </div>
+                    
                     <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
 
                     <input type="hidden" th:field="*{photoPath}">
@@ -112,22 +123,33 @@
 
                     <span class="flex flex-col">
                         <label class="font-bold">Interessos</label>
-                        <p id="interests" name="interests" th:text="${#strings.replace(customer.interests, ';', ' ')}"></p>
+                        <p id="interests" name="interests" th:text="${#strings.replace(customer.interests, ';', ' ')}">
+                        </p>
                     </span>
-                    
-                    
-                    
-                    <span class="flex flex-col">
-                        <label for="activityNamesString" class="font-bold">Actividad</label>
-                        <select id="activityNamesString" name="activityNamesString" class="border border-gray-800 p-1"
-                            th:field="*{activityNamesString}" required>
-                            <option value="*{activityNamesString}">Selecciona una actividad</option>
-                            <!-- Aquí puedes iterar sobre las actividades disponibles y crear una opción para cada una -->
-                            <option th:each="activity : ${activities}" th:value="${activity.name}"
-                                th:text="${activity.name}"></option>
-                        </select>
-                    </span>
-                    
+                    <input type="hidden" th:field="*{interests}" />
+                    <input type="hidden" th:field="*{activityNamesString}" />
+
+                    <div
+                        class="scrollbar-hide grid max-h-72 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                        <div th:each="activity : ${activities}">
+                            <div class="size-full bg-teal-500 p-2">
+                                <div class="mb-2 text-lg font-semibold text-blue-700" th:text="${activity.name}"></div>
+                                <div class="mx-2 border-l-4 border-blue-700 bg-gray-200 p-1 font-black"
+                                    th:text="${#dates.format(activity.startDate, 'dd/MM/yyyy')}"></div>
+                                <div
+                                    class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
+                                    <img class="size-6" src="/images/mapas-y-banderas.png" />
+                                    <span th:text="${activity.place}"></span>
+                                </div>
+                                <div
+                                    class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
+                                    <input type="checkbox" name="selectedActivities" th:value="${activity.name}"
+                                        th:checked="${#lists.contains(selectedActivityNames, activity.name)}" />
+                                    <label>Seleccionar</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- ... tus otros campos ... -->
 
