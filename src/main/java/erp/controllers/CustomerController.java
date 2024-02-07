@@ -6,8 +6,11 @@ package erp.controllers;
 
 import erp.domain.Activity;
 import erp.domain.Customer;
+import erp.domain.Form;
 import erp.services.ActivityService;
 import erp.services.CustomerService;
+import erp.services.FormService;
+import erp.services.PhotoStorageService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
@@ -32,12 +35,17 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private Queue<Customer> customersCSV;
+    private final PhotoStorageService photoStorageService;
     private final ActivityService activityService;
+    private final FormService formService;
 
     @Autowired
-    public CustomerController(CustomerService customerService, ActivityService activityService) {
+    public CustomerController(CustomerService customerService, ActivityService activityService,
+            FormService formService, PhotoStorageService photoStorageService) {
         this.customerService = customerService;
         this.activityService = activityService;
+        this.formService = formService;
+        this.photoStorageService = photoStorageService;
     }
 
     @GetMapping("/home/customers")
@@ -61,7 +69,8 @@ public class CustomerController {
 
     @Transactional
     @PostMapping("/home/customers/update")
-    public String updateCustomer(@ModelAttribute Customer customer, @RequestParam("photo") MultipartFile photo, Model model) {
+    public String updateCustomer(@ModelAttribute Customer customer, @RequestParam("photo") MultipartFile photo,
+            Model model) {
         String photoPath;
         Customer oldCustomer = null;
 
@@ -72,7 +81,7 @@ public class CustomerController {
 
         try {
             // Si no se proporciona una nueva foto, usa la foto actual del usuario
-            photoPath = customerService.savePhoto(photo, oldCustomer != null ? oldCustomer : customer);
+            photoPath = photoStorageService.savePhoto(photo, oldCustomer != null ? oldCustomer : customer);
             customer.setPhotoPath(photoPath);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -96,21 +105,24 @@ public class CustomerController {
     @GetMapping("/editCustomer")
     public String editCustomer(Model model) {
         if (customersCSV == null || customersCSV.isEmpty()) {
-            return "redirect:/home/customers";  // tu vista cuando todos los clientes han sido revisados
+            return "redirect:/home/customers"; // tu vista cuando todos los clientes han sido revisados
         } else {
             Customer customer = customersCSV.poll();
             if (customer.getPhotoPath() == null) {
                 customer.setPhotoPath("usuario2.png");
             }
+            List<Activity> activities = activityService.getAllActivities();
+            model.addAttribute("activities", activities);
             System.out.println(customer);
             model.addAttribute("customer", customer);
-            return "customerForm";  // tu vista
+            return "customerForm"; // tu vista
         }
     }
 
     @GetMapping("/home/customers/update/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
         Customer customer = customerService.findCustomerById(id);
+        
         model.addAttribute("customer", customer);
         return "customerForm";
     }
@@ -159,5 +171,35 @@ public class CustomerController {
         }
 
         return "participantList";
+    }
+    @GetMapping("/show-inscription-form")
+    public String showInscriptionForm(Model model) {
+        Form form = formService.initForm();
+        model.addAttribute("form", form);
+        model.addAttribute("activities", form.getActivities());
+        model.addAttribute("cursos", form.getCursos());
+        model.addAttribute("intereses", form.getIntereses());
+        return "inscriptionForm";
+    }
+    
+
+    @PostMapping("/form")
+    public String recibirFormulario(@ModelAttribute Form form, @RequestParam("photo") MultipartFile photo,
+            Model model) {
+        String photoPath;
+        try {
+            // Si se proporciona una nueva foto, guarda la foto y establece la ruta de la
+            // foto en el objeto Form
+            photoPath = photoStorageService.savePhoto(photo, form);
+            form.setPhotoPath(photoPath);
+            
+            // Escribe los datos del Customer en el CSV
+            formService.escribirformEnCsv(form);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        System.out.println(form.getInterests()+"dsa");
+        // Redirige a una pantalla de confirmación
+        return "redirect:/home/communications";
     }
 }

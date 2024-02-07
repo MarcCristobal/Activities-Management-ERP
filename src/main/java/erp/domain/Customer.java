@@ -28,7 +28,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Data
 @Entity
-public class Customer {
+public class Customer implements PhotoEntity{
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,9 +58,11 @@ public class Customer {
         @Enumerated(EnumType.STRING)
         private CustomerType type;
 
+        @CsvBindByName(column = "Imatge de perfil")
         @Column(length = 256)
         private String photoPath;
 
+        
         @CsvBindByName(column = "Nom del pare/mare/tutor legal")
         @Column(length = 50)
         private String parentName;

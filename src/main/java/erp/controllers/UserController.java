@@ -5,6 +5,7 @@
 package erp.controllers;
 
 import erp.domain.User;
+import erp.services.PhotoStorageService;
 import erp.services.UserService;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
@@ -34,10 +35,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
     private final UserService userService;
+    private final PhotoStorageService photoStorageService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PhotoStorageService photoStorageService) {
         this.userService = userService;
+        this.photoStorageService = photoStorageService;
     }
 
     @GetMapping("/register")
@@ -51,7 +54,7 @@ public class UserController {
             String photoPath;
             if (photo != null && !photo.isEmpty()) {
                 // Si el usuario ha seleccionado una foto, la procesamos y guardamos
-                photoPath = userService.savePhoto(photo, user);
+                photoPath = photoStorageService.savePhoto(photo, user);
             } else {
                 // Si el usuario no ha seleccionado una foto, usamos una imagen predeterminada
                 photoPath = "usuario2.png";
@@ -102,7 +105,7 @@ public class UserController {
 
         try {
             // Si no se proporciona una nueva foto, usa la foto actual del usuario
-            photoPath = userService.savePhoto(photo, oldUser != null ? oldUser : user);
+            photoPath = photoStorageService.savePhoto(photo, oldUser != null ? oldUser : user);
             user.setPhotoPath(photoPath);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -121,7 +124,7 @@ public class UserController {
         User oldUser = userService.findById(user.getId());
         try {
             // Si no se proporciona una nueva foto, usa la foto actual del usuario
-            photoPath = userService.savePhoto(photo, oldUser);
+            photoPath = photoStorageService.savePhoto(photo, oldUser);
 
             user.setPhotoPath(photoPath);
         } catch (IOException ex) {
