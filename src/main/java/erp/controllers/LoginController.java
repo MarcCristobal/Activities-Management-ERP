@@ -25,40 +25,40 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
-          private final UserService userService;
+    private final UserService userService;
 
-          @Autowired
-          public LoginController(UserService userService) {
-                    this.userService = userService;
-          }
+    @Autowired
+    public LoginController(UserService userService) {
+        this.userService = userService;
+    }
 
-          @GetMapping("/")
-          public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
-                    if (error != null) {
-                              model.addAttribute("error", error);
-                    }
-                    boolean hasNotUsers = userService.hasUsers();
-                    model.addAttribute("hasNotUsers", hasNotUsers);
-                    return "login";
-          }
+    @GetMapping("/")
+    public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
+        boolean hasNotUsers = userService.hasUsers();
+        model.addAttribute("hasNotUsers", hasNotUsers);
+        return "login";
+    }
 
-          @GetMapping("/home")
-          public String postLogin(HttpServletRequest request, Authentication authentication) {
-                    // Obtén el usuario actualmente autenticado
-                    User user = userService.findUserByEmail(authentication.getName());
+    @GetMapping("/home")
+    public String postLogin(HttpServletRequest request, Authentication authentication) {
+        // Obtén el usuario actualmente autenticado
+        User user = userService.findUserByEmail(authentication.getName());
 
-                    // Redirige al usuario a una vista específica basada en su rol
-                    switch (user.getRole()) {
-                              case ADMIN:
-                                        return "redirect:/home/users";
-                              case ACTIVITIES_COORDINATOR:
-                                        return "redirect:/activities";
-                              case MONITOR:
-                                        return "redirect:/activities";
-                              case CONCIERGE:
-                                        return "redirect:/activities";
-                              default:
-                                        return "redirect:/";
-                    }
-          }
+        // Redirige al usuario a una vista específica basada en su rol
+        switch (user.getRole()) {
+            case ADMIN:
+                return "redirect:/home/users";
+            case ACTIVITIES_COORDINATOR:
+                return "redirect:/activities";
+            case MONITOR:
+                return "redirect:/activities";
+            case CONCIERGE:
+                return "redirect:/activities";
+            default:
+                return "redirect:/";
+        }
+    }
 }

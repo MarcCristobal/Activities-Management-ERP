@@ -28,7 +28,7 @@
 
     <body>
         <div th:replace="~{header :: div}"></div>
-        <a href="http://44.211.104.141:9090/show-inscription-form" class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer inline-block mb-4">Inscription Form</a>
+        <a th:href="@{/activities-board/show-inscription-form}" class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer inline-block mb-4">Inscription Form</a>
         <div class="mx-8 my-6 space-y-6">
             <div class="flex">
                 <div class="w-1/3 pr-4 overflow-y-auto" style="max-height: 500px;">
