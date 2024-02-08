@@ -11,15 +11,10 @@
 
 <body>
     <div th:replace="~{header :: div}"></div>
-    <div th:replace="~{nav :: div}"></div>
 
     <div class="mx-8 my-6 space-y-16">
-        <div th:if="${#fields.hasErrors('*')}">
-            <ul>
-                <li th:each="error : ${errors.allErrors}" th:text="${error.defaultMessage}"></li>
-            </ul>
-        </div>
-        <form th:object="${form}" th:action="@{/form}" method="post" enctype="multipart/form-data"
+       
+        <form th:object="${form}" th:action="@{/shpw-inscription-form/form}" method="post" enctype="multipart/form-data"
             class="grid grid-rows-1">
             <div class="flex flex-grow flex-row space-x-10">
                 <!-- Photo -->
@@ -39,6 +34,13 @@
                     <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
 
                     <input type="hidden" th:field="*{photoPath}" />
+                                        <div th:if="${#fields.hasErrors('*')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">¡Error!</strong>
+                        <span class="block sm:inline">Hay errores en tu formulario:</span>
+                        <ul>
+                            <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+                        </ul>
+                    </div>
 
                     <span class="flex flex-col">
                         <label for="name" class="font-bold">Name</label>
