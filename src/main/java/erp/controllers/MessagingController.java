@@ -86,9 +86,9 @@ public class MessagingController {
         model.addAttribute("users", users);
         return "messageForm";
     }
-    
+
     @GetMapping("/home/communications/reply-message/{id}")
-    public String replyMessage(@PathVariable("id") long id, Model model){
+    public String replyMessage(@PathVariable("id") long id, Model model) {
         Message message = new Message();
         String original = messagingService.getMessageById(id).getContent();
         List<User> users = userService.getAllUsers();
@@ -122,11 +122,21 @@ public class MessagingController {
         return "messageOverview";
     }
 
+    @GetMapping("/filtered-messages-by-subject/")
+    public String filterMessagesBySubject(@RequestParam("subject") String subject, @RequestParam("box") String box, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long id = (Long) ((Map<String, Object>) auth.getDetails()).get("id");
+        List<Message> filteredMessages = messagingService.findMessageBySubject(subject, box, id);
+        model.addAttribute("messages", filteredMessages);
+        model.addAttribute("box", box);
+
+        return "messageList";
+    }
+
     @PostMapping("/home/communications/delete-message/{id}")
     public String deleteMessage(@PathVariable("id") long id) {
         messagingService.deleteMessage(id);
         return "redirect:/home/communications/inbox";
     }
-    
 
 }

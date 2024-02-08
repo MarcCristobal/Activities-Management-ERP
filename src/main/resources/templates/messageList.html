@@ -16,9 +16,18 @@
         <div class="mx-8 my-6 space-y-6">
             <label class="bg-gray-200 p-2 text-sm text-orange-500">Messages<span class="text-black" th:text="' > ' + ${box == 'inbox' ? 'Outbox' : 'Inbox'}"></span></label>     
 
-            <form th:action="@{/home/communications/message-form}" method="get" class="pb-2">
-                <button type="submit" class="w-10 h-10 cursor-pointer"><img src="/images/anadir.png"></button>
-            </form>
+            <div class="flex items-center justify-between">
+
+                <form th:action="@{/home/communications/message-form}" method="get" class="pb-2">
+                    <button type="submit" class="w-10 h-10 cursor-pointer"><img src="/images/anadir.png"></button>
+                </form>
+
+                <form th:action="@{/filtered-messages-by-subject/}" method="get" class="flex items-center">
+                    <input type="text" id="subject" name="subject" class="w-80 h-10 border border-gray-800 rounded-md">
+                    <button class="w-10 h-10 cursor-pointer rounded-md bg-teal-500"><img src="/images/lupa.png"></button>
+                    <input type="text" id="box" name="box" th:value="${box}" class="hidden">
+                </form>
+            </div>
 
             <a  class="py-1 px-2 bg-teal-500 text-center text-slate-50 rounded-md" th:href="@{'/home/communications/' + ${box}}" th:text="${box == 'inbox' ? 'Inbox' : 'Outbox'}"></a>
 

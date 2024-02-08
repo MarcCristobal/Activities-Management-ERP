@@ -103,42 +103,6 @@ public class UserService {
                 return userDao.count() == 0;
         }
 
-        public String savePhoto(MultipartFile photo, User user) throws IOException {
-                // Generamos un nombre de archivo único
-                String filename;
-                if (photo != null && !photo.isEmpty()) {
-                        if (user.getPhotoPath() != null && !user.getPhotoPath().equals("usuario2.png")) {
-                                // Si el usuario ya tiene una imagen asignada que no es la imagen por defecto,
-                                // usamos el mismo nombre de archivo para sobrescribir la imagen anterior
-                                filename = user.getPhotoPath();
-                                // Obtenemos la ruta absoluta del directorio del proyecto
-                                String projectDirectory = new File(".").getAbsolutePath();
-                                // Creamos la ruta completa al archivo
-                                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
-                                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
-                                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                        } else {
-                                // Si el usuario no tiene una imagen asignada o si tiene la imagen por defecto,
-                                // generamos un nuevo nombre de archivo
-                                filename = UUID.randomUUID().toString() + ".jpg";
-                                // Obtenemos la ruta absoluta del directorio del proyecto
-                                String projectDirectory = new File(".").getAbsolutePath();
-                                // Creamos la ruta completa al archivo
-                                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
-                                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
-                                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                        }
-                } else if (user.getPhotoPath() != null) {
-                        // Si no se sube una nueva foto, usa la foto actual del usuario
-                        filename = user.getPhotoPath();
-                } else {
-                        // Si no hay foto actual y no se sube una nueva foto, usa la imagen por defecto
-                        filename = "usuario2.png";
-                }
-                // Devolvemos solo el nombre del archivo,
-                return filename;
-        }
-
         public List<User> getLockedUsers() {
                 return userDao.findByAccountNonLockedFalse();
         }

@@ -21,8 +21,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,10 +59,11 @@ public class CustomerService {
             existingCustomer.setPhone(customer.getPhone());
             existingCustomer.setCourse(customer.getCourse());
             existingCustomer.setInterests(customer.getInterests());
+            existingCustomer.setActivityNamesString(customer.getActivityNamesString());
 
             // Añadir actividades a la lista de actividades del cliente
             if (customer.getActivityNamesString() != null) {
-                String[] activityNames = customer.getActivityNamesString().split(",");
+                String[] activityNames = customer.getActivityNamesString().split(";");
                 for (String activityName : activityNames) {
                     Activity activity = activityDao.findActivityByNameExact(activityName.trim());
                     if (activity != null) {
@@ -98,42 +102,6 @@ public class CustomerService {
         return customerDao.findById(id).orElse(null);
     }
 
-    public String savePhoto(MultipartFile photo, Customer customer) throws IOException {
-        // Generamos un nombre de archivo único
-        String filename;
-        if (photo != null && !photo.isEmpty()) {
-            if (customer.getPhotoPath() != null && !customer.getPhotoPath().equals("usuario2.png")) {
-                // Si el usuario ya tiene una imagen asignada que no es la imagen por defecto,
-                // usamos el mismo nombre de archivo para sobrescribir la imagen anterior
-                filename = customer.getPhotoPath();
-                // Obtenemos la ruta absoluta del directorio del proyecto
-                String projectDirectory = new File(".").getAbsolutePath();
-                // Creamos la ruta completa al archivo
-                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
-                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
-                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            } else {
-                // Si el usuario no tiene una imagen asignada o si tiene la imagen por defecto,
-                // generamos un nuevo nombre de archivo
-                filename = UUID.randomUUID().toString() + ".jpg";
-                // Obtenemos la ruta absoluta del directorio del proyecto
-                String projectDirectory = new File(".").getAbsolutePath();
-                // Creamos la ruta completa al archivo
-                Path filePath = Paths.get(projectDirectory, "./userImages/", filename);
-                // Guardamos la imagen en el archivo, sobrescribiendo el archivo existente si existe
-                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            }
-        } else if (customer.getPhotoPath() != null) {
-            // Si no se sube una nueva foto, usa la foto actual del usuario
-            filename = customer.getPhotoPath();
-        } else {
-            // Si no hay foto actual y no se sube una nueva foto, usa la imagen por defecto
-            filename = "usuario2.png";
-        }
-        // Devolvemos solo el nombre del archivo, no la ruta completa
-        return filename;
-    }
-
     public Queue<Customer> loadCustomersFromCsv(MultipartFile file) {
         System.out.println("Entre al metodo ");
         Queue<Customer> customers = new LinkedList<>();
@@ -165,6 +133,10 @@ public class CustomerService {
         return customerDao.findCustomersByName(name);
     }
 
+    public Customer findCustomerByEmail(String email) {
+        return customerDao.findByEmail(email);
+    }
+
     public List<Customer> getActivityCustomers(Long id) {
         return customerDao.findCustomerByActivityId(id);
     }
@@ -172,6 +144,29 @@ public class CustomerService {
     @Transactional
     public void removeCustomersFromActivity(Long activityId, List<Long> customerIds) {
         customerDao.removeCustomersFromActivity(activityId, customerIds);
+    }
+
+    public List<String> splitInterests(String interests) {
+        List<String> interestList = new ArrayList<>();
+
+        String[] splited = interests.split(";");
+
+        for (int i = 0; i < splited.length; i++) {
+            interestList.add(splited[i]);
+        }
+
+        return interestList;
+    }
+
+    public Map<String, Integer> getAllInterests() {
+        Map<String, Integer> interestCounts = new HashMap<>();
+        for (Customer customer : customerDao.findAll()) {
+            for (String interest : splitInterests(customer.getInterests())) {
+                interestCounts.put(interest, interestCounts.getOrDefault(interest, 0) + 1);
+            }
+        }
+        
+        return interestCounts;
     }
 
 }

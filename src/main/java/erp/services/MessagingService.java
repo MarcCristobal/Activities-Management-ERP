@@ -39,24 +39,24 @@ public class MessagingService {
     @Autowired
     private MailSenderService mailSenderService;
 
-
-    public void sendMessage(Long senderId, String userRecipients, String customerRecipients, String activityRecipients,String subject, String content) {
+    public void sendMessage(Long senderId, String userRecipients, String customerRecipients, String activityRecipients, String subject, String content) {
         User sender = userRepository.findById(senderId).orElse(null);
 
-            Message message = new Message();
-            message.setSender(sender);
-            message.setSubject(subject);
-            message.setContent(content);
-            processIds(message, userRecipients, customerRecipients, activityRecipients);
+        Message message = new Message();
+        message.setSender(sender);
+        message.setSubject(subject);
+        message.setContent(content);
+        processIds(message, userRecipients, customerRecipients, activityRecipients);
 
-            messageRepository.save(message);
-        
+        messageRepository.save(message);
+
     }
+
     public void processIds(Message message, String userIDs, String customerIDs, String activityIDs) {
         List<String> userList = userIDs != null ? Arrays.asList(userIDs.split(",")) : new ArrayList<>();
         List<String> customerList = customerIDs != null ? Arrays.asList(customerIDs.split(",")) : new ArrayList<>();
         List<String> activityList = activityIDs != null ? Arrays.asList(activityIDs.split(",")) : new ArrayList<>();
-    
+
         for (String userID : userList) {
             if (!userID.isEmpty()) {
                 User user = userRepository.findById(Long.parseLong(userID)).orElse(null);
@@ -66,7 +66,7 @@ public class MessagingService {
                 }
             }
         }
-    
+
         for (String customerID : customerList) {
             if (!customerID.isEmpty()) {
                 Customer customer = customerRepository.findById(Long.parseLong(customerID)).orElse(null);
@@ -76,7 +76,7 @@ public class MessagingService {
                 }
             }
         }
-    
+
         for (String activityID : activityList) {
             if (!activityID.isEmpty()) {
                 Activity activity = activityRepository.findById(Long.parseLong(activityID)).orElse(null);
@@ -89,8 +89,7 @@ public class MessagingService {
             }
         }
     }
-    
-    
+
     public void replyToMessage(Long senderId, Long originalMessageId, String content) {
         User sender = userRepository.findById(senderId).orElse(null);
         Message originalMessage = messageRepository.findById(originalMessageId).orElse(null);
@@ -104,17 +103,21 @@ public class MessagingService {
 
         messageRepository.save(reply);
     }
+
     public List<Message> getAllMessages() {
-        
+
         return messageRepository.findAll();
     }
+
     public Message getMessageById(long id) {
         return messageRepository.findById(id).orElse(null);
     }
+
     @Transactional
-    public void deleteMessage(long id){
+    public void deleteMessage(long id) {
         messageRepository.deleteById(id);
     }
+
     public List<Message> findAllUserMessages(Long userId) {
         return messageRepository.findMessagesByUserRecipients(userId);
     }
@@ -123,5 +126,23 @@ public class MessagingService {
         return messageRepository.findMessagesByUserSender(senderId);
     }
 
-}
+    public List<Message> findMessageBySubject(String subject, String box, long id) {
+        List<Message> messages = new ArrayList<>();
+        
+        if (box.equalsIgnoreCase("outbox")){
+            for(Message message : messageRepository.findMessagesByUserRecipients(id)){
+                if (message.getSubject().contains(subject)){
+                    messages.add(message);
+                }
+            }
+        } else{
+            for(Message message : messageRepository.findMessagesByUserSender(id)){
+                if (message.getSubject().contains(subject)){
+                    messages.add(message);
+                }
+            }
+        }
+        return messages;
+    }
 
+}
