@@ -60,16 +60,12 @@ public class ActivityService {
         activityDao.deleteById(id);
     }
 
-    public Activity findById(Long id) {
+    public Activity findActivityById(Long id) {
         return activityDao.findById(id).orElse(null);
     }
 
     public List<Activity> getAllActivities() {
         return activityDao.findAll();
-    }
-
-    public Activity findActivityById(Long id) {
-        return activityDao.findById(id).orElse(null);
     }
 
     public List<Activity> findActivitiesByName(String name) {

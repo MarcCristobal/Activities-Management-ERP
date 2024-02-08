@@ -1,0 +1,81 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Activities</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+        <style>
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            function showActivityDetails(activityId) {
+                // Mostrar el contenedor de detalles solo si se selecciona una actividad
+                if (!activityId) {
+                    document.getElementById('activity-details').style.display = 'none';
+                    return;
+                }
+
+                // Mostrar los detalles de la actividad seleccionada
+                document.getElementById('activity-details').style.display = 'block';
+            }
+        </script>
+    </head>
+
+    <body>
+        <div th:replace="~{header :: div}"></div>
+        <a href="http://44.211.104.141:9090/show-inscription-form" class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer inline-block mb-4">Inscription Form</a>
+        <div class="mx-8 my-6 space-y-6">
+            <div class="flex">
+                <div class="w-1/3 pr-4 overflow-y-auto" style="max-height: 500px;">
+                    <div class="grid gap-4">
+                        <div th:each="activity : ${activities}">
+                            <button type="button" class="size-full bg-teal-500 p-2 w-full text-left border-l-4 border-transparent hover:border-blue-700" onclick="showActivityDetails('${activity.id}')">
+                                <a th:href="@{/activities-board(id=${activity.id})}" th:text="${activity.name}"></a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-2/3 pl-4">
+                    <div th:if="${selectedActivity != null}" id="activity-details" class="border-l-4 border-blue-700 bg-gray-200 p-4">
+                        <div class="flex flex-row space-x-4">
+                            <div class="size-full bg-teal-500 p-2">
+                                <div class="mx-2 mb-2 flex justify-between text-lg font-semibold text-blue-700">
+                                    <span th:text="${selectedActivity.name}"></span>
+                                </div>
+                                <div class="mx-2 flex justify-between border-l-4 border-blue-700 bg-gray-200 p-1 font-black">
+                                    <span th:text="'From ' + ${#dates.format(selectedActivity.startDate, 'dd/MM/yyyy')} + ' to ' + ${#dates.format(selectedActivity.endDate, 'dd/MM/yyyy')}"></span>
+                                    <span th:text="${selectedActivity.pricePerPerson} + ' € / ' + ${selectedActivity.numberOfPayments} + ' payments' "></span>
+                                    <span class="flex items-center justify-center space-x-1">
+                                        <img class="size-6" src="/images/mapas-y-banderas.png" />
+                                        <span th:text="${selectedActivity.place}"></span>
+                                    </span>
+                                    <span th:text="'Capacity: ' + ${selectedActivity.participantLimit}"></span>
+                                </div>
+                                <div class="mx-2 grid min-h-80 grid-cols-2 space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
+                                    <div>
+                                        <label class="text-lg font-bold">Resources:</label>
+                                        <div th:each="resource : ${selectedActivity.resources}">
+                                            <span th:text="${resource}"></span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="text-lg font-bold">Requirements:</label>
+                                        <div th:each="requirement : ${selectedActivity.requirements}">
+                                            <span th:text="${requirement}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

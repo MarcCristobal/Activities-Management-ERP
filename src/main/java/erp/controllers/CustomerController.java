@@ -123,7 +123,7 @@ public class CustomerController {
     }
 
     @GetMapping("/filtered-customers-by-name")
-    public String filterActivitiesByName(@RequestParam("name") String name, Model model) {
+    public String filterCustomersByName(@RequestParam("name") String name, Model model) {
         List<Customer> filteredCustomers = customerService.findCustomersByName(name);
         model.addAttribute("customers", filteredCustomers);
         return "customers";

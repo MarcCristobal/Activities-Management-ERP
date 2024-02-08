@@ -1,7 +1,5 @@
 package erp.domain;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "content")
     private String content;
 
@@ -38,24 +36,23 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;
-    
+
     @ManyToOne
     @JoinColumn(name = "reply_to_id")
     private Message replyTo;
 
     @ManyToMany
     @JoinTable(
-        name = "message_user_recipients",
-        joinColumns = @JoinColumn(name = "message_id"),
-        inverseJoinColumns = @JoinColumn(name = "recipient_id"))
+            name = "message_user_recipients",
+            joinColumns = @JoinColumn(name = "message_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipient_id"))
     private List<User> userRecipients = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
-        name = "message_customer_recipients",
-        joinColumns = @JoinColumn(name = "message_id"),
-        inverseJoinColumns = @JoinColumn(name = "recipient_id"))
+            name = "message_customer_recipients",
+            joinColumns = @JoinColumn(name = "message_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipient_id"))
     private List<Customer> customerRecipients = new ArrayList<>();
 
-    
 }
