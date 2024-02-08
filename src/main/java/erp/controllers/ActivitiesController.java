@@ -115,4 +115,18 @@ public class ActivitiesController {
         return "activities";
     }
 
+    @GetMapping("/activities-board")
+    public String showActivitiesBoard(@RequestParam(required = false, name = "id") Long activityId, Model model) {
+        List<Activity> activities = activityService.getAllActivities();
+        model.addAttribute("activities", activities);
+
+        if (activityId != null) {
+            Activity activity = activityService.findActivityById(activityId);
+            System.out.println(activityId);
+            model.addAttribute("selectedActivity", activity);
+        }
+
+        return "activitiesBoard";
+    }
+
 }

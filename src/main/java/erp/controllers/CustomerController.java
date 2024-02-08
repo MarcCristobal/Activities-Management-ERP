@@ -247,7 +247,7 @@ public class CustomerController {
                 return "participantList";
         }
 
-        @GetMapping("/show-inscription-form")
+        @GetMapping("/activities-board/show-inscription-form")
         public String showInscriptionForm(Model model) {
                 Form form = formService.initForm();
                 model.addAttribute("form", form);
@@ -257,7 +257,7 @@ public class CustomerController {
                 return "inscriptionForm";
         }
 
-        @PostMapping("/show-inscription-form/form")
+        @PostMapping("/activities-board/show-inscription-form/form")
         public String recibirFormulario(@Valid @ModelAttribute Form form, BindingResult result,
                         @RequestParam("photo") MultipartFile photo,
                         Model model, @RequestParam List<String> selectedActivities) {

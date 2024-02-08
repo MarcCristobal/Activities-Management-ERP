@@ -41,7 +41,8 @@ public class SecurityConfig {
                 http
                                 .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(authorize -> authorize
-                                                .requestMatchers("/show-inscription-form/**").permitAll()
+                                                .requestMatchers("/activities-board").permitAll()
+                                                .requestMatchers("/activities-board/**").permitAll()
                                                 .requestMatchers("/images/**").permitAll()
                                                 .requestMatchers("/css/**").permitAll()
                                                 .requestMatchers(new RegisterRequestMatcher()).permitAll()
