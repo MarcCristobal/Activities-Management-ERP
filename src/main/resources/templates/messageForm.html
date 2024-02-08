@@ -1,182 +1,186 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Message</title>
-    <!-- Include Tailwind CSS -->
-    <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Create Message</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+    </head>
 
-<body>
-    <div th:replace="~{header :: div}"></div>
-    <div th:replace="~{nav :: div}"></div>
-    <div class="mx-8 my-6 space-y-16">
-        <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500">Communications</span><span> > New
-                Message</span></label>
-        <form th:object="${message}" th:action="@{/home/communications/send-message}" method="post"
-            class="grid grid-rows-1">
-            <input type="hidden" th:field="*{id}"/>
-            <div class="flex flex-grow flex-row space-x-10">
-                <div class="grid-rows-1 space-y-4">
-                    <span class="flex flex-col">
-                        <label class="font-bold">Subject</label>
-                        <input class="border border-gray-800 p-1" id="subject" th:field="*{subject}" name="subject"
-                            required />
+    <body>
+        <div th:replace="~{header :: div}"></div>
+        <div th:replace="~{nav :: div}"></div>
+        <div class="mx-8 my-6 space-y-6">
+            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500">Communications</span><span> > New Message</span></label>
+            <form class="grid grid-rows-1 gap-4" th:object="${message}" th:action="@{/home/communications/send-message}" method="post">
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="grid-rows-1 size-full bg-teal-500 p-2">
+                    <span class="flex mx-2 border-l-4 border-blue-700 bg-gray-200 p-1 items-center space-x-2">
+                        <label class="font-bold text-lg">Subject</label>
+                        <input class="w-4/12 h-6 border border-gray-800 p-1" id="subject" th:field="*{subject}" name="subject"required />
                     </span>
 
-                    <!-- Listas de destinatarios -->
-                    <div class="flex flex-row space-x-4">
-                        <label class="font-bold">Destinatarios (usuarios)</label>
-                        <ul id="userRecipients" class="flex flex-row space-x-2">
-                            <!-- Se llenará dinámicamente con JavaScript -->
-                        </ul>
+                    <div class="grid grid-cols-2 min-h-80 mx-2 border-l-4 border-blue-700 bg-slate-50 p-2">
+
+                        <!-- Listas de destinatarios -->
+                        <div class="grid grid-rows-2">
+                            <div class="grid grid-cols-2">
+                                <div class="flex-col">
+                                    <div class="flex-row">
+                                        <label class="font-bold">Select recipients</label>
+                                        <select id="recipientList" onchange="changeRecipientList(this)">
+                                            <option value="user">Usuarios</option>
+                                            <option value="customer">Clientes</option>
+                                            <option value="activity">Actividades</option>
+                                        </select>                                    
+                                    </div>
+
+                                    <div id="userTable" class="flex flex-row space-x-4">
+                                        <table>
+                                            <tr th:each="user : ${users}">
+                                                <td th:text="${user.name}"></td>
+                                                <td>
+                                                    <button type="button" th:data-id="${user.id}" th:data-name="${user.name}"
+                                                            onclick="addRecipient(this, 'user')">
+                                                        Añadir
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div id="customerTable" class="flex flex-row space-x-4" style="display: none;">                               
+                                        <table>
+                                            <tr th:each="customer : ${customers}">
+                                                <td th:text="${customer.name}"></td>
+                                                <td>
+                                                    <button type="button" th:data-id="${customer.id}" th:data-name="${customer.name}"
+                                                            onclick="addRecipient(this, 'customer')">
+                                                        Añadir
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div id="activityTable" class="flex flex-row space-x-4" style="display: none;">
+                                        <table>
+                                            <tr th:each="activity : ${activities}">
+                                                <td th:text="${activity.name}"></td>
+                                                <td>
+                                                    <button type="button" th:data-id="${activity.id}" th:data-name="${activity.name}"
+                                                            onclick="addRecipient(this, 'activity')">
+                                                        Añadir
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div>
+
+                                    <label class="font-bold">To</label>
+                                    <ul id="userRecipients" class="flex flex-row space-x-2">
+                                        <!-- Se llenará dinámicamente con JavaScript -->
+                                    </ul>
+                                    <ul id="customerRecipients" class="flex flex-row space-x-2">
+                                        <!-- Se llenará dinámicamente con JavaScript -->
+                                    </ul>
+                                    <ul id="activityRecipients" class="flex flex-row space-x-2">
+                                        <!-- Se llenará dinámicamente con JavaScript -->
+                                    </ul>
+
+
+                                    <!-- Campo oculto para los IDs de los destinatarios -->
+
+                                    <input type="hidden" id="userRecipientIds" name="userRecipients" />
+                                    <input type="hidden" id="customerRecipientIds" name="customerRecipients" />
+                                    <input type="hidden" id="activityRecipientIds" name="activityRecipients" />
+
+                                    <div class="flex flex-row space-x-4">
+
+                                    </div>
+                                    <!-- Tablas de destinatarios -->
+
+                                </div>
+                            </div>
+                            <div th:if="${original} != null">
+                                <div class="flex flex-col">                                    
+                                    <label class="font-bold">Original Message</label>
+                                    <span th:text="${original}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Campo para el contenido del mensaje -->
+                        <div class="flex flex-col">
+                            <label class="font-bold">Contenido del mensaje</label>
+                            <textarea id="content" class="resize-none w-full h-72 border border-black" th:field="*{content}"></textarea>
+                        </div>
                     </div>
-
-                    <div class="flex flex-row space-x-4">
-                        <label class="font-bold">Destinatarios (clientes)</label>
-                        <ul id="customerRecipients" class="flex flex-row space-x-2">
-                            <!-- Se llenará dinámicamente con JavaScript -->
-                        </ul>
-                    </div>
-
-                    <div class="flex flex-row space-x-4">
-                        <label class="font-bold">Destinatarios (actividades)</label>
-                        <ul id="activityRecipients" class="flex flex-row space-x-2">
-                            <!-- Se llenará dinámicamente con JavaScript -->
-                        </ul>
-                    </div>
-
-
-                    <!-- Campo oculto para los IDs de los destinatarios -->
-
-                    <input type="hidden" id="userRecipientIds" name="userRecipients" />
-                    <input type="hidden" id="customerRecipientIds" name="customerRecipients" />
-                    <input type="hidden" id="activityRecipientIds" name="activityRecipients" />
-
-                    <div class="flex flex-row space-x-4">
-                        <label class="font-bold">Seleccionar lista de destinatarios</label>
-                        <select id="recipientList" onchange="changeRecipientList(this)">
-                            <option value="user">Usuarios</option>
-                            <option value="customer">Clientes</option>
-                            <option value="activity">Actividades</option>
-                        </select>
-                    </div>
-                    <!-- Tablas de destinatarios -->
-                    <div id="userTable" class="flex flex-row space-x-4">
-                        <label class="font-bold">Seleccionar destinatarios (usuarios)</label>
-                        <table>
-                            <tr th:each="user : ${users}">
-                                <td th:text="${user.name}"></td>
-                                <td>
-                                    <button type="button" th:data-id="${user.id}" th:data-name="${user.name}"
-                                        onclick="addRecipient(this, 'user')">
-                                        Añadir
-                                    </button>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div id="customerTable" class="flex flex-row space-x-4" style="display: none;">
-                        <label class="font-bold">Seleccionar destinatarios (clientes)</label>
-                        <table>
-                            <tr th:each="customer : ${customers}">
-                                <td th:text="${customer.name}"></td>
-                                <td>
-                                    <button type="button" th:data-id="${customer.id}" th:data-name="${customer.name}"
-                                        onclick="addRecipient(this, 'customer')">
-                                        Añadir
-                                    </button>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div id="activityTable" class="flex flex-row space-x-4" style="display: none;">
-                        <label class="font-bold">Seleccionar destinatarios (actividades)</label>
-                        <table>
-                            <tr th:each="activity : ${activities}">
-                                <td th:text="${activity.name}"></td>
-                                <td>
-                                    <button type="button" th:data-id="${activity.id}" th:data-name="${activity.name}"
-                                        onclick="addRecipient(this, 'activity')">
-                                        Añadir
-                                    </button>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <!-- Campo para el contenido del mensaje -->
-                    <div class="flex flex-row space-x-4">
-                        <label class="font-bold">Contenido del mensaje</label>
-                        <textarea id="content"
-                            class="border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            th:field="*{content}" rows="4" cols="50"></textarea>
-                    </div>
-
-                    <span class="flex flex-row justify-end">
-                        <input type="submit"
-                            class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
-                            value="Send" />
-                        <a th:href="@{/home/communications}"
-                            class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
-                    </span>
                 </div>
-            </div>
-        </form>
-    </div>
-    <script>
-        function addRecipient(button, listType) {
-            var id = button.getAttribute('data-id');
-            var name = button.getAttribute('data-name');
 
-            // Añade el ID del destinatario seleccionado al campo oculto correspondiente
-            var recipientIds = document.getElementById(listType + "RecipientIds");
-            recipientIds.value += id + ",";
+                <span class="flex flex-row justify-end">
+                    <input type="submit"
+                           class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
+                           value="Send" />
+                    <a th:href="@{/home/communications/inbox}"
+                       class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
+                </span>
+            </form>
+        </div>
+        <script>
+            function addRecipient(button, listType) {
+                var id = button.getAttribute('data-id');
+                var name = button.getAttribute('data-name');
 
-            // Añade el nombre del destinatario seleccionado a la lista correspondiente
-            var recipientsList = document.getElementById(listType + "Recipients");
-            var li = document.createElement("li");
-            li.id = listType + "Recipient" + id;  // Asigna un ID único al elemento li
-            li.appendChild(document.createTextNode(name));
+                // Añade el ID del destinatario seleccionado al campo oculto correspondiente
+                var recipientIds = document.getElementById(listType + "RecipientIds");
+                recipientIds.value += id + ",";
 
-            // Añade un botón para eliminar el destinatario
-            var removeButton = document.createElement("button");
-            removeButton.innerHTML = "Eliminar";
-            removeButton.onclick = function () {
-                removeRecipient(li.id, name);  // Pasa el ID del elemento li a la función removeRecipient
-            };
-            li.appendChild(removeButton);
+                // Añade el nombre del destinatario seleccionado a la lista correspondiente
+                var recipientsList = document.getElementById(listType + "Recipients");
+                var li = document.createElement("li");
+                li.id = listType + "Recipient" + id;  // Asigna un ID único al elemento li
+                li.appendChild(document.createTextNode(name));
 
-            recipientsList.appendChild(li);
-        }
+                // Añade un botón para eliminar el destinatario
+                var removeButton = document.createElement("button");
+                removeButton.innerHTML = "Eliminar";
+                removeButton.onclick = function () {
+                    removeRecipient(li.id, name);  // Pasa el ID del elemento li a la función removeRecipient
+                };
+                li.appendChild(removeButton);
 
-        function removeRecipient(liId, listType) {
-            var li = document.getElementById(liId);
-            li.parentNode.removeChild(li);
+                recipientsList.appendChild(li);
+            }
 
-            // Obtiene el ID del destinatario del ID del elemento li
-            var id = liId.replace(listType + "Recipient", "");
+            function removeRecipient(liId, listType) {
+                var li = document.getElementById(liId);
+                li.parentNode.removeChild(li);
 
-            // Elimina el ID del destinatario del campo oculto correspondiente
-            var recipientIds = document.getElementById(listType + "RecipientIds");
-            recipientIds.value = recipientIds.value.replace(id + ",", "");
-        }
+                // Obtiene el ID del destinatario del ID del elemento li
+                var id = liId.replace(listType + "Recipient", "");
 
-        function changeRecipientList(selectElement) {
-            // Ocultar todas las tablas
-            document.getElementById('userTable').style.display = 'none';
-            document.getElementById('customerTable').style.display = 'none';
-            document.getElementById('activityTable').style.display = 'none';
+                // Elimina el ID del destinatario del campo oculto correspondiente
+                var recipientIds = document.getElementById(listType + "RecipientIds");
+                recipientIds.value = recipientIds.value.replace(id + ",", "");
+            }
 
-            // Mostrar la tabla seleccionada
-            document.getElementById(selectElement.value + 'Table').style.display = 'block';
-        }
+            function changeRecipientList(selectElement) {
+                // Ocultar todas las tablas
+                document.getElementById('userTable').style.display = 'none';
+                document.getElementById('customerTable').style.display = 'none';
+                document.getElementById('activityTable').style.display = 'none';
 
-    </script>
-</body>
+                // Mostrar la tabla seleccionada
+                document.getElementById(selectElement.value + 'Table').style.display = 'block';
+            }
+
+        </script>
+    </body>
 
 </html>

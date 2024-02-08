@@ -14,16 +14,12 @@ import erp.services.PhotoStorageService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,6 +69,7 @@ public class CustomerController {
         public String showCustomerProfile(@PathVariable("id") Long id, Model model) {
                 Customer customer = customerService.findCustomerById(id);
                 model.addAttribute("customer", customer);
+                model.addAttribute("interestList", customerService.splitInterests(customer.getInterests()));
                 return "customerOverview";
         }
 
@@ -289,5 +286,12 @@ public class CustomerController {
                 System.out.println(form.getInterests() + "dsa");
                 // Redirige a una pantalla de confirmación
                 return "redirect:/show-inscription-form";
+        }
+        
+        @GetMapping("/home/customers/statistics")
+        public String showStatistics(Model model){
+            model.addAttribute("interestMap", customerService.getAllInterests());
+            
+            return "statistics";
         }
 }

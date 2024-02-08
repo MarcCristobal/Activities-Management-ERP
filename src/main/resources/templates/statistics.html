@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>User List</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+    </head>
+
+    <body>
+        <div th:replace="~{header :: div}"></div>
+        <div th:replace="~{nav :: div}"></div>
+
+        <div class="space-y-6 mx-8 my-6">
+            <label class="p-2 text-orange-500 bg-gray-200 text-sm">Customers Interests Statistics</label>
+            <div class="container mx-auto mt-8">
+                <h1 class="text-2xl font-bold mb-4">Interests Statistics</h1>
+                <div class="bg-white shadow-md">
+                    <canvas id="interestsChart" class="w-full h-48"></canvas>
+                </div>
+            </div>
+
+            <!-- Agrega la referencia a la biblioteca Chart.js -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script th:inline="javascript">
+                /* Obtén los datos de intereses y sus recuentos del modelo */
+                var interestMap = /*[[${interestMap}]]*/ {};
+
+                /* Extrae las etiquetas (intereses) y los recuentos del objeto de datos */
+                var labels = Object.keys(interestMap);
+                var counts = Object.values(interestMap);
+
+                /* Configura los datos del gráfico */
+                var ctx = document.getElementById('interestsChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                                label: 'Número de clientes',
+                                data: counts,
+                                backgroundColor: 'rgba(79, 70, 229, 0.5)',
+                                borderColor: 'rgba(79, 70, 229, 1)',
+                                borderWidth: 1
+                            }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </body>
+
+</html>
