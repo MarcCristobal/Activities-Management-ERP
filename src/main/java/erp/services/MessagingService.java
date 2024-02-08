@@ -61,6 +61,7 @@ public class MessagingService {
             if (!userID.isEmpty()) {
                 User user = userRepository.findById(Long.parseLong(userID)).orElse(null);
                 if (user != null) {
+                    System.out.println(user);
                     message.getUserRecipients().add(user);
                 }
             }
@@ -116,6 +117,10 @@ public class MessagingService {
     }
     public List<Message> findAllUserMessages(Long userId) {
         return messageRepository.findMessagesByUserRecipients(userId);
+    }
+    
+    public List<Message> findMessagesByUserSender(Long senderId){
+        return messageRepository.findMessagesByUserSender(senderId);
     }
 
 }
