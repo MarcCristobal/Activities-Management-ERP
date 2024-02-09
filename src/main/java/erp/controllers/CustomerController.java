@@ -5,6 +5,7 @@
 package erp.controllers;
 
 import erp.domain.Activity;
+import erp.domain.CsvProcessingResult;
 import erp.domain.Customer;
 import erp.domain.Form;
 import erp.services.ActivityService;
@@ -40,9 +41,12 @@ public class CustomerController {
 
         private final CustomerService customerService;
         private Queue<Customer> customersCSV;
+        private List<String> unprocessedLines;
+        private CsvProcessingResult processingResult;
         private final PhotoStorageService photoStorageService;
         private final ActivityService activityService;
         private final FormService formService;
+        private int currentIndex = 1;
 
         @Autowired
         public CustomerController(CustomerService customerService, ActivityService activityService,
@@ -132,9 +136,7 @@ public class CustomerController {
                         } else {
                                 customer.setActivityNamesString(String.join(";", selectedActivities));
                         }
-
                 }
-
                 try {
                         // Si no se proporciona una nueva foto, usa la foto actual del usuario
                         photoPath = photoStorageService.savePhoto(photo,
@@ -143,22 +145,22 @@ public class CustomerController {
                 } catch (IOException ex) {
                         System.out.println(ex.getMessage());
                 }
-
                 // Guardamos el usuario
                 customerService.saveOrUpdateCustomer(customer);
-
                 if (customersCSV != null && !customersCSV.isEmpty()) {
+
                         customersCSV.poll(); // Quita el cliente de la cola solo después de que se haya procesado con
-                                             // éxito
+                        //unprocessedLines.remove(currentIndex); // éxito
                 }
 
                 return "redirect:/editCustomer";
         }
 
         @PostMapping("/upload")
-        public String upload(@RequestParam("file") MultipartFile file) {
-                System.out.println("Hola");
-                customersCSV = customerService.loadCustomersFromCsv(file);
+        public String upload() {
+                processingResult = customerService.loadCustomersFromCsv();
+                //unprocessedLines = processingResult.getUnprocessedLines();
+                customersCSV = processingResult.getCustomers();
                 System.out.println("No pete");
                 return "redirect:/editCustomer";
         }
@@ -170,7 +172,7 @@ public class CustomerController {
                         return "redirect:/home/customers"; // tu vista cuando todos los clientes han sido revisados
                 } else {
                         Customer customer = customersCSV.peek(); // Usa peek en lugar de poll para no quitar el cliente
-                                                                 // de la cola
+                        currentIndex++; // de la cola
                         if (customer.getPhotoPath() == null) {
                                 customer.setPhotoPath("usuario2.png");
                         }
@@ -180,11 +182,21 @@ public class CustomerController {
                         List<String> selectedActivityNames = Arrays
                                         .asList(customer.getActivityNamesString().split(";"));
                         model.addAttribute("selectedActivityNames", selectedActivityNames);
-
+                        model.addAttribute("showSkipButton", false);
                         System.out.println(customer);
                         model.addAttribute("customer", customer);
                         return "customerForm"; // tu vista
                 }
+        }
+
+        @GetMapping("/skip")
+        public String skipCustomer() {
+                if (customersCSV != null && !customersCSV.isEmpty()) {
+
+                        customersCSV.poll(); // Quita el cliente de la cola solo después de que se haya procesado con
+                        unprocessedLines.remove(currentIndex); // éxito
+                }
+                return "redirect:/editCustomer";
         }
 
         @GetMapping("/home/customers/update/{id}")

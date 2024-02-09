@@ -157,9 +157,12 @@
                         <input type="submit"
                             class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
                             value="Accept" />
+                        <a th:if="${showSkipButton}" th:href="@{/skip}"
+                            class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-yellow-500 px-4 text-lg font-bold text-white">Skip</a>
                         <a th:href="@{/home/customers}"
                             class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
                     </span>
+                    
                 </div>
             </div>
         </form>
