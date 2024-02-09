@@ -1,197 +1,196 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inscription Form</title>
-    <!-- Include Tailwind CSS -->
-    <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Inscription Form</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+    </head>
 
-<body>
-    <div th:replace="~{header :: div}"></div>
+    <body>
+        <div th:replace="~{header :: div}"></div>
 
-    <div class="mx-8 my-6 space-y-16">
-       
-        <form th:object="${form}" th:action="@{/shpw-inscription-form/form}" method="post" enctype="multipart/form-data"
-            class="grid grid-rows-1">
-            <div class="flex flex-grow flex-row space-x-10">
-                <!-- Photo -->
-                <div class="space-y-6">
-                    <img id="previewImage" class="size-36"
-                        th:src="@{'/images/userImages/serve/' + ${form.photoPath}}" />
-                    <label for="photo"
-                        class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
-                        <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png" />
-                        <span class="text-white">Photo</span>
-                    </label>
-                    <input type="file" id="photo" name="photo" accept="image/*" class="hidden"
-                        onchange="previewImage(this)" />
-                </div>
+        <div class="mx-8 my-6 space-y-16">
 
-                <div class="grid-rows-1 space-y-4">
-                    <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
-
-                    <input type="hidden" th:field="*{photoPath}" />
-                                        <div th:if="${#fields.hasErrors('*')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                        <strong class="font-bold">¡Error!</strong>
-                        <span class="block sm:inline">Hay errores en tu formulario:</span>
-                        <ul>
-                            <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
-                        </ul>
+            <form th:object="${form}" th:action="@{/activities-board/show-inscription-form/form}" method="post" enctype="multipart/form-data"
+                  class="grid grid-rows-1">
+                <div class="flex flex-grow flex-row space-x-10">
+                    <!-- Photo -->
+                    <div class="space-y-6">
+                        <img id="previewImage" class="size-36"
+                             th:src="@{'/images/userImages/serve/' + ${form.photoPath}}" />
+                        <label for="photo"
+                               class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
+                            <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png" />
+                            <span class="text-white">Photo</span>
+                        </label>
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden"
+                               onchange="previewImage(this)" />
                     </div>
 
-                    <span class="flex flex-col">
-                        <label for="name" class="font-bold">Name</label>
-                        <input type="text" id="name" name="name" class="border border-gray-800 p-1" th:field="*{name}"
-                            required />
-                    </span>
+                    <div class="grid-rows-1 space-y-4">
+                        <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
 
-                    <span class="flex flex-col">
-                        <label for="name" class="font-bold">Surnames</label>
-                        <input type="text" id="surnames" name="surnames" class="border border-gray-800 p-1"
-                            th:field="*{surnames}" required />
-                    </span>
-
-                    <span class="flex flex-col">
-                        <label for="email" class="font-bold">Email</label>
-                        <input type="email" id="email" name="email" class="border border-gray-800 p-1"
-                            th:field="*{email}" required />
-                    </span>
-
-                    <span class="flex flex-row">
-                        <span class="flex flex-col">
-                            <label class="font-bold">Phone</label>
-                            <input type="text" id="phone" name="phone" class="border border-gray-800 p-1"
-                                th:field="*{phone}" required />
-                            <p class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Formato de
-                                teléfono inválido</p>
-                        </span>
-                        <span class="flex flex-col">
-                            <label for="birthDate" class="font-bold">Date of Birth</label>
-                            <input type="date" id="birthDate" name="birthDate" class="border p-1 border-gray-800"
-                                th:field="*{birthDate}" required />
-                        </span>
-                    </span>
-
-                    <span class="flex flex-col">
-                        <label for="email" class="font-bold">Parent / Guardian Name (if apply)</label>
-                        <input type="parentName" id="parentName" name="parentName" class="border border-gray-800 p-1"
-                            th:field="*{parentName}" />
-                    </span>
-
-                    <span class="flex flex-col">
-                        <label for="dni" class="font-bold">DNI</label>
-                        <input type="text" id="dni" name="dni" class="border border-gray-800 p-1" th:field="*{dni}"
-                            required />
-                        <p class="error" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}">Formato de DNI/NIE
-                            inválido</p>
-                    </span>
-
-                    <span class="flex flex-col">
-                        <label for="course" class="font-bold">Curso</label>
-                        <select id="course" name="course" class="border border-gray-800 p-1" th:field="*{course}"
-                            required>
-                            <option value="">Selecciona un curso</option>
-                            <!-- Aquí puedes iterar sobre los cursos disponibles y crear una opción para cada uno -->
-                            <option th:each="curso : ${cursos}" th:value="${curso}" th:text="${curso}"></option>
-                        </select>
-                    </span>
-
-                    <span class="flex flex-row items-center justify-between space-x-4">
-                        <label class="font-bold">Type</label>
-
-                        <input type="radio" class="peer/student hidden" id="student" name="type" value="Estudiant"
-                            th:field="*{type}" required />
-                        <label for="student"
-                            class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/student:bg-teal-500">Student</label>
-
-                        <input type="radio" class="peer/teacher hidden" id="teacher" name="type" value="Professor"
-                            th:field="*{type}" required />
-                        <label for="teacher"
-                            class="cursor-pointer border px-1 border-gray-800 peer-checked/teacher:bg-teal-500">Teacher</label>
-
-                        <input type="radio" class="peer/neighbor hidden" id="neighbor" name="type" value="Veí"
-                            th:field="*{type}" required />
-                        <label for="neighbor"
-                            class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/neighbor:bg-teal-500">Neighbor</label>
-                    </span>
-                    <!-- ... tus otros campos ... -->
-                    <div class="flex flex-col">
-                        <label class="font-bold">Intereses</label>
-                        <div th:each="interes : ${intereses}">
-                            <input type="checkbox" class="interest-checkbox" th:id="${interes}" th:value="${interes}" />
-                            <label th:for="${interes}" th:text="${interes}"></label>
+                        <input type="hidden" th:field="*{photoPath}" />
+                        <div th:if="${#fields.hasErrors('*')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold">¡Error!</strong>
+                            <span class="block sm:inline">Hay errores en tu formulario:</span>
+                            <ul>
+                                <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+                            </ul>
                         </div>
-                    </div>
-                    <input type="hidden" id="interests" name="interests" th:field="*{interests}" />
 
-                    <div
-                        class="scrollbar-hide grid max-h-72 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                        <div th:each="activity : ${activities}">
-                            <div class="size-full bg-teal-500 p-2">
-                                <div class="mb-2 text-lg font-semibold text-blue-700" th:text="${activity.name}"></div>
-                                <div class="mx-2 border-l-4 border-blue-700 bg-gray-200 p-1 font-black"
-                                    th:text="${#dates.format(activity.startDate, 'dd/MM/yyyy')}"></div>
-                                <div
-                                    class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
-                                    <img class="size-6" src="/images/mapas-y-banderas.png" />
-                                    <span th:text="${activity.place}"></span>
-                                </div>
-                                <div
-                                    class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
-                                    <input type="checkbox" name="selectedActivities" th:value="${activity.name}" />
-                                    <label>Seleccionar</label>
+                        <span class="flex flex-col">
+                            <label for="name" class="font-bold">Name</label>
+                            <input type="text" id="name" name="name" class="border border-gray-800 p-1" th:field="*{name}"
+                                   required />
+                        </span>
+
+                        <span class="flex flex-col">
+                            <label for="name" class="font-bold">Surnames</label>
+                            <input type="text" id="surnames" name="surnames" class="border border-gray-800 p-1"
+                                   th:field="*{surnames}" required />
+                        </span>
+
+                        <span class="flex flex-col">
+                            <label for="email" class="font-bold">Email</label>
+                            <input type="email" id="email" name="email" class="border border-gray-800 p-1"
+                                   th:field="*{email}" required />
+                        </span>
+
+                        <span class="flex flex-row">
+                            <span class="flex flex-col">
+                                <label class="font-bold">Phone</label>
+                                <input type="text" id="phone" name="phone" class="border border-gray-800 p-1"
+                                       th:field="*{phone}" required />
+                                <p class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Formato de
+                                    teléfono inválido</p>
+                            </span>
+                            <span class="flex flex-col">
+                                <label for="birthDate" class="font-bold">Date of Birth</label>
+                                <input type="date" id="birthDate" name="birthDate" class="border p-1 border-gray-800"
+                                       th:field="*{birthDate}" required />
+                            </span>
+                        </span>
+
+                        <span class="flex flex-col">
+                            <label for="email" class="font-bold">Parent / Guardian Name (if apply)</label>
+                            <input type="parentName" id="parentName" name="parentName" class="border border-gray-800 p-1"
+                                   th:field="*{parentName}" />
+                        </span>
+
+                        <span class="flex flex-col">
+                            <label for="dni" class="font-bold">DNI</label>
+                            <input type="text" id="dni" name="dni" class="border border-gray-800 p-1" th:field="*{dni}"
+                                   required />
+                            <p class="error" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}">Formato de DNI/NIE
+                                inválido</p>
+                        </span>
+
+                        <span class="flex flex-col">
+                            <label for="course" class="font-bold">Course</label>
+                            <select id="course" name="course" class="border border-gray-800 p-1" th:field="*{course}">
+                                <option value="">Selecciona un curso</option>
+                                <!-- Aquí puedes iterar sobre los cursos disponibles y crear una opción para cada uno -->
+                                <option th:each="curso : ${cursos}" th:value="${curso}" th:text="${curso}"></option>
+                            </select>
+                        </span>
+
+                        <span class="flex flex-row items-center justify-between space-x-4">
+                            <label class="font-bold">Type</label>
+
+                            <input type="radio" class="peer/student hidden" id="student" name="type" value="Estudiant"
+                                   th:field="*{type}" required />
+                            <label for="student"
+                                   class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/student:bg-teal-500">Student</label>
+
+                            <input type="radio" class="peer/teacher hidden" id="teacher" name="type" value="Professor"
+                                   th:field="*{type}" required />
+                            <label for="teacher"
+                                   class="cursor-pointer border px-1 border-gray-800 peer-checked/teacher:bg-teal-500">Teacher</label>
+
+                            <input type="radio" class="peer/neighbor hidden" id="neighbor" name="type" value="Veí"
+                                   th:field="*{type}" required />
+                            <label for="neighbor"
+                                   class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/neighbor:bg-teal-500">Neighbor</label>
+                        </span>
+                        <!-- ... tus otros campos ... -->
+                        <div class="flex flex-col">
+                            <label class="font-bold">Interests</label>
+                            <div th:each="interes : ${intereses}">
+                                <input type="checkbox" class="interest-checkbox" th:id="${interes}" th:value="${interes}" />
+                                <label th:for="${interes}" th:text="${interes}"></label>
+                            </div>
+                        </div>
+                        <input type="hidden" id="interests" name="interests" th:field="*{interests}" />
+
+                        <div
+                            class="scrollbar-hide grid max-h-72 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            <div th:each="activity : ${activities}">
+                                <div class="size-full bg-teal-500 p-2">
+                                    <div class="mb-2 text-lg font-semibold text-blue-700" th:text="${activity.name}"></div>
+                                    <div class="mx-2 border-l-4 border-blue-700 bg-gray-200 p-1 font-black"
+                                         th:text="${#dates.format(activity.startDate, 'dd/MM/yyyy')}"></div>
+                                    <div
+                                        class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
+                                        <img class="size-6" src="/images/mapas-y-banderas.png" />
+                                        <span th:text="${activity.place}"></span>
+                                    </div>
+                                    <div
+                                        class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
+                                        <input type="checkbox" name="selectedActivities" th:value="${activity.name}" />
+                                        <label>Seleccionar</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <span class="flex flex-row justify-end">
+                            <input type="submit"
+                                   class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
+                                   value="Accept" />
+                            <a th:href="@{/home/customers}"
+                               class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
+                        </span>
                     </div>
-
-                    <span class="flex flex-row justify-end">
-                        <input type="submit"
-                            class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
-                            value="Accept" />
-                        <a th:href="@{/home/customers}"
-                            class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
-                    </span>
                 </div>
-            </div>
-        </form>
-    </div>
-    <script>
-        // Cuando el DOM esté completamente cargado...
-        // Cuando el DOM esté completamente cargado...
-        document.addEventListener("DOMContentLoaded", function () {
-            // Recoger todos los checkboxes
-            var checkboxes = document.querySelectorAll(".interest-checkbox");
+            </form>
+        </div>
+        <script>
+            // Cuando el DOM esté completamente cargado...
+            // Cuando el DOM esté completamente cargado...
+            document.addEventListener("DOMContentLoaded", function () {
+                // Recoger todos los checkboxes
+                var checkboxes = document.querySelectorAll(".interest-checkbox");
 
-            // Añadir un controlador de eventos a cada checkbox
-            checkboxes.forEach(function (checkbox) {
-                checkbox.addEventListener("change", function () {
-                    // Filtrar los checkboxes seleccionados y extraer sus valores
-                    var selectedValues = Array.from(checkboxes)
-                        .filter(function (checkbox) {
-                            return checkbox.checked;
-                        })
-                        .map(function (checkbox) {
-                            return checkbox.value;
-                        });
+                // Añadir un controlador de eventos a cada checkbox
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.addEventListener("change", function () {
+                        // Filtrar los checkboxes seleccionados y extraer sus valores
+                        var selectedValues = Array.from(checkboxes)
+                                .filter(function (checkbox) {
+                                    return checkbox.checked;
+                                })
+                                .map(function (checkbox) {
+                                    return checkbox.value;
+                                });
 
-                    // Unir los valores seleccionados con punto y coma
-                    var joinedValues = selectedValues.join(";");
+                        // Unir los valores seleccionados con punto y coma
+                        var joinedValues = selectedValues.join(";");
 
-                    // Guardar los valores unidos en el campo oculto
-                    document.querySelector("#interests").value = joinedValues;
+                        // Guardar los valores unidos en el campo oculto
+                        document.querySelector("#interests").value = joinedValues;
+                    });
                 });
             });
-        });
 
 
 
 
-    </script>
-</body>
+        </script>
+    </body>
 
 
 </html>

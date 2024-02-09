@@ -1,6 +1,5 @@
 package erp.services;
 
-import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
@@ -15,26 +14,18 @@ import erp.domain.Customer;
 import jakarta.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.UUID;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -138,13 +129,8 @@ public class CustomerService {
         return csvProcessingResult;
     }
 
-    
-    
-
     public void writeUnprocessedLinesToCsv(List<String> unprocessedLines) {
-        try (FileOutputStream fos = new FileOutputStream("inscriptionForm");
-                OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-                BufferedWriter writer = new BufferedWriter(osw)) {
+        try ( FileOutputStream fos = new FileOutputStream("inscriptionForm");  OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);  BufferedWriter writer = new BufferedWriter(osw)) {
             // Escribe las líneas no procesadas
             for (String line : unprocessedLines) {
                 writer.write(line);
@@ -192,7 +178,7 @@ public class CustomerService {
                 interestCounts.put(interest, interestCounts.getOrDefault(interest, 0) + 1);
             }
         }
-        
+
         return interestCounts;
     }
 
