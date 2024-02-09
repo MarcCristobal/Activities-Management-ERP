@@ -1,5 +1,6 @@
 package erp.services;
 
+import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
@@ -9,18 +10,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.CustomerDao;
 import erp.domain.Activity;
+import erp.domain.CsvProcessingResult;
 import erp.domain.Customer;
 import jakarta.transaction.Transactional;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -98,10 +106,13 @@ public class CustomerService {
     public Customer findCustomerById(Long id) {
         return customerDao.findById(id).orElse(null);
     }
-    public Queue<Customer> loadCustomersFromCsv(MultipartFile file) {
+
+    public CsvProcessingResult loadCustomersFromCsv() {
+
         System.out.println("Entre al metodo ");
+        String file = "./inscriptionForm.csv";
         Queue<Customer> customers = new LinkedList<>();
-        try ( Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+        try ( Reader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             HeaderColumnNameMappingStrategy<Customer> strategy = new HeaderColumnNameMappingStrategy<>();
             strategy.setType(Customer.class);
 
@@ -121,14 +132,34 @@ public class CustomerService {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        CsvProcessingResult csvProcessingResult = new CsvProcessingResult();
+        csvProcessingResult.setCustomers(customers);
+        return csvProcessingResult;
+    }
 
-        return customers;
+    
+    
+
+    public void writeUnprocessedLinesToCsv(List<String> unprocessedLines) {
+        try (FileOutputStream fos = new FileOutputStream("inscriptionForm");
+                OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+                BufferedWriter writer = new BufferedWriter(osw)) {
+            // Escribe las líneas no procesadas
+            for (String line : unprocessedLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            // Manejar la excepción
+            System.out.println(e.getMessage());
+        }
     }
 
     public List<Customer> findCustomersByName(String name) {
         return customerDao.findCustomersByName(name);
     }
-    public Customer findCustomerByEmail(String email){
+
+    public Customer findCustomerByEmail(String email) {
         return customerDao.findByEmail(email);
     }
 
