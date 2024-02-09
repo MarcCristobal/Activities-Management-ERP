@@ -31,6 +31,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
@@ -170,6 +171,29 @@ public class CustomerService {
     @Transactional
     public void removeCustomersFromActivity(Long activityId, List<Long> customerIds) {
         customerDao.removeCustomersFromActivity(activityId, customerIds);
+    }
+
+    public List<String> splitInterests(String interests) {
+        List<String> interestList = new ArrayList<>();
+
+        String[] splited = interests.split(";");
+
+        for (int i = 0; i < splited.length; i++) {
+            interestList.add(splited[i]);
+        }
+
+        return interestList;
+    }
+
+    public Map<String, Integer> getAllInterests() {
+        Map<String, Integer> interestCounts = new HashMap<>();
+        for (Customer customer : customerDao.findAll()) {
+            for (String interest : splitInterests(customer.getInterests())) {
+                interestCounts.put(interest, interestCounts.getOrDefault(interest, 0) + 1);
+            }
+        }
+        
+        return interestCounts;
     }
 
 }

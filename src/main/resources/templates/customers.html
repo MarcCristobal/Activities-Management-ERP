@@ -10,12 +10,15 @@
     </head>
 
     <body>
-        <div th:replace="header :: div"></div>
-        <div th:replace="nav :: div"></div>
+        <div th:replace="~{header :: div}"></div>
+        <div th:replace="~{nav :: div}"></div>
 
         <div class="mx-8 my-6 space-y-6">
             <label class="bg-gray-200 p-2 text-sm text-orange-500">Customers</label>
-            <div class="flex items-center justify-end">
+            <div class="flex items-center justify-between">
+                <a th:href="@{/home/customers/statistics}"class="bg-teal-500 text-slate-50 px-2 py-1 rounded-md">
+                    <label >Interests Statistics</label>
+                </a>
                 <form th:action="@{/filtered-customers-by-name}" method="get" class="flex items-center">
                     <input type="text" id="name" name="name" class="w-80 h-10 border border-gray-800 rounded-md">
                     <button type="submit" class="w-10 h-10 cursor-pointer rounded-md bg-teal-500">
