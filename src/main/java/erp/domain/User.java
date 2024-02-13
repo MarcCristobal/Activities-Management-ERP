@@ -11,7 +11,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -20,7 +24,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-public class User implements PhotoEntity{
+public class User implements PhotoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,4 +53,8 @@ public class User implements PhotoEntity{
 
     private LocalDateTime lockTime;
     private boolean accountNonLocked = true;
+
+    @OneToMany(mappedBy = "monitor")
+    private List<Activity> activities;
+
 }

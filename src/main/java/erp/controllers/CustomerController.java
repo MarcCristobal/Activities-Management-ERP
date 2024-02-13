@@ -19,13 +19,15 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,12 +47,12 @@ public class CustomerController {
 
         private final CustomerService customerService;
         private Queue<Customer> customersCSV;
-        private List<String> unprocessedLines;
+        private Map<Integer, String> unprocessedLines;
         private CsvProcessingResult processingResult;
         private final PhotoStorageService photoStorageService;
         private final ActivityService activityService;
         private final FormService formService;
-        private int currentIndex = 1;
+        private int currentIndex = 0;
 
         @Autowired
         public CustomerController(CustomerService customerService, ActivityService activityService,
@@ -153,7 +155,7 @@ public class CustomerController {
                 if (customersCSV != null && !customersCSV.isEmpty()) {
 
                         customersCSV.poll(); // Quita el cliente de la cola solo después de que se haya procesado con
-                        //unprocessedLines.remove(currentIndex); // éxito
+                        unprocessedLines.remove(currentIndex); // éxito
                 }
 
                 return "redirect:/editCustomer";
@@ -161,8 +163,9 @@ public class CustomerController {
 
         @PostMapping("/upload")
         public String upload() {
+                currentIndex = 0;
                 processingResult = customerService.loadCustomersFromCsv();
-                //unprocessedLines = processingResult.getUnprocessedLines();
+                unprocessedLines = processingResult.getUnprocessedLines();
                 customersCSV = processingResult.getCustomers();
                 System.out.println("No pete");
                 return "redirect:/editCustomer";
@@ -172,10 +175,15 @@ public class CustomerController {
         @GetMapping("/editCustomer")
         public String editCustomer(Model model) {
                 if (customersCSV == null || customersCSV.isEmpty()) {
-                        return "redirect:/home/customers"; // tu vista cuando todos los clientes han sido revisados
+                        if (unprocessedLines != null && !unprocessedLines
+                                        .isEmpty()) {
+                                System.out.println("reescribiendo csv");
+                                customerService.writeUnprocessedLinesToCsv(unprocessedLines);
+                        }
+                        return "redirect:/home/customers";
                 } else {
-                        Customer customer = customersCSV.peek(); // Usa peek en lugar de poll para no quitar el cliente
-                        currentIndex++; // de la cola
+                        Customer customer = customersCSV.peek();
+                        currentIndex++;
                         if (customer.getPhotoPath() == null) {
                                 customer.setPhotoPath("usuario2.png");
                         }
@@ -185,7 +193,7 @@ public class CustomerController {
                         List<String> selectedActivityNames = Arrays
                                         .asList(customer.getActivityNamesString().split(";"));
                         model.addAttribute("selectedActivityNames", selectedActivityNames);
-                        model.addAttribute("showSkipButton", false);
+                        model.addAttribute("showSkipButton", true);
                         System.out.println(customer);
                         model.addAttribute("customer", customer);
                         return "customerForm"; // tu vista
@@ -195,7 +203,7 @@ public class CustomerController {
         @GetMapping("/skip")
         public String skipCustomer() {
                 if (customersCSV != null && !customersCSV.isEmpty()) {
-
+                        System.out.println("removiendo customer");
                         customersCSV.poll(); // Quita el cliente de la cola solo después de que se haya procesado con
                         unprocessedLines.remove(currentIndex); // éxito
                 }
@@ -228,7 +236,8 @@ public class CustomerController {
         }
 
         @GetMapping("/home/activities/show-participant-list/{id}")
-        public String showParticipants(@PathVariable("id") Long activityId, HttpSession session, Model model) {
+        public String showParticipants(@PathVariable("id") Long activityId, HttpSession session, Model model,
+                        Authentication authentication) {
                 if (activityId != null) {
                         session.setAttribute("activityId", activityId);
                         Activity activity = activityService.findActivityById(activityId);
@@ -236,10 +245,26 @@ public class CustomerController {
                                 model.addAttribute("activity", activity);
                                 model.addAttribute("customers", customerService.getActivityCustomers(activityId));
                                 model.addAttribute("activity_id", activityId);
-                                return "participantList";
+
+                                // Obtén las autoridades del usuario autenticado
+                                Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+                                // Comprueba si el usuario tiene el rol de monitor o concierge
+                                boolean isMonitorOrConcierge = authorities.stream()
+                                                .anyMatch(role -> role.getAuthority().equals("ROLE_MONITOR")
+                                                                || role.getAuthority().equals("ROLE_CONCIERGE"));
+
+                                if (isMonitorOrConcierge) {
+                                        // Si el usuario es un monitor o un concierge, redirígelo a la vista de solo
+                                        // lectura
+                                        return "participantsListMonitor";
+                                } else {
+                                        // Si el usuario no es un monitor ni un concierge, permítele editar
+                                        return "participantList";
+                                }
                         }
                 }
-                return "partitipantList";
+                return "participantList";
         }
 
         @Transactional

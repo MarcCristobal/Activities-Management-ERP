@@ -2,6 +2,8 @@ package erp.services;
 
 import erp.dao.UserDao;
 import erp.domain.User;
+import erp.domain.UserRole;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -109,6 +111,13 @@ public class UserService {
 
         public List<User> findUsersByName(String name) {
                 return userDao.findUsersByName(name);
+        }
+        public List<User> findUsersByRole(UserRole role){
+                return userDao.findUsersByRole(role);
+                
+        }
+        public boolean existsByEmail(String email){
+                return userDao.existsByEmail(email);
         }
 
 }

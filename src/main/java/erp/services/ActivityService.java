@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.ActivityDao;
 import erp.domain.Activity;
+import erp.domain.User;
+import erp.domain.UserRole;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -35,6 +38,7 @@ public class ActivityService {
             existingActivity.setStartDate(activity.getStartDate());
             existingActivity.setEndDate(activity.getEndDate());
             existingActivity.setIsFree(activity.getIsFree());
+            existingActivity.setMonitor(activity.getMonitor());
             existingActivity.setIsLimited(activity.getIsLimited());
             existingActivity.setResources(jsonConversionService.toList(resourceJson));
             existingActivity.setRequirements(jsonConversionService.toList(requirementJson));
@@ -68,17 +72,25 @@ public class ActivityService {
         return activityDao.findAll();
     }
 
-    public List<Activity> findActivitiesByName(String name) {
-        return activityDao.findActivitiesByName(name);
+    public List<Activity> findActivitiesByName(String name, User user) {
+        if (user.getRole().equals(UserRole.MONITOR)) {
+            return activityDao.findActivitiesByNameAndMonitor(name, user.getId());
+        } else {
+            return activityDao.findActivitiesByName(name);
+        }
     }
 
-    public List<Activity> findActivitiesByDate(String dateString) {
+    public List<Activity> findActivitiesByDate(String dateString, User user) {
         if (dateString == null || dateString.isEmpty()) {
             return getAllActivities();
         } else {
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-                return activityDao.findActivitiesByDate(date);
+                if (user.getRole().equals(UserRole.MONITOR)) {
+                    return activityDao.findActivitiesByDateAndMonitor(date, user.getId());
+                } else {
+                    return activityDao.findActivitiesByDate(date);
+                }
             } catch (ParseException pe) {
                 return Collections.emptyList();
             }
@@ -95,6 +107,11 @@ public class ActivityService {
 
     public boolean validateParticipantLimit(int participantLimit) {
         return !(participantLimit < 1);
+    }
+
+    public List<Activity> getActivitiesByMonitor(User user) {
+        return activityDao.findActivitiesByMonitorId(user.getId());
+
     }
 
 }

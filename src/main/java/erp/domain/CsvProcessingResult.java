@@ -1,6 +1,6 @@
 package erp.domain;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import lombok.Data;
@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 public class CsvProcessingResult {
     private Queue<Customer> customers;
-    private List<String> unprocessedLines;
+    private Map<Integer, String> unprocessedLines;
 }

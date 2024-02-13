@@ -61,4 +61,10 @@ public class LoginController {
                 return "redirect:/";
         }
     }
+    @GetMapping("/error")
+    public String handleError(@RequestParam(value = "errorMessage", defaultValue = "Acceso denegado") String errorMessage, Model model) {
+        model.addAttribute("errorMessage", errorMessage);
+        // Retorna el nombre de la vista de error
+        return "error";
+    }
 }

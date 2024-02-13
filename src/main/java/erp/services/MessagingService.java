@@ -83,6 +83,7 @@ public class MessagingService {
                     List<Customer> participants = activity.getCustomers();
                     for (Customer participant : participants) {
                         message.getCustomerRecipients().add(participant);
+                        
                     }
                 }
             }

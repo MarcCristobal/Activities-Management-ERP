@@ -47,6 +47,13 @@ public class SecurityConfig {
                                                 .requestMatchers("/css/**").permitAll()
                                                 .requestMatchers(new RegisterRequestMatcher()).permitAll()
                                                 .requestMatchers("/").permitAll()
+                                                .requestMatchers("/home/communications/**")
+                                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_ACTIVITIES_COORDINATOR",
+                                                                "ROLE_MONITOR")
+                                                .requestMatchers("/home/users/{id}/**", "/home/users/update/**")
+                                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_ACTIVITIES_COORDINATOR")
+                                                .requestMatchers("/home/users/**")
+                                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_ACTIVITIES_COORDINATOR")
                                                 .anyRequest().authenticated())
                                 .formLogin(login -> login
                                                 .loginPage("/")
@@ -54,7 +61,10 @@ public class SecurityConfig {
                                                 .failureHandler(authenticationFailureHandler))
                                 .logout(logout -> logout
                                                 .logoutUrl("/my/ownlogout") // Custom logout URL
-                                                .logoutSuccessUrl("/")); // Redirect to custom login page after logout
+                                                .logoutSuccessUrl("/")) // Redirect to custom login page after logout
+                                .exceptionHandling(exceptionHandling -> exceptionHandling
+                                                .accessDeniedPage("/error")); // Redirect to custom error page after
+                                                                              // access denied
                 return http.build();
         }
 

@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +24,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
 
 /**
  *
@@ -36,6 +39,7 @@ public class UserController {
 
     private final UserService userService;
     private final PhotoStorageService photoStorageService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(UserService userService, PhotoStorageService photoStorageService) {
@@ -94,7 +98,8 @@ public class UserController {
 
     @Transactional
     @PostMapping("/home/users/update")
-    public String updateUser(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo) {
+    public String updateUser(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo,
+            Model model) {
         String photoPath;
         User oldUser = null;
 
@@ -111,6 +116,14 @@ public class UserController {
             System.out.println(ex.getMessage());
         }
 
+        // Comprueba si el email o DNI ya existe
+        boolean existingUserByEmail = userService.existsByEmail(user.getEmail());
+        if ((existingUserByEmail && (oldUser == null || !user.getEmail().equals(oldUser.getEmail())))) {
+            model.addAttribute("user", user);
+            model.addAttribute("errorMessage", "The email is already in use.");
+            return "userForm";
+        }
+
         // Guardamos el usuario
         userService.saveOrUpdateUser(user);
 
@@ -119,7 +132,8 @@ public class UserController {
 
     @Transactional
     @PostMapping("/home/users/updateCurrentUser")
-    public String updateCurrentUser(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo) {
+    public String updateCurrentUser(@ModelAttribute User user, @RequestParam("photo") MultipartFile photo,
+            RedirectAttributes redirectAttributes) {
         String photoPath;
         User oldUser = userService.findById(user.getId());
         try {
@@ -128,7 +142,9 @@ public class UserController {
 
             user.setPhotoPath(photoPath);
         } catch (IOException ex) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error al guardar la foto", ex);
+            redirectAttributes.addFlashAttribute("errorMessage", "Ha ocurrido un error al guardar la foto.");
+            return "redirect:/error";
         }
 
         // Guarda el usuario
@@ -145,7 +161,8 @@ public class UserController {
         newAuth.setDetails(details);
         SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-        return "redirect:/home/users";
+        // Redirige al usuario a su propia vista de perfil
+        return "redirect:/home/users/" + user.getId();
     }
 
     @GetMapping("/home/users/update/{id}")
@@ -191,7 +208,8 @@ public class UserController {
     public String getHeader(Model model) {
 
         // Luego, devuelves la vista que contiene el HTML del encabezado
-        // Asegúrate de que esta vista solo contenga el HTML del encabezado y no de toda la página
+        // Asegúrate de que esta vista solo contenga el HTML del encabezado y no de toda
+        // la página
         return "header";
     }
 

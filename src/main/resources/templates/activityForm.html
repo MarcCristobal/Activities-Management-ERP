@@ -43,6 +43,14 @@
                             <input type="date" id="endDate" class="w-40 border border-gray-800 p-1" th:field="*{endDate}" required />
                         </span>
                     </span>
+                    <div class="flex flex-col">
+                        <label for="monitor" class="font-bold">Monitor</label>
+                        <select id="monitor" class="border border-gray-800 p-1" th:field="*{monitor}">
+                            <option value="">Select a monitor</option>
+                            <option th:each="monitor : ${monitors}" th:value="${monitor.id}" th:text="${monitor.name}"></option>
+                        </select>
+                    </div>
+                    
 
                     <div th:if="${incorrectDate}">
                         <div>
