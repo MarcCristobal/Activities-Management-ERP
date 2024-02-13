@@ -1,6 +1,5 @@
 package erp.services;
 
-import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
@@ -17,19 +16,12 @@ import erp.domain.Customer;
 import jakarta.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -208,7 +200,7 @@ public class CustomerService {
                 interestCounts.put(interest, interestCounts.getOrDefault(interest, 0) + 1);
             }
         }
-        
+
         return interestCounts;
     }
 

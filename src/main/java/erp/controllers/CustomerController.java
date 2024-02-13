@@ -324,7 +324,7 @@ public class CustomerController {
                 }
                 System.out.println(form.getInterests() + "dsa");
                 // Redirige a una pantalla de confirmación
-                return "redirect:/show-inscription-form";
+                return "redirect:/activities-board";
         }
         
         @GetMapping("/home/customers/statistics")
