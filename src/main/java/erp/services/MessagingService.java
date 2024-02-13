@@ -61,6 +61,7 @@ public class MessagingService {
             if (!userID.isEmpty()) {
                 User user = userRepository.findById(Long.parseLong(userID)).orElse(null);
                 if (user != null) {
+                    System.out.println(user);
                     message.getUserRecipients().add(user);
                 }
             }
@@ -121,9 +122,28 @@ public class MessagingService {
     public List<Message> findAllUserMessages(Long userId) {
         return messageRepository.findMessagesByUserRecipients(userId);
     }
+    
+    public List<Message> findMessagesByUserSender(Long senderId){
+        return messageRepository.findMessagesByUserSender(senderId);
+    }
 
-    public List<Message> findMessageBySubject(String subject) {
-        return messageRepository.findMessagesBySubject(subject);
+    public List<Message> findMessageBySubject(String subject, String box, long id) {
+        List<Message> messages = new ArrayList<>();
+        
+        if (box.equalsIgnoreCase("outbox")){
+            for(Message message : messageRepository.findMessagesByUserRecipients(id)){
+                if (message.getSubject().contains(subject)){
+                    messages.add(message);
+                }
+            }
+        } else{
+            for(Message message : messageRepository.findMessagesByUserSender(id)){
+                if (message.getSubject().contains(subject)){
+                    messages.add(message);
+                }
+            }
+        }
+        return messages;
     }
 
 }

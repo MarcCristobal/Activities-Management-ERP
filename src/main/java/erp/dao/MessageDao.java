@@ -11,7 +11,7 @@ public interface MessageDao extends GenericDao<Message, Long> {
 
     @Query("SELECT m FROM Message m JOIN m.userRecipients u WHERE u.id = :recipientId")
     List<Message> findMessagesByUserRecipients(@Param("recipientId") Long recipientId);
-
-    @Query("SELECT m FROM Message m WHERE m.subject LIKE %:subject%")
-    List<Message> findMessagesBySubject(@Param("subject") String subject);
+    
+    @Query("SELECT m FROM Message m JOIN m.sender u WHERE u.id = :senderId")
+    List<Message> findMessagesByUserSender(@Param("senderId") Long senderId);
 }
