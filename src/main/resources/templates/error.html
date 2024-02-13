@@ -1,0 +1,46 @@
+<!-- src/main/resources/templates/error.html -->
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error</title>
+    <!-- Include Tailwind CSS -->
+    <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+</head>
+
+<body>
+    <div th:replace="~{header :: div}"></div>
+
+    <div class="mx-8 my-6 space-y-16">
+        <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500"><a th:href="@{/home}">Home</a></span> > Error</label>
+
+        <div class="grid grid-rows-1">
+            <div class="flex flex-grow flex-row space-x-10">
+                <!-- Error message -->
+                <div class="space-y-6">
+                    <img class="size-36" th:src="@{'/images/error.png'}">
+                    <p class="text-red-500 text-xl">Ha ocurrido un error.</p>
+                </div>
+
+                <div class="grid-rows-1 space-y-4">
+                    <div class="mr-80 text-2xl font-bold">Error</div>
+
+                    <div class="mr-80 text-xl text-gray-500">Lo sentimos, algo ha ido mal.</div>
+
+                    <span class="flex flex-col">
+                        <label class="font-bold">Mensaje de error</label>
+                        <label th:text="${errorMessage}"></label>
+                    </span>
+
+                    <a th:href="@{/home}" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center space-x-1 py-1">
+                        <label class="text-slate-50">Volver a Home</label>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

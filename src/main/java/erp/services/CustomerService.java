@@ -5,6 +5,8 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import erp.dao.ActivityDao;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.CustomerDao;
@@ -26,6 +28,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -100,11 +108,11 @@ public class CustomerService {
     }
 
     public CsvProcessingResult loadCustomersFromCsv() {
-
         System.out.println("Entre al metodo ");
         String file = "./inscriptionForm.csv";
         Queue<Customer> customers = new LinkedList<>();
-        try ( Reader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+        Map<Integer, String> lines = new HashMap<>(); // Cambiado a HashMap
+        try (Reader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             HeaderColumnNameMappingStrategy<Customer> strategy = new HeaderColumnNameMappingStrategy<>();
             strategy.setType(Customer.class);
 
@@ -121,18 +129,32 @@ public class CustomerService {
                 System.out.println(customer); // Imprime el objeto Customer
                 customers.add(customer);
             }
+
+            // Leer todas las líneas del archivo CSV
+            try (Stream<String> stream = Files.lines(Paths.get(file))) {
+                List<String> lineList = stream.collect(Collectors.toList());
+                for (int i = 0; i < lineList.size(); i++) {
+                    lines.put(i, lineList.get(i)); // Añade las líneas al HashMap con su índice como clave
+                }
+            }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
         CsvProcessingResult csvProcessingResult = new CsvProcessingResult();
         csvProcessingResult.setCustomers(customers);
+        csvProcessingResult.setUnprocessedLines(lines); // Actualiza el método para aceptar un Map en lugar de una List
+        System.out.println(lines); // Añadir las líneas al resultado
         return csvProcessingResult;
     }
 
-    public void writeUnprocessedLinesToCsv(List<String> unprocessedLines) {
-        try ( FileOutputStream fos = new FileOutputStream("inscriptionForm");  OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);  BufferedWriter writer = new BufferedWriter(osw)) {
+    public void writeUnprocessedLinesToCsv(Map<Integer, String> unprocessedLines) {
+        try (FileOutputStream fos = new FileOutputStream("./inscriptionForm.csv");
+                OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+                BufferedWriter writer = new BufferedWriter(osw)) {
+            // Ordena el HashMap por clave (índice de línea) antes de escribir las líneas
+            Map<Integer, String> sortedLines = new TreeMap<>(unprocessedLines);
             // Escribe las líneas no procesadas
-            for (String line : unprocessedLines) {
+            for (String line : sortedLines.values()) {
                 writer.write(line);
                 writer.newLine();
             }

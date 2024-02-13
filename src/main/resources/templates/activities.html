@@ -1,75 +1,85 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-        <title>Activities</title>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
-    </head>
+<head>
+    <title>Activities</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+</head>
 
-    <body>
-        <div th:replace="~{header :: div}"></div>
-        <div th:replace="~{nav :: div}"></div>
+<body>
+    <div th:replace="~{header :: div}"></div>
+    <div th:replace="~{nav :: div}"></div>
 
-        <div class="mx-8 my-6 space-y-6">
-            <label class="bg-gray-200 p-2 text-sm text-orange-500">Activities</label>
+    <div class="mx-8 my-6 space-y-6">
+        <label class="bg-gray-200 p-2 text-sm text-orange-500">Activities</label>
+        <div class="flex items-center">
+            <!-- Botón de añadir actividad -->
+            <form th:action="@{/activities/create-activity}" method="get" class="flex flex-grow items-center"
+                th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_ACTIVITIES_COORDINATOR'')')}">
+                <button type="submit" class="h-10 w-10 cursor-pointer">
+                    <img src="/images/anadir.png" />
+                </button>
+            </form>
+            <div th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_ACTIVITIES_COORDINATOR'')')}"
+                class="flex flex-grow items-center h-10 w-10"></div>
+
             <div class="flex items-center">
-                <form th:action="@{/activities/create-activity}" method="get" class="flex flex-grow items-center">
-                    <button type="submit" class="h-10 w-10 cursor-pointer">
-                        <img src="/images/anadir.png" />
+                <form th:action="@{/filtered-activities-by-name}" method="get" class="flex items-center">
+                    <input type="text" id="name" name="name" class="h-10 w-80 rounded-md border border-gray-800" />
+                    <button type="submit" class="h-10 w-10 cursor-pointer rounded-md bg-teal-500">
+                        <img src="/images/lupa.png" />
                     </button>
                 </form>
-
-                <div class="flex items-center">
-                    <form th:action="@{/filtered-activities-by-name}" method="get" class="flex items-center">
-                        <input type="text" id="name" name="name" class="h-10 w-80 rounded-md border border-gray-800" />
-                        <button type="submit" class="h-10 w-10 cursor-pointer rounded-md bg-teal-500">
-                            <img src="/images/lupa.png" />
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="flex items-center">
-                <form id="uploadForm" class="flex flex-grow items-center" th:action="@{/upload}" method="POST">
-                    <button type="submit" class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer">Add Participants</button>
-                </form>
-                <form th:action="@{/filtered-activities-by-date}" method="get" class="flex items-center" id="dateForm">                
-                    <input type="date" id="date" name="date" class="text-center w-32 h-8 border rounded-md border-gray-800">
-                </form>
-            </div>
-
-            <div
-                class="scrollbar-hide grid max-h-72 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                <div th:each="activity : ${activities}">
-                    <form th:action="@{'/activities/' + ${activity.id}}" method="get">
-                        <button type="submit" class="size-full bg-teal-500 p-2">
-                            <div class="mb-2 text-lg font-semibold text-blue-700" th:text="${activity.name}"></div>
-                            <div class="mx-2 border-l-4 border-blue-700 bg-gray-200 p-1 font-black"
-                                 th:text="${#dates.format(activity.startDate, 'dd/MM/yyyy')}"></div>
-                            <div class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
-                                <img class="size-6" src="/images/mapas-y-banderas.png" />
-                                <span th:text="${activity.place}"></span>
-                            </div>
-                        </button>
-                    </form>
-                </div>
             </div>
         </div>
-        <script>
-            function handleClick() {
-                var fileUpload = document.getElementById('fileUpload');
-                fileUpload.click();
-                fileUpload.onchange = function () {
-                    if (fileUpload.value !== '') {
-                        document.getElementById('uploadForm').submit();
-                    }
-                };
-            }
-            document.getElementById('date').addEventListener('change', function () {
-                document.getElementById('dateForm').submit();
-            });
-        </script>
-    </body>
+        <div class="flex items-center">
+            <form id="uploadForm" class="flex flex-grow items-center" th:action="@{/upload}" method="POST"
+                th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_ACTIVITIES_COORDINATOR'')')}">
+                <button type="submit"
+                    class="bg-neutral-500 text-white p-1.5 text-sm rounded-md font-bold cursor-pointer">Add
+                    Participants</button>
+            </form>
+            <div th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_ACTIVITIES_COORDINATOR'')')}"
+                class="flex flex-grow items-center h-10 w-10"></div>
+            <form th:action="@{/filtered-activities-by-date}" method="get" class="flex items-center" id="dateForm">
+                <input type="date" id="date" name="date" class="text-center w-32 h-8 border rounded-md border-gray-800">
+            </form>
+        </div>
+
+        <div
+            class="scrollbar-hide grid max-h-72 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div th:each="activity : ${activities}">
+                <form th:action="@{'/activities/' + ${activity.id}}" method="get">
+                    <button type="submit" class="size-full bg-teal-500 p-2">
+                        <div class="mb-2 text-lg font-semibold text-blue-700" th:text="${activity.name}"></div>
+                        <div class="mx-2 border-l-4 border-blue-700 bg-gray-200 p-1 font-black"
+                            th:text="${#dates.format(activity.startDate, 'dd/MM/yyyy')}"></div>
+                        <div
+                            class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
+                            <img class="size-6" src="/images/mapas-y-banderas.png" />
+                            <span th:text="${activity.place}"></span>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function handleClick() {
+            var fileUpload = document.getElementById('fileUpload');
+            fileUpload.click();
+            fileUpload.onchange = function () {
+                if (fileUpload.value !== '') {
+                    document.getElementById('uploadForm').submit();
+                }
+            };
+        }
+        document.getElementById('date').addEventListener('change', function () {
+            document.getElementById('dateForm').submit();
+        });
+    </script>
+</body>
 
 </html>

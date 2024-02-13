@@ -2,85 +2,84 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Customer Information</title>
-        <!-- Include Tailwind CSS -->
-        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Information</title>
+    <!-- Include Tailwind CSS -->
+    <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+</head>
 
-    <body>
-        <div th:replace="~{header :: div}"></div>
-        <div th:replace="~{nav :: div}"></div>
+<body>
+    <div th:replace="~{header :: div}"></div>
+    <div th:replace="~{nav :: div}"></div>
 
-        <div class="mx-8 my-6 space-y-16">
-            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500"><a th:href="@{/home/customers}">Customers</a></span><span th:text="' > ' + ${customer.name} + ' ' + ${customer.surnames}"></span></label>
+    <div class="mx-8 my-6 space-y-16">
+        <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500"><a
+                    th:href="@{/home/customers}">Customers</a></span><span
+                th:text="' > ' + ${customer.name} + ' ' + ${customer.surnames}"></span></label>
 
-            <div th:object="${customer}" th:action="@{/home/customers/update}" method="post" enctype="multipart/form-data"
-                 class="grid grid-rows-1">
-                <div class="flex flex-grow flex-row space-x-10">
-                    <!-- Photo -->
-                    <div class="space-y-6">
-                        <img class="size-36" th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}">
-                        <a th:href="@{'/home/customers/update/' + ${customer.id}}" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center space-x-1 py-1">
-                            <img class="size-5" src="/images/lapiz.png">
-                            <label class="text-slate-50">Edit</label>
-                        </a>
-                        <form th:action="@{'/home/customers/delete/' + ${customer.id}}" method="post" th:object="${customer}"
-                              class="flex min-w-36 max-w-36 cursor-pointer items-center justify-center space-x-1 rounded-md bg-red-500 py-1">
-                            <img class="size-5" src="/images/contenedor-de-basura.png" />
-                            <input type="submit" value="Delete" class="text-slate-50" onclick="if (!confirm('Are you sure you want to delete this customer?'))
-                                        return false;" />
-                        </form>
-                    </div>
+        <div th:object="${customer}" th:action="@{/home/customers/update}" method="post" enctype="multipart/form-data"
+            class="grid grid-rows-1">
+            <div class="flex flex-grow flex-row space-x-10">
+                <!-- Photo -->
+                <div class="space-y-6">
+                    <img class="size-36" th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}">
+                    <a th:href="@{'/home/customers/update/' + ${customer.id}}"
+                        th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_ACTIVITIES_COORDINATOR'')')}"
+                        class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center space-x-1 py-1">
+                        <img class="size-5" src="/images/lapiz.png">
+                        <label class="text-slate-50">Edit</label>
+                    </a>
+                    <form th:action="@{'/home/customers/delete/' + ${customer.id}}" method="post"
+                        th:object="${customer}"
+                        th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_ACTIVITIES_COORDINATOR'')')}"
+                        class="flex min-w-36 max-w-36 cursor-pointer items-center justify-center space-x-1 rounded-md bg-red-500 py-1">
+                        <img class="size-5" src="/images/contenedor-de-basura.png" />
+                        <input type="submit" value="Delete" class="text-slate-50" onclick="if (!confirm('Are you sure you want to delete this customer?'))
+            return false;" />
+                    </form>
+                </div>
 
-                    <div class="grid-rows-1 space-y-4">
-                        <div class="mr-80 text-2xl font-bold" th:text="${customer.name} + ' ' + ${customer.surnames}"></div>
+                <div class="grid-rows-1 space-y-4">
+                    <div class="mr-80 text-2xl font-bold" th:text="${customer.name} + ' ' + ${customer.surnames}"></div>
 
-                        <div class="mr-80 text-xl text-gray-500">Personal Information</div>
+                    <div class="mr-80 text-xl text-gray-500">Personal Information</div>
 
-                        <span class="flex flex-row space-x-4">
-                            <span class="flex flex-col">
-                                <label class="font-bold">Phone</label>
-                                <label th:text="${customer.phone}"></label>
-                            </span>
-                            <span class="flex flex-col">
-                                <label class="font-bold">Date of Birth</label>
-                                <label th:text="${#dates.format(customer.birthDate, 'dd/MM/yyyy')}"></label>
-                            </span>
-                        </span>
-
+                    <span class="flex flex-row">
                         <span class="flex flex-col">
-                            <label class="font-bold">Email</label>
-                            <label th:text="${customer.email}"></label>
+                            <label class="font-bold">Phone</label>
+                            <label th:text="${customer.phone}"></label>
                         </span>
-
                         <span class="flex flex-col">
-                            <label class="font-bold">DNI</label>
-                            <label th:text="${customer.dni}"></label>
+                            <label class="font-bold">Date of Birth</label>
+                            <label th:text="${#dates.format(customer.birthDate, 'dd/MM/yyyy')}"></label>
                         </span>
+                    </span>
 
-                        <span class="flex flex-col">
-                            <label class="font-bold">Type</label>
-                            <label th:text="${customer.type}"></label>
-                        </span>
+                    <span class="flex flex-col">
+                        <label class="font-bold">Email</label>
+                        <label th:text="${customer.email}"></label>
+                    </span>
 
-                        <span class="flex flex-col">
-                            <label class="font-bold">Grade</label>
-                            <label th:text="${customer.course}"></label>
-                        </span>
-                    </div>
+                    <span class="flex flex-col">
+                        <label class="font-bold">DNI</label>
+                        <label th:text="${customer.dni}"></label>
+                    </span>
 
-                    <div class="flex-col space-y-4 pt-10">
-                        <label class="mr-80 text-xl text-gray-500">Interests</label>
-                        <div th:each="interest : ${interestList}">
-                            <label th:text="${interest}"></label>
-                        </div>
-                    </div>
+                    <span class="flex flex-col">
+                        <label class="font-bold">Type</label>
+                        <label th:text="${customer.type}"></label>
+                    </span>
+
+                    <span class="flex flex-col">
+                        <label class="font-bold">Grade</label>
+                        <label th:text="${customer.course}"></label>
+                    </span>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
 
 </html>

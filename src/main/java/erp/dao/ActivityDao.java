@@ -25,4 +25,13 @@ public interface ActivityDao extends GenericDao<Activity, Long> {
     @Query("SELECT a FROM Activity a WHERE a.name = :name")
     Activity findActivityByNameExact(@Param("name") String name);
 
+    @Query("SELECT a FROM Activity a WHERE a.monitor.id = :monitorId")
+    List<Activity> findActivitiesByMonitorId(@Param("monitorId") Long monitorId);
+
+    @Query("SELECT a FROM Activity a WHERE a.name LIKE %:name% AND a.monitor.id = :monitorId")
+    List<Activity> findActivitiesByNameAndMonitor(@Param("name") String name, @Param("monitorId") Long monitorId);
+
+    @Query("SELECT a FROM Activity a WHERE a.startDate >= :date AND a.monitor.id = :monitorId")
+    List<Activity> findActivitiesByDateAndMonitor(@Param("date") Date date, @Param("monitorId") Long monitorId);
+
 }

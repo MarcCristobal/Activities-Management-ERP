@@ -12,7 +12,23 @@
     <body>
         <div th:replace="~{header :: div}"></div>
 
-        <div class="mx-8 my-6 space-y-16">
+    <div class="mx-8 my-6 space-y-16">
+       
+        <form th:object="${form}" th:action="@{/activities-board/show-inscription-form/form}" method="post" enctype="multipart/form-data"
+            class="grid grid-rows-1">
+            <div class="flex flex-grow flex-row space-x-10">
+                <!-- Photo -->
+                <div class="space-y-6">
+                    <img id="previewImage" class="size-36"
+                        th:src="@{'/images/userImages/serve/' + ${form.photoPath}}" />
+                    <label for="photo"
+                        class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
+                        <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png" />
+                        <span class="text-white">Photo</span>
+                    </label>
+                    <input type="file" id="photo" name="photo" accept="image/*" class="hidden"
+                        onchange="previewImage(this)" />
+                </div>
 
             <form th:object="${form}" th:action="@{/activities-board/show-inscription-form/form}" method="post" enctype="multipart/form-data"
                   class="grid grid-rows-1">

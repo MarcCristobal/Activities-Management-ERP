@@ -16,6 +16,9 @@
 
         <div class="space-y-16 mx-8 my-6">
             <label class="p-2 bg-gray-200 text-sm"><span class="text-orange-500"><a th:href="@{/home/users}">Users</a></span> > New User<span></span></label>
+            <div th:if="${errorMessage}" class="bg-red-500 text-white p-3 rounded-md mb-6" role="alert">
+                <p th:text="${errorMessage}"></p>
+            </div>
             <form th:object="${user}" th:action="@{/home/users/update}" method="post" enctype="multipart/form-data" class="grid grid-rows-1">
                 <input type="hidden" th:field="*{id}">
                 <div class="flex flex-row flex-grow space-x-10">

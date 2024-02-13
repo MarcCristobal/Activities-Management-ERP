@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -73,13 +74,12 @@ public class Activity {
     @Column(name = "requirement")
     private List<String> requirements = new ArrayList<>();
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "monitor_id")
     private User monitor;
     
     @ManyToMany(mappedBy = "activities")
     private List<Customer> customers = new ArrayList<>();
-
 
     public boolean getIsFree() {
         return isFree;
