@@ -5,11 +5,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-
 import org.springframework.stereotype.Service;
-
 import com.opencsv.CSVWriter;
-
 import erp.dao.ActivityDao;
 import erp.domain.Form;
 

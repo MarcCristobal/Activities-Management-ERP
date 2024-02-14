@@ -4,7 +4,6 @@
  */
 package erp.services;
 
-
 import erp.dao.UserDao;
 import erp.domain.User;
 import java.time.LocalDateTime;

@@ -11,7 +11,6 @@ import erp.services.ActivityService;
 import erp.services.JsonConversionService;
 import erp.services.UserService;
 import jakarta.transaction.Transactional;
-
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

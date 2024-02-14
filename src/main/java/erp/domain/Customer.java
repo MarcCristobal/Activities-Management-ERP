@@ -6,7 +6,6 @@ package erp.domain;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,7 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Pattern;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,7 +81,7 @@ public class Customer implements PhotoEntity {
           @Column(length = 256)
           private String interests;
 
-          @ManyToMany(cascade = CascadeType.ALL)
+          @ManyToMany
           @JoinTable(
                   name = "customer_activity",
                   joinColumns = @JoinColumn(name = "customer_id"),

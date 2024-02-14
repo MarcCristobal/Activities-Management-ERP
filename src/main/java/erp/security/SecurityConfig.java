@@ -26,68 +26,64 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
 
-        private final CustomAuthenticationFailureHandler authenticationFailureHandler;
-        private final UserService userService;
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
+    private final UserService userService;
 
-        @Autowired
-        public SecurityConfig(CustomAuthenticationFailureHandler authenticationFailureHandler,
-                        UserService userService) {
-                this.authenticationFailureHandler = authenticationFailureHandler;
-                this.userService = userService;
+    @Autowired
+    public SecurityConfig(CustomAuthenticationFailureHandler authenticationFailureHandler,
+            UserService userService) {
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.userService = userService;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/activities-board").permitAll()
+                .requestMatchers("/activities-board/**").permitAll()
+                .requestMatchers("/images/**").permitAll()
+                .requestMatchers("/css/**").permitAll()
+                .requestMatchers(new RegisterRequestMatcher()).permitAll()
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/home/communications/**")
+                .hasAnyAuthority("ROLE_ADMIN", "ROLE_ACTIVITIES_COORDINATOR",
+                        "ROLE_MONITOR")
+                .anyRequest().authenticated())
+                .formLogin(login -> login
+                .loginPage("/")
+                .defaultSuccessUrl("/home", true)
+                .failureHandler(authenticationFailureHandler))
+                .logout(logout -> logout
+                .logoutUrl("/my/ownlogout") // Custom logout URL
+                .logoutSuccessUrl("/")) // Redirect to custom login page after logout
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                .accessDeniedPage("/error")); // Redirect to custom error page after
+        // access denied
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+        entryPoint.setRealmName("admin realm");
+        return entryPoint;
+    }
+
+    private class RegisterRequestMatcher implements RequestMatcher {
+
+        @Override
+        public boolean matches(HttpServletRequest request) {
+            // Solo permite el acceso a /register si no hay usuarios
+            return request.getServletPath().equals("/register") && userService.hasUsers();
         }
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http
-                                .csrf(csrf -> csrf.disable())
-                                .authorizeHttpRequests(authorize -> authorize
-                                                .requestMatchers("/activities-board").permitAll()
-                                                .requestMatchers("/activities-board/**").permitAll()
-                                                .requestMatchers("/images/**").permitAll()
-                                                .requestMatchers("/css/**").permitAll()
-                                                .requestMatchers(new RegisterRequestMatcher()).permitAll()
-                                                .requestMatchers("/").permitAll()
-                                                .requestMatchers("/home/communications/**")
-                                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_ACTIVITIES_COORDINATOR",
-                                                                "ROLE_MONITOR")
-                                                .requestMatchers("/home/users/{id}/**", "/home/users/update/**")
-                                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_ACTIVITIES_COORDINATOR")
-                                                .requestMatchers("/home/users/**")
-                                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_ACTIVITIES_COORDINATOR")
-                                                .anyRequest().authenticated())
-                                .formLogin(login -> login
-                                                .loginPage("/")
-                                                .defaultSuccessUrl("/home", true)
-                                                .failureHandler(authenticationFailureHandler))
-                                .logout(logout -> logout
-                                                .logoutUrl("/my/ownlogout") // Custom logout URL
-                                                .logoutSuccessUrl("/")) // Redirect to custom login page after logout
-                                .exceptionHandling(exceptionHandling -> exceptionHandling
-                                                .accessDeniedPage("/error")); // Redirect to custom error page after
-                                                                              // access denied
-                return http.build();
-        }
-
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
-
-        @Bean
-        public AuthenticationEntryPoint authenticationEntryPoint() {
-                BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-                entryPoint.setRealmName("admin realm");
-                return entryPoint;
-        }
-
-        private class RegisterRequestMatcher implements RequestMatcher {
-
-                @Override
-                public boolean matches(HttpServletRequest request) {
-                        // Solo permite el acceso a /register si no hay usuarios
-                        return request.getServletPath().equals("/register") && userService.hasUsers();
-                }
-
-        }
+    }
 
 }
