@@ -157,6 +157,7 @@ public class UserController {
         Map<String, Object> details = new HashMap<>();
         details.put("id", Long.valueOf(user.getId()));
         details.put("name", user.getName());
+        details.put("surname", user.getSurname());
         details.put("photoPath", user.getPhotoPath());
         newAuth.setDetails(details);
         SecurityContextHolder.getContext().setAuthentication(newAuth);

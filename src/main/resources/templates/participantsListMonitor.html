@@ -30,14 +30,14 @@
             </div>
 
             <div class="grid w-9/12 grid-rows-1">
-                <span class="mb-2 grid grid-cols-3 px-2 text-lg font-bold text-slate-500">
+                <span class="mb-2 grid grid-cols-4 px-2 text-lg font-bold text-slate-500">
                     <label>Name/Surname</label>
                     <label>Type</label>
                     <label>Grade</label>
                 </span>
 
                 <div th:each="customer : ${customers}">
-                    <span class="grid grid-cols-3 px-2 py-1">
+                    <span class="grid grid-cols-4 px-2 py-1">
                         <span class="flex flex-row items-center space-x-3 font-semibold">
                             <img class="size-9" th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}" />
                             <label th:text="${customer.name}"></label>
@@ -45,8 +45,10 @@
                         <span class="flex flex-row items-center">
                             <label th:text="${customer.type}"></label>
                         </span>
-                        <span class="flex flex-row items-center justify-between">
-                            <label th:text="${customer.course}"></label>
+                        <span class="flex flex-row items-center">
+                            <label th:text="${customer.course}"></label>                            
+                        </span>
+                        <span class="flex flex-row items-center">
                             <a th:href="@{'/home/customers/' + ${customer.id}}"
                                class="flex items-center space-x-1 rounded-md bg-teal-500 px-2 py-1 text-slate-50">
                                 <img class="size-5" src="/images/sobre-nosotros.png" />
