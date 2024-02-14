@@ -10,67 +10,75 @@
         <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
     </head>
 
-    <body class="bg-gray-100">
+    <body>
         <div th:replace="~{header :: div}"></div>
-        <div class="container mx-auto mt-8">
-            <h2 class="mb-4 text-2xl font-bold">Create User</h2>
+        <div class="space-y-6 mx-8 my-6">
+            <label class="p-2 bg-gray-200 text-sm">Create User</label>
 
-            <form th:object="${user}" th:action="@{/register}" method="post" enctype="multipart/form-data"
-                  class="mx-auto max-w-md rounded-md bg-white p-6 shadow-md">
-                <!-- Name -->
-                <div class="mb-4">
-                    <label for="name" class="mb-2 block text-sm font-medium text-gray-600">Name:</label>
-                    <input type="text" id="name" name="name" class="w-full rounded-md border px-3 py-2" th:field="*{name}"
-                           required />
+            <form class="grid grid-cols-1" th:object="${user}" th:action="@{/register}" method="post" enctype="multipart/form-data">
+
+                <div class="space-y-4">
+
+
+                    <!-- Name -->
+                    <div>
+                        <label for="name" class="font-bold block">Name</label>
+                        <input type="text" id="name" name="name" class="w-1/2 border border-gray-800 p-1" th:field="*{name}" required />
+                    </div>
+
+                    <!-- Surname -->
+                    <div>
+                        <label for="surname" class="font-bold block">Surname</label>
+                        <input type="text" id="surname" name="surname" class="w-1/2 border border-gray-800 p-1" th:field="*{surname}"
+                               required />
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="font-bold block">Email</label>
+                        <input type="email" id="email" name="email" class="w-1/2 border border-gray-800 p-1" th:field="*{email}"
+                               required />
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="font-bold block">Password</label>
+                        <input type="password" id="password" name="password" class="w-1/2 border border-gray-800 p-1"
+                               th:field="*{password}" pattern=".{8,}" title="8 characters minimum" required />
+                    </div>
+
+                    
+                    <!-- Role -->
+                    <div>
+                        <label for="role" class="font-bold block">Role</label>
+                        <select id="role" name="role" class=" w-1/2 border border-gray-800 p-1" th:field="*{role}" required>
+                            <option value="">Select a role</option>
+                            <option value="ACTIVITIES_COORDINATOR">
+                                Activities Coordinator
+                            </option>
+                            <option value="MONITOR">Monitor</option>
+                            <option value="CONCIERGE">Concierge</option>
+                            <option value="ADMIN">Admin</option>
+                        </select>
+                    </div>
+
+                    <!-- Photo -->
+                    <div>
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden">
+                        <label for="photo" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer py-1">
+                            <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
+                            <span class="text-white">Photo</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit" class="flex min-w-36 max-w-36 bg-blue-500 text-white rounded-md items-center justify-center cursor-pointer py-1">
+                            Create User
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Surname -->
-                <div class="mb-4">
-                    <label for="surname" class="mb-2 block text-sm font-medium text-gray-600">Surname:</label>
-                    <input type="text" id="surname" name="surname" class="w-full rounded-md border px-3 py-2" th:field="*{surname}"
-                           required />
-                </div>
-
-                <!-- Email -->
-                <div class="mb-4">
-                    <label for="email" class="mb-2 block text-sm font-medium text-gray-600">Email:</label>
-                    <input type="email" id="email" name="email" class="w-full rounded-md border px-3 py-2" th:field="*{email}"
-                           required />
-                </div>
-
-                <!-- Password -->
-                <div class="mb-4">
-                    <label for="password" class="mb-2 block text-sm font-medium text-gray-600">Password:</label>
-                    <input type="password" id="password" name="password" class="w-full rounded-md border px-3 py-2"
-                           th:field="*{password}" pattern=".{8,}" title="8 characters minimum" required />
-                </div>
-
-                <!-- Role -->
-                <div class="mb-4">
-                    <label for="role" class="mb-2 block text-sm font-medium text-gray-600">Role:</label>
-                    <select id="role" name="role" class="w-full rounded-md border px-3 py-2" th:field="*{role}" required>
-                        <option value="">Select a role</option>
-                        <option value="ACTIVITIES_COORDINATOR">
-                            Activities Coordinator
-                        </option>
-                        <option value="MONITOR">Monitor</option>
-                        <option value="CONCIERGE">Concierge</option>
-                        <option value="ADMIN">Admin</option>
-                    </select>
-                </div>
-
-                <!-- Photo -->
-                <div class="mb-4">
-                    <label for="photo" class="mb-2 block text-sm font-medium text-gray-600">Photo:</label>
-                    <input type="file" id="photo" name="photo" accept="images/*" class="w-full rounded-md border px-3 py-2" />
-                </div>
-
-                <!-- Submit Button -->
-                <div class="mb-4">
-                    <button type="submit" class="w-full rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-                        Create User
-                    </button>
-                </div>
             </form>
         </div>
     </body>

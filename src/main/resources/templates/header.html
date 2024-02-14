@@ -1,20 +1,18 @@
-<div class="w-screen h-auto flex items-center justify-center text-white px-8 py-4 bg-orange-500">
-    <img class="w-60 min-w-60" src="/images/NicolauCopernic-LOGO.png" />
-    <div class="flex-grow">
-        <h1 class="text-3xl text-center font-bold">ACTIVITIES MANAGEMENT</h1>
-    </div>
-    <div class="w-60 min-w-60 flex space-x-2 justify-center items-center relative" th:if="${#authorization.expression('isAuthenticated()')}">
-        <label th:text="${#authentication.details['name']}"></label>
-        <img class="w-12 h-12 rounded-full object-cover" th:src="@{'/images/userImages/serve/' + ${#authentication.details['photoPath']}}">
+<div class="w-screen h-auto flex items-center justify-between text-white px-8 py-4 bg-orange-500">
+    <img class="w-48 min-w-48" src="/images/NicolauCopernic-LOGO.png" />
+    <h1 class="text-3xl text-center font-bold">ACTIVITIES MANAGEMENT</h1>
+    <div class="flex space-x-2 justify-end items-center relative" th:if="${#authorization.expression('isAuthenticated()')}">
+        <label th:text="${#authentication.details['name']} + ' ' + ${#authentication.details['surname']}"></label>
+        <img class="size-12 rounded-full object-cover" th:src="@{'/images/userImages/serve/' + ${#authentication.details['photoPath']}}">
 
 
         <img class="size-4 cursor-pointer" src="/images/flecha-hacia-abajo.png" onclick="toggleDropdown()">
-        <div id="dropdown" style="display: none; position: absolute; top: 100%; left: 0; background-color: #f9f9f9; min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; color: black;">
+        <div id="dropdown" class="hidden absolute top-full rigth-0 bg-gray-100 min-w-32 shadow-md">
             <form th:action="@{/home/users/{id}(id=${#authentication.details['id']})}" method="GET">
-                <input type="submit" value="Perfil" />
+                <input type="submit" value="Perfil" class="w-full py-2 px-4 text-gray-800 hover:bg-gray-200 cursor-pointer" />
             </form>
             <form th:action="@{/my/ownlogout}" method="POST">
-                <input type="submit" value="Logout" />
+                <input type="submit" value="Logout" class="w-full py-2 px-4 text-gray-800 hover:bg-gray-200 cursor-pointer" />
             </form>
         </div>
     </div>
@@ -22,15 +20,15 @@
     <script>
         function toggleDropdown() {
             var dropdown = document.getElementById("dropdown");
-            if (dropdown.style.display === "none") {
-                dropdown.style.display = "block";
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
             } else {
-                dropdown.style.display = "none";
+                dropdown.classList.add('hidden');
             }
         }
     </script>
 
-    <div class="w-60 min-w-60 flex space-x-2 justify-center items-center" th:unless="${#authorization.expression('isAuthenticated()')}">
+    <div class="w-48 min-w-48 flex space-x-2 justify-center items-center" th:unless="${#authorization.expression('isAuthenticated()')}">
         <!-- Contenido en blanco -->
     </div>
 

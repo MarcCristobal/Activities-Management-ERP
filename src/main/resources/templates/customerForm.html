@@ -1,173 +1,180 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit Customer</title>
-    <!-- Include Tailwind CSS -->
-    <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Edit Customer</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+    </head>
 
-<body>
-    <div th:replace="~{header :: div}"></div>
-    <div th:replace="~{nav :: div}"></div>
+    <body>
+        <div th:replace="~{header :: div}"></div>
+        <div th:replace="~{nav :: div}"></div>
 
-    <div class="mx-8 my-6 space-y-16">
-        <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500"><a
-                    th:href="@{/home/customers}">Customers</a></span><span> > Edit
-                Customer</span></label>
+        <div class="mx-8 my-6 space-y-6">
+            <label class="bg-gray-200 p-2 text-sm"><span class="text-orange-500"><a
+                        th:href="@{/home/customers}">Customers</a></span><span> > Edit
+                    Customer</span></label>
 
-        <form th:object="${customer}" th:action="@{/home/customers/update}" method="post" enctype="multipart/form-data"
-            class="grid grid-rows-1">
-            <input type="hidden" th:field="*{id}" />
-            
-            
-            <div class="flex flex-grow flex-row space-x-10">
-                <!-- Photo -->
-                <div class="space-y-6">
-                    <img id="previewImage" class="size-36"
-                        th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}">
-                    <label for="photo"
-                        class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
-                        <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
-                        <span class="text-white">Photo</span>
-                    </label>
-                    <input type="file" id="photo" name="photo" accept="image/*" class="hidden"
-                        onchange="previewImage(this)">
-                </div>
+            <form th:object="${customer}" th:action="@{/home/customers/update}" method="post" enctype="multipart/form-data"
+                  class="grid grid-rows-1">
+                <input type="hidden" th:field="*{id}" />
 
-                <div class="grid-rows-1 space-y-4">
-                    
-                    <div th:if="${#fields.hasErrors('*')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                        <strong class="font-bold">¡Error!</strong>
-                        <span class="block sm:inline">Hay errores en tu formulario:</span>
-                        <ul>
-                            <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
-                        </ul>
+
+                <div class="flex flex-grow flex-row space-x-10">
+                    <!-- Photo -->
+                    <div class="space-y-6">
+                        <img id="previewImage" class="size-36"
+                             th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}">
+                        <label for="photo"
+                               class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center py-1">
+                            <img class="w-6 h-6 mr-2" src="/images/subir-archivo.png">
+                            <span class="text-white">Photo</span>
+                        </label>
+                        <input type="file" id="photo" name="photo" accept="image/*" class="hidden"
+                               onchange="previewImage(this)">
                     </div>
-                    
-                    <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
 
-                    <input type="hidden" th:field="*{photoPath}">
+                    <div class="grid-rows-1 space-y-4">
 
-                    <span class="flex flex-col">
-                        <label for="name" class="font-bold">Name</label>
-                        <input type="text" id="name" name="name" class="border border-gray-800 p-1" th:field="*{name}"
-                            required />
-                    </span>
+                        <div th:if="${#fields.hasErrors('*')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold">¡Error!</strong>
+                            <span class="block sm:inline">Hay errores en tu formulario:</span>
+                            <ul>
+                                <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+                            </ul>
+                        </div>
 
-                    <span class="flex flex-col">
-                        <label for="name" class="font-bold">Surnames</label>
-                        <input type="text" id="surnames" name="surnames" class="border border-gray-800 p-1"
-                            th:field="*{surnames}" required />
-                    </span>
+                        <span class="mr-80 pb-5 text-xl text-gray-500">Personal Information</span>
 
-                    <span class="flex flex-col">
-                        <label for="email" class="font-bold">Email</label>
-                        <input type="email" id="email" name="email" class="border border-gray-800 p-1"
-                            th:field="*{email}" required />
-                    </span>
+                        <input type="hidden" th:field="*{photoPath}">
 
-                    <span class="flex flex-row">
                         <span class="flex flex-col">
-                            <label class="font-bold">Phone</label>
-                            <input type="text" id="phone" name="phone" class="border border-gray-800 p-1"
-                                th:field="*{phone}" required />
+                            <label for="name" class="font-bold">Name</label>
+                            <input type="text" id="name" name="name" class="border border-gray-800 p-1" th:field="*{name}"
+                                   required />
                         </span>
+
                         <span class="flex flex-col">
-                            <label for="birthDate" class="font-bold">Date of Birth</label>
-                            <input type="date" id="birthDate" name="birthDate" class="border p-1 border-gray-800"
-                                th:field="*{birthDate}" required>
+                            <label for="name" class="font-bold">Surnames</label>
+                            <input type="text" id="surnames" name="surnames" class="border border-gray-800 p-1"
+                                   th:field="*{surnames}" required />
                         </span>
-                    </span>
 
-                    <span class="flex flex-col">
-                        <label for="email" class="font-bold">Parent / Guardian Name (if apply)</label>
-                        <input type="parentName" id="parentName" name="parentName" class="border border-gray-800 p-1"
-                            th:field="*{parentName}" />
-                    </span>
+                        <span class="flex flex-col">
+                            <label for="email" class="font-bold">Email</label>
+                            <input type="email" id="email" name="email" class="border border-gray-800 p-1"
+                                   th:field="*{email}" required />
+                        </span>
 
-                    <span class="flex flex-col">
-                        <label for="dni" class="font-bold">DNI</label>
-                        <input type="text" id="dni" name="dni" class="border border-gray-800 p-1" th:field="*{dni}"
-                            required />
-                    </span>
+                        <span class="flex flex-row justify-between">
+                            <span class="flex flex-col w-/4">
+                                <label class="font-bold">Phone</label>
+                                <input type="text" id="phone" name="phone" class="border border-gray-800 p-1"
+                                       th:field="*{phone}" required />
+                            </span>
+                            <span class="flex flex-col">
+                                <label for="birthDate" class="font-bold">Date of Birth</label>
+                                <input type="date" id="birthDate" name="birthDate" class="border p-1 border-gray-800"
+                                       th:field="*{birthDate}" required>
+                            </span>
+                        </span>
 
-                    <span class="flex flex-col">
-                        <label for="grade" class="font-bold">Grade (if apply)</label>
-                        <input type="text" id="course" name="course" class="border border-gray-800 p-1"
-                            th:field="*{course}" />
-                    </span>
+                        <span class="flex flex-col">
+                            <label for="email" class="font-bold">Parent / Guardian Name (if apply)</label>
+                            <input type="parentName" id="parentName" name="parentName" class="border border-gray-800 p-1"
+                                   th:field="*{parentName}" />
+                        </span>
 
-                    <span class="flex flex-row items-center justify-between space-x-4">
-                        <label class="font-bold">Type</label>
+                    </div>
+                    <div class="grid-rows-1 space-y-4">
 
-                        <input type="radio" class="peer/student hidden" id="student" name="type" value="Estudiant"
-                            th:field="*{type}" required>
-                        <label for="student"
-                            class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/student:bg-teal-500">Student</label>
+                        <span class="flex flex-col">
+                            <label for="dni" class="font-bold">DNI</label>
+                            <input type="text" id="dni" name="dni" class="border border-gray-800 p-1" th:field="*{dni}"
+                                   required />
+                        </span>
 
-                        <input type="radio" class="peer/teacher hidden" id="teacher" name="type" value="Professor"
-                            th:field="*{type}" required>
-                        <label for="teacher"
-                            class="cursor-pointer border px-1 border-gray-800 peer-checked/teacher:bg-teal-500">Teacher</label>
+                        <span class="flex flex-col">
+                            <label for="grade" class="font-bold">Grade (if apply)</label>
+                            <input type="text" id="course" name="course" class="border border-gray-800 p-1"
+                                   th:field="*{course}" />
+                        </span>
 
-                        <input type="radio" class="peer/neighbor hidden" id="neighbor" name="type" value="Veí"
-                            th:field="*{type}" required>
-                        <label for="neighbor"
-                            class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/neighbor:bg-teal-500">Neighbor</label>
+                        <span class="flex flex-row items-center justify-between space-x-4">
+                            <label class="font-bold">Type</label>
 
-                    </span>
-                    <!-- ... tus otros campos ... -->
+                            <input type="radio" class="peer/student hidden" id="student" name="type" value="Estudiant"
+                                   th:field="*{type}" required>
+                            <label for="student"
+                                   class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/student:bg-teal-500">Student</label>
 
-                    <span class="flex flex-col">
-                        <label class="font-bold">Interessos</label>
-                        <p id="interests" name="interests" th:text="${#strings.replace(customer.interests, ';', ' ')}">
-                        </p>
-                    </span>
-                    <input type="hidden" th:field="*{interests}" />
-                    <input type="hidden" th:field="*{activityNamesString}" />
+                            <input type="radio" class="peer/teacher hidden" id="teacher" name="type" value="Professor"
+                                   th:field="*{type}" required>
+                            <label for="teacher"
+                                   class="cursor-pointer border px-1 border-gray-800 peer-checked/teacher:bg-teal-500">Teacher</label>
 
-                    <div
-                        class="scrollbar-hide grid max-h-72 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                        <div th:each="activity : ${activities}">
-                            <div class="size-full bg-teal-500 p-2">
-                                <div class="mb-2 text-lg font-semibold text-blue-700" th:text="${activity.name}"></div>
-                                <div class="mx-2 border-l-4 border-blue-700 bg-gray-200 p-1 font-black"
-                                    th:text="${#dates.format(activity.startDate, 'dd/MM/yyyy')}"></div>
-                                <div
-                                    class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
-                                    <img class="size-6" src="/images/mapas-y-banderas.png" />
-                                    <span th:text="${activity.place}"></span>
-                                </div>
-                                <div
-                                    class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
-                                    <input type="checkbox" name="selectedActivities" th:value="${activity.name}"
-                                        th:checked="${#lists.contains(selectedActivityNames, activity.name)}" />
-                                    <label>Seleccionar</label>
+                            <input type="radio" class="peer/neighbor hidden" id="neighbor" name="type" value="Veí"
+                                   th:field="*{type}" required>
+                            <label for="neighbor"
+                                   class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/neighbor:bg-teal-500">Neighbor</label>
+
+                        </span>
+                        <!-- ... tus otros campos ... -->
+
+
+
+                        <span class="flex flex-col">
+                            <label class="font-bold">Interessos</label>
+                            <p id="interests" name="interests" th:text="${#strings.replace(customer.interests, ';', ' ')}">
+                            </p>
+                        </span>
+                        <input type="hidden" th:field="*{interests}" />
+                        <input type="hidden" th:field="*{activityNamesString}" />
+
+                    </div>
+                    <div class="grid-rows-1 space-y-4">
+
+                        <div class="scrollbar-hide grid w-72 min-w-72 max-h-96 gap-4 overflow-y-auto grid-cols-1">
+                            <div th:each="activity : ${activities}">
+                                <div class="size-full bg-teal-500 p-2">
+                                    <div class="mb-2 text-lg font-semibold text-blue-700" th:text="${activity.name}"></div>
+                                    <div class="mx-2 border-l-4 border-blue-700 bg-gray-200 p-1 font-black"
+                                         th:text="${#dates.format(activity.startDate, 'dd/MM/yyyy')}"></div>
+                                    <div
+                                        class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
+                                        <img class="size-6" src="/images/mapas-y-banderas.png" />
+                                        <span th:text="${activity.place}"></span>
+                                    </div>
+                                    <div
+                                        class="mx-2 flex items-center justify-center space-x-1 border-l-4 border-blue-700 bg-slate-50 p-2">
+                                        <input type="checkbox" name="selectedActivities" th:value="${activity.name}"
+                                               th:checked="${#lists.contains(selectedActivityNames, activity.name)}" />
+                                        <label>Seleccionar</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- ... tus otros campos ... -->
+
+                        <span class="flex flex-row justify-end">
+                            <input type="submit"
+                                   class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
+                                   value="Accept" />
+                            <a th:if="${showSkipButton}" th:href="@{/skip}"
+                               class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white">Skip</a>
+                            <a th:href="@{/home/customers}"
+                               class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
+                        </span>
+
                     </div>
-
-                    <!-- ... tus otros campos ... -->
-
-                    <span class="flex flex-row justify-end">
-                        <input type="submit"
-                            class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white"
-                            value="Accept" />
-                        <a th:if="${showSkipButton}" th:href="@{/skip}"
-                            class="mr-2 cursor-pointer rounded-b-md rounded-t-md bg-teal-600 px-4 text-lg font-bold text-white">Skip</a>
-                        <a th:href="@{/home/customers}"
-                            class="cursor-pointer rounded-b-md rounded-t-md bg-red-500 px-4 text-lg font-bold text-white">Cancel</a>
-                    </span>
-                    
                 </div>
-            </div>
-        </form>
-    </div>
-    <script th:src="@{/js/customerForm.js}"></script>
-</body>
+            </form>
+        </div>
+        <script th:src="@{/js/customerForm.js}"></script>
+    </body>
 
 </html>

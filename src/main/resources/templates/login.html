@@ -1,39 +1,38 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Page</title>
-  <!-- Include Tailwind CSS -->
-  <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login Page</title>
+        <!-- Include Tailwind CSS -->
+        <link th:href="@{/css/tailwind.css}" rel="stylesheet" />
+    </head>
 
-<body>
-  <div class="flex min-h-screen flex-col">
-    <div th:replace="~{header :: div}"></div>
+    <body>
+        <div class="flex min-h-screen flex-col">
+            <div th:replace="~{header :: div}"></div>
 
-    <!-- Your login form -->
-    <div class="flex flex-grow items-center justify-center">
-      <section class="w-96 rounded bg-white p-8 shadow-md shadow-slate-500">
-        <p th:if="${error}" th:text="${error}" class="rounded-md bg-red-500 p-4 text-black"></p>
+            <!-- Your login form -->
+            <div class="flex flex-grow items-center justify-center">
+                <section class="w-96 rounded bg-white p-8 shadow-md shadow-slate-500">
+                    <p th:if="${error}" th:text="${error}" class="rounded-md bg-red-500 p-4 text-black"></p>
 
-        <form th:action="@{/}" method="post" class="flex flex-col text-center">
-          <input type="text" id="username" name="username" class="mb-4 rounded border p-2 placeholder:text-slate-500"
-            placeholder="Username:" />
-          <input type="password" id="password" name="password"
-            class="mb-4 rounded border p-2 placeholder:text-slate-500" placeholder="Password:" />
-          <div th:if="${hasNotUsers}" class="mb-4 flex justify-center">
-            <button th:text=" 'Register' " type="button" onclick="location.href = '/register'"
-              class="flex flex-grow rounded bg-teal-500 p-2 text-center text-white"></button>
-          </div>
-          <button type="submit" class="rounded bg-teal-500 p-2 text-white">
-            Log-in
-          </button>
-        </form>
-      </section>
-    </div>
-  </div>
-</body>
+                    <form th:action="@{/}" method="post" class="flex flex-col text-center space-y-4">
+                        <input type="text" id="username" name="username" class="rounded border p-2 placeholder:text-slate-500"
+                               placeholder="Username:" />
+                        <input type="password" id="password" name="password"
+                               class="rounded border p-2 placeholder:text-slate-500" placeholder="Password:" />
+                        <button type="submit" class="rounded bg-teal-500 p-2 text-white">
+                            Log-in
+                        </button>
+                        <button th:if="${hasNotUsers}" th:text=" 'Register' " type="button" onclick="location.href = '/register'"
+                                class="rounded bg-teal-500 p-2 text-white">                      
+                        </button>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </body>
 
 </html>

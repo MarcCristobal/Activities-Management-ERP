@@ -48,8 +48,7 @@
             </form>
         </div>
 
-        <div
-            class="scrollbar-hide grid max-h-72 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div class="scrollbar-hide grid max-h-72 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             <div th:each="activity : ${activities}">
                 <form th:action="@{'/activities/' + ${activity.id}}" method="get">
                     <button type="submit" class="size-full bg-teal-500 p-2">
