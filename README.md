@@ -1,5 +1,8 @@
 # Activities Management ERP
-![Logo]()
+<p align="center">
+  <img src="https://gitlab.com/project2team2/activities-management-erp/-/raw/master/readmeContent/NicolauCopernic-LOGO.png">
+</p>
+
 
 ## Description
 This project, named "Activities Management ERP", has been created to assist the Nicolau Copernic Institute with the registration and resource management of extracurricular activities. It offers an ERP with different modules that will facilitate the management of these activities, in addition to providing data and an integrated messaging system.
@@ -35,8 +38,8 @@ This project, named "Activities Management ERP", has been created to assist the 
 (You can upload your screenshots in this section. Use the following syntax to display an image: `!Image Description`)
 
 ## Demo Video
-(You can embed your demo video in this section. If your video is hosted on a platform like YouTube, you can embed it using the following syntax: `!Video Description`)
+
 
 ## Project Report
-(You can embed your project report in this section. If your report is in a format like PDF, you can use a service like DocDroid to upload your PDF and then embed it in your README.)
+
 
