@@ -73,7 +73,7 @@
                                                 <td>
                                                     <button type="button" th:data-id="${activity.id}" th:data-name="${activity.name}"
                                                             onclick="addRecipient(this, 'activity')">
-                                                        Añadir
+                                                        Add
                                                     </button>
                                                 </td>
                                             </tr>
@@ -149,7 +149,7 @@
 
                 // Añade un botón para eliminar el destinatario
                 var removeButton = document.createElement("button");
-                removeButton.innerHTML = "Eliminar";
+                removeButton.innerHTML = "Delete";
                 removeButton.onclick = function () {
                     removeRecipient(li.id, name);  // Pasa el ID del elemento li a la función removeRecipient
                 };

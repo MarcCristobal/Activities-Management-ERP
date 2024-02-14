@@ -40,8 +40,8 @@
                     <div class="grid-rows-1 space-y-4">
 
                         <div th:if="${#fields.hasErrors('*')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                            <strong class="font-bold">¡Error!</strong>
-                            <span class="block sm:inline">Hay errores en tu formulario:</span>
+                            <strong class="font-bold">Error!</strong>
+                            <span class="block sm:inline">There are error in your form:</span>
                             <ul>
                                 <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
                             </ul>
@@ -120,14 +120,11 @@
                                    th:field="*{type}" required>
                             <label for="neighbor"
                                    class="cursor-pointer border px-1 border-gray-800 bg-gray-200 peer-checked/neighbor:bg-teal-500">Neighbor</label>
-
                         </span>
                         <!-- ... tus otros campos ... -->
 
-
-
                         <span class="flex flex-col">
-                            <label class="font-bold">Interessos</label>
+                            <label class="font-bold">Interests</label>
                             <p id="interests" name="interests" th:text="${#strings.replace(customer.interests, ';', ' ')}">
                             </p>
                         </span>

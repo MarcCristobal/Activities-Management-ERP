@@ -2,9 +2,7 @@ package erp.domain;
 
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -15,12 +13,12 @@ public class Form implements PhotoEntity{
     private String email;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
-    @Pattern(regexp = "[XYZ]?[0-9]{7,8}[A-HJ-NP-TV-Z]", message = "Formato de DNI/NIE inválido")
+    @Pattern(regexp = "[XYZ]?[0-9]{7,8}[A-HJ-NP-TV-Z]", message = "Invalida DNI/NIE format")
     private String dni;
     private CustomerType type;
     private String photoPath = "usuario2.png";
     private String parentName;
-    @Pattern(regexp = "[0-9]{9}", message = "Formato de teléfono inválido")
+    @Pattern(regexp = "[0-9]{9}", message = "Invalid phone format")
     private String phone;
     private List<Activity> activities;
     private String activityNamesString;
@@ -42,6 +40,6 @@ public class Form implements PhotoEntity{
     };
     private String course;
 
-    private String [] intereses = {"Lectura", "Viatges", "Cuina", "Esports", "Fotografía", "Música", "Videojocs", "Pel·lícules i sèries", "Activitats a l'aire lluire", "Moda", "Tecnología"};
+    private String [] intereses = {"Read", "Travel", "Cook", "Sports", "Photography", "Music", "Videogames", "Films and Series", "Outdoor activities", "Fashion", "Technology"};
     private String interests;
 }

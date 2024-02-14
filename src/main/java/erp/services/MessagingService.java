@@ -3,10 +3,8 @@ package erp.services;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import erp.dao.ActivityDao;
 import erp.dao.CustomerDao;
 import erp.dao.MessageDao;
@@ -84,7 +82,7 @@ public class MessagingService {
                     List<Customer> participants = activity.getCustomers();
                     for (Customer participant : participants) {
                         message.getCustomerRecipients().add(participant);
-                        
+                        mailSenderService.sendEmail(participant.getEmail(), message.getSubject(), message.getContent());
                     }
                 }
             }
@@ -122,23 +120,23 @@ public class MessagingService {
     public List<Message> findAllUserMessages(Long userId) {
         return messageRepository.findMessagesByUserRecipients(userId);
     }
-    
-    public List<Message> findMessagesByUserSender(Long senderId){
+
+    public List<Message> findMessagesByUserSender(Long senderId) {
         return messageRepository.findMessagesByUserSender(senderId);
     }
 
     public List<Message> findMessageBySubject(String subject, String box, long id) {
         List<Message> messages = new ArrayList<>();
-        
-        if (box.equalsIgnoreCase("outbox")){
-            for(Message message : messageRepository.findMessagesByUserRecipients(id)){
-                if (message.getSubject().contains(subject)){
+
+        if (box.equalsIgnoreCase("outbox")) {
+            for (Message message : messageRepository.findMessagesByUserRecipients(id)) {
+                if (message.getSubject().contains(subject)) {
                     messages.add(message);
                 }
             }
-        } else{
-            for(Message message : messageRepository.findMessagesByUserSender(id)){
-                if (message.getSubject().contains(subject)){
+        } else {
+            for (Message message : messageRepository.findMessagesByUserSender(id)) {
+                if (message.getSubject().contains(subject)) {
                     messages.add(message);
                 }
             }

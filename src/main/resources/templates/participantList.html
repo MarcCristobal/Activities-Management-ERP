@@ -20,14 +20,6 @@
                 </span>
                 <span th:text="' > ' + ${activity.name} + ' > Participant List'"></span>
             </label>
-            <div class="flex items-center justify-end">
-                <form class="flex items-center">
-                    <input type="text" id="text" name="text" class="h-10 w-80 rounded-md border border-gray-800" />
-                    <button class="h-10 w-10 cursor-pointer rounded-md bg-teal-500">
-                        <img src="/images/lupa.png" />
-                    </button>
-                </form>
-            </div>
 
             <form th:action="@{/update-activity-customers}" method="post">
                 <input type="number" name="activity_id" th:value="${activity_id}" class="hidden"/>
@@ -48,7 +40,7 @@
                         <span class="grid grid-cols-5 px-2 py-1">
                             <span class="flex flex-row items-center space-x-3 font-semibold">
                                 <img class="size-9" th:src="@{'/images/userImages/serve/' + ${customer.photoPath}}" />
-                                <label th:text="${customer.name}"></label>
+                                <label th:text="${customer.name} + ' ' + ${customer.surnames}"></label>
                             </span>
                             <span class="flex flex-row items-center">
                                 <label th:text="${customer.type}"></label>

@@ -21,21 +21,21 @@
                 <!-- Error message -->
                 <div class="space-y-6">
                     <img class="size-36" th:src="@{'/images/error.png'}">
-                    <p class="text-red-500 text-xl">Ha ocurrido un error.</p>
+                    <p class="text-red-500 text-xl">An error has occurred.</p>
                 </div>
 
                 <div class="grid-rows-1 space-y-4">
                     <div class="mr-80 text-2xl font-bold">Error</div>
 
-                    <div class="mr-80 text-xl text-gray-500">Lo sentimos, algo ha ido mal.</div>
+                    <div class="mr-80 text-xl text-gray-500">We're sorry, something has gone wrong.</div>
 
                     <span class="flex flex-col">
-                        <label class="font-bold">Mensaje de error</label>
+                        <label class="font-bold">Error message</label>
                         <label th:text="${errorMessage}"></label>
                     </span>
 
                     <a th:href="@{/home}" class="flex min-w-36 max-w-36 bg-teal-500 rounded-md items-center justify-center cursor-pointer items-center space-x-1 py-1">
-                        <label class="text-slate-50">Volver a Home</label>
+                        <label class="text-slate-50">Go back Home</label>
                     </a>
                 </div>
             </div>

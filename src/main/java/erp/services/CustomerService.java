@@ -5,8 +5,6 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import erp.dao.ActivityDao;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import erp.dao.CustomerDao;
@@ -31,11 +29,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -66,34 +61,45 @@ public class CustomerService {
             existingCustomer.setPhone(customer.getPhone());
             existingCustomer.setCourse(customer.getCourse());
             existingCustomer.setInterests(customer.getInterests());
-            existingCustomer.setActivityNamesString(customer.getActivityNamesString());
 
             // Añadir actividades a la lista de actividades del cliente
-            if (customer.getActivityNamesString() != null) {
+            if (customer.getActivityNamesString() != null && !customer.getActivityNamesString().isEmpty()) {
                 String[] activityNames = customer.getActivityNamesString().split(";");
+                List<Activity> newActivities = new ArrayList<>();
                 for (String activityName : activityNames) {
                     Activity activity = activityDao.findActivityByNameExact(activityName.trim());
                     if (activity != null) {
-                        existingCustomer.getActivities().add(activity);
+                        newActivities.add(activity);
                     }
                 }
+                existingCustomer.setActivities(newActivities);
+                existingCustomer.setActivityNamesString(String.join(";", activityNames));
+            } else {
+                existingCustomer.setActivities(new ArrayList<>());
+                existingCustomer.setActivityNamesString("");
             }
 
             return customerDao.save(existingCustomer);
         } else {
             // Este es un nuevo Customer, así que debes añadir las actividades
-            if (customer.getActivityNamesString() != null) {
+            if (customer.getActivityNamesString() != null && !customer.getActivityNamesString().isEmpty()) {
                 String[] activityNames = customer.getActivityNamesString().split(",");
+                List<Activity> newActivities = new ArrayList<>();
                 for (String activityName : activityNames) {
                     Activity activity = activityDao.findActivityByNameExact(activityName.trim());
                     if (activity != null) {
-                        customer.getActivities().add(activity);
+                        newActivities.add(activity);
                     }
                 }
+                customer.setActivities(newActivities);
+                customer.setActivityNamesString(String.join(",", activityNames));
+            } else {
+                customer.setActivities(new ArrayList<>());
+                customer.setActivityNamesString("");
             }
 
+            return customerDao.save(customer);
         }
-        return customerDao.save(customer);
     }
 
     @Transactional
@@ -114,7 +120,7 @@ public class CustomerService {
         String file = "./inscriptionForm.csv";
         Queue<Customer> customers = new LinkedList<>();
         Map<Integer, String> lines = new HashMap<>(); // Cambiado a HashMap
-        try (Reader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+        try ( Reader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             HeaderColumnNameMappingStrategy<Customer> strategy = new HeaderColumnNameMappingStrategy<>();
             strategy.setType(Customer.class);
 
@@ -133,7 +139,7 @@ public class CustomerService {
             }
 
             // Leer todas las líneas del archivo CSV
-            try (Stream<String> stream = Files.lines(Paths.get(file))) {
+            try ( Stream<String> stream = Files.lines(Paths.get(file))) {
                 List<String> lineList = stream.collect(Collectors.toList());
                 for (int i = 0; i < lineList.size(); i++) {
                     lines.put(i, lineList.get(i)); // Añade las líneas al HashMap con su índice como clave
@@ -150,9 +156,7 @@ public class CustomerService {
     }
 
     public void writeUnprocessedLinesToCsv(Map<Integer, String> unprocessedLines) {
-        try (FileOutputStream fos = new FileOutputStream("./inscriptionForm.csv");
-                OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-                BufferedWriter writer = new BufferedWriter(osw)) {
+        try ( FileOutputStream fos = new FileOutputStream("./inscriptionForm.csv");  OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);  BufferedWriter writer = new BufferedWriter(osw)) {
             // Ordena el HashMap por clave (índice de línea) antes de escribir las líneas
             Map<Integer, String> sortedLines = new TreeMap<>(unprocessedLines);
             // Escribe las líneas no procesadas

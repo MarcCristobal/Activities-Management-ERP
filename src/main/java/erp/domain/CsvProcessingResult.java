@@ -2,7 +2,6 @@ package erp.domain;
 
 import java.util.Map;
 import java.util.Queue;
-
 import lombok.Data;
 
 @Data
