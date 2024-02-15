@@ -38,6 +38,8 @@ This project, named "Activities Management ERP", has been created to assist the 
 
 
 ## Demo Video
+<iframe src="https://drive.google.com/file/d/1xVK6GOexw1E0T-_VvUCBT6ktMo02g51i/view?usp=sharing" width="640" height="480"></iframe>
+
 
 
 ## Project Report
