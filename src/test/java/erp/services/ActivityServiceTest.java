@@ -8,8 +8,6 @@ import erp.dao.ActivityDao;
 import erp.dao.CustomerDao;
 import erp.domain.Activity;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
@@ -25,38 +23,43 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  *
  * @author wilso
  */
+
 @ExtendWith(SpringExtension.class)
 public class ActivityServiceTest {
 
-          @Mock
-          private ActivityDao activityDao;
+    @Mock
+    private ActivityDao activityDao;
 
-          @Mock
-          private CustomerDao customerDao;
+    @Mock
+    private CustomerDao customerDao;
 
-          @InjectMocks
-          private ActivityService activityService;
+    @Mock
+    private JsonConversionService jsonConversionService;
 
-          @Test
-          public void testSaveOrUpdateActivity() {
-                    // Crea un Activity simulado
-                    Activity activity = new Activity();
-                    activity.setName("test");
-                    // ... establece los otros campos de activity ...
+    @InjectMocks
+    private ActivityService activityService;
+    
+    @Test
+    public void testSaveOrUpdateActivity() {
+        // Crea un Activity simulado
+        Activity activity = new Activity();
+        activity.setName("test");
+        // ... establece los otros campos de activity ...
 
-                    // Simula el comportamiento de activityDao.findById(...)
-                    when(activityDao.findById(activity.getId())).thenReturn(Optional.of(activity));
+        // Simula el comportamiento de activityDao.findById(...)
+        when(activityDao.findById(activity.getId())).thenReturn(Optional.of(activity));
 
-                    // Simula el comportamiento de activityDao.save(...)
-                    when(activityDao.save(any(Activity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        // Simula el comportamiento de activityDao.save(...)
+        when(activityDao.save(any(Activity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-                    // Simula el comportamiento de jsonConversionService.toList(...)
-                    // Llama al método que quieres probar
-                    Activity result = activityService.saveOrUpdateActivity(activity, "", "");
+        // Simula el comportamiento de jsonConversionService.toList(...)
+        when(jsonConversionService.toList(anyString())).thenReturn(new ArrayList<>());
 
-                    // Verifica que el resultado es el esperado
-                    assertEquals(activity, result);
-          }
+        // Llama al método que quieres probar
+        Activity result = activityService.saveOrUpdateActivity(activity, null, null);
 
-          // Añade aquí más pruebas para otros métodos del servicio...
+        // Verifica que el resultado es el esperado
+        assertEquals(activity, result);
+    }
 }
+

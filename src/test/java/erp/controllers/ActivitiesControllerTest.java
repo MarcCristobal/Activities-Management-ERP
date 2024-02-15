@@ -59,7 +59,6 @@ public class ActivitiesControllerTest {
 
                     // Simula el comportamiento de userService.findUserByEmail(...)
                     when(userService.findUserByEmail(user.getEmail())).thenReturn(user);
-
                     // Crea un Authentication con los detalles necesarios
                     Map<String, Object> details = new HashMap<>();
                     details.put("id", user.getId());

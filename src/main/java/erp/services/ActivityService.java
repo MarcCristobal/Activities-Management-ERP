@@ -60,8 +60,14 @@ public class ActivityService {
 
             return activityDao.save(existingActivity);
         }
-        activity.setResources(jsonConversionService.toList(resourceJson));
-        activity.setRequirements(jsonConversionService.toList(requirementJson));
+        if(resourceJson!=null){
+                activity.setResources(jsonConversionService.toList(resourceJson));
+        }
+        if(requirementJson != null){
+                activity.setRequirements(jsonConversionService.toList(requirementJson));
+        }
+        
+        
 
         return activityDao.save(activity);
     }
