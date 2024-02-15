@@ -35,11 +35,12 @@ This project, named "Activities Management ERP", has been created to assist the 
 |Development         |![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) ![NetBeans IDE](https://img.shields.io/badge/NetBeansIDE-1B6AC6.svg?style=for-the-badge&logo=apache-netbeans-ide&logoColor=white)|
 
 ## Application Screenshots
-(You can upload your screenshots in this section. Use the following syntax to display an image: `!Image Description`)
+
 
 ## Demo Video
 
 
 ## Project Report
+<a href="https://drive.google.com/file/d/1pMtNkzGime5Ld58daKlY0k3vqvo4LOc6/view?usp=sharing">Project report link</a>
 
 
