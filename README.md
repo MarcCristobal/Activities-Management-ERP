@@ -35,10 +35,15 @@ This project, named "Activities Management ERP", has been created to assist the 
 |Development         |![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) ![NetBeans IDE](https://img.shields.io/badge/NetBeansIDE-1B6AC6.svg?style=for-the-badge&logo=apache-netbeans-ide&logoColor=white)|
 
 ## Application Screenshots
+![Login](homeSC.png)
+![Home](loginSC.png)
+![Activities](activitiesSc.png)
+![Customer metrics](customerMetricsSC.png)
+
 
 
 ## Demo Video
-<iframe src="https://drive.google.com/file/d/1xVK6GOexw1E0T-_VvUCBT6ktMo02g51i/view?usp=sharing" width="640" height="480"></iframe>
+[![Video demo](https://img.youtube.com/vi/nwbJ7cy3anM/0.jpg)](https://www.youtube.com/watch?v=nwbJ7cy3anM)
 
 
 
